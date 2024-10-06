@@ -72,7 +72,7 @@
     "auth/invalid-emulator-scheme": "Emulator URL must start with a valid scheme (http:// or https://).",
     "auth/invalid-api-key": "Your API key is invalid, please check you have copied it correctly.",
     "auth/invalid-cert-hash": "The SHA-1 certificate hash provided is invalid.",
-    "auth/invalid-credential": "The supplied auth credential is malformed or has expired.",
+    "auth/invalid-credential": "Invalid Email/Password combination.",
     "auth/invalid-message-payload": "The email template corresponding to this action contains invalid characters in its message. Please fix by going to the Auth email templates section in the Firebase Console.",
     "auth/invalid-multi-factor-session": "The request does not contain a valid proof of first factor successful sign-in.",
     "auth/invalid-oauth-provider": "EmailAuthProvider is not supported for this operation. This operation only supports OAuth providers.",

@@ -11,9 +11,9 @@ function LoginPage() {
   const { loginEmail, loginPassword, loginError, loading, rememberMe } = state;
   const { dispatch } = useAuth();
 
-  const handleLogin = async(e)=>{
+  const handleLogin = (e)=>{
     e.preventDefault();
-    await loginUser(loginEmail, loginPassword, setError, resetFields, navigate, setLoading, rememberMe, dispatch);
+     loginUser(loginEmail, loginPassword, setError, resetFields, navigate, setLoading, rememberMe, dispatch);
   }
 
   return (

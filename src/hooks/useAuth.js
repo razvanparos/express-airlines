@@ -4,12 +4,13 @@ const AuthContext = createContext();
 
 const initialState = {
   currentUser: null,
+  currentUserPhone:'',
 };
 
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
-      return { ...state, currentUser: action.payload };
+      return { ...state, currentUser: action.payload, currentUserPhone: action.phone };
     case 'LOGOUT':
       return { ...state, currentUser: null};
     default:

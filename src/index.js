@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage";
 import Layout from "./pages/Layout";
 import NoPage from "./pages/NoPage";
 import { AuthProvider } from './hooks/useAuth';
+import UserDashboard from "./pages/UserDashboard";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
+            <Route path="user-dashboard" element={<UserDashboard />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

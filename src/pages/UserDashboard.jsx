@@ -14,7 +14,7 @@ function UserDashboard() {
         }
     },[])
   return (
-    <div className="">
+    <div className="min-h-[565px]">
         <p>User dashboard</p>
         <p>{`Name: ${currentUser?.displayName}`}</p>
         <p>{`Email: ${currentUser?.email}`}</p>

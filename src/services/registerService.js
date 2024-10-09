@@ -3,8 +3,7 @@ import { auth, db } from "../firebase-config";
 import errorMessages from '../utils/errorMessages.json';
 import { doc, setDoc } from "firebase/firestore"; 
 
-export const registerUser = async (registerEmail, registerPassword, registerName, registerPhone, setError, resetFields, navigate, setLoading) => {
-  setLoading(true);
+export const registerUser = async (registerName,registerPhone, registerEmail, registerPassword) => {
   if (registerEmail && registerPassword && registerName && registerPhone) {
     try {
       await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
@@ -13,14 +12,10 @@ export const registerUser = async (registerEmail, registerPassword, registerName
         id: auth.currentUser?.uid,
         phone: registerPhone,
     });
-      resetFields(); 
-      navigate('/login'); 
     } catch (error) {
-      console.log(error)
-      setError(errorMessages[error.code] || "An error occurred during registration.");
+      throw errorMessages[error.code];
     }
   } else {
-    setError('Fields cannot be empty.');
+    throw('Fields cannot be empty')
   }
-  setLoading(false);
 };

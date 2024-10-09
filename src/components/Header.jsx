@@ -1,19 +1,16 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { BiSolidPlaneAlt } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 
-function Header() {
-  const { state } = useAuth();
-  const { currentUser } = state;
+function Header(props) {
   return (
-    <header className="bg-blue-300 h-[50px] flex items-center px-2 justify-between">
+    <header className="bg-darkBlue h-[60px] flex items-center px-4 justify-between text-white">
       <div className="flex items-center gap-x-2">
         <Link to="/"><h2 className="text-lg font-semibold">Airline Express</h2></Link>
         <BiSolidPlaneAlt className="text-xl" />
       </div>
-      
-      {currentUser===null?<Link to="/login" className="bg-yellow-300 p-1">Login</Link>:<Link to='/user-dashboard'><FaUserCircle  className="text-3xl text-yellow-300"/></Link>}
+      {/* <button onClick={()=>{console.log(props.userData)}}>click</button> */}
+      {props.userData?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl"/></Link>:<Link to="/login" className="p-1 ">Login</Link>}
     </header>
   );
 }

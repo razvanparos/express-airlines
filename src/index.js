@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css';
 import './output.css';
 import reportWebVitals from './reportWebVitals';
@@ -9,25 +9,54 @@ import Home from "./pages/Home";
 import RegisterPage from "./pages/RegisterPage";
 import Layout from "./pages/Layout";
 import NoPage from "./pages/NoPage";
-import { AuthProvider } from './hooks/useAuth';
 import UserDashboard from "./pages/UserDashboard";
+import { auth } from "./firebase-config";
+import ExploreResults from "./pages/ExploreResults";
+
 
 export default function App() {
+  const [userData, setUserData]=useState('');
+  const [exploreResults, setExploreResults]=useState('');
+ 
+  const getUserDataFromLogin=(data)=>{
+    console.log(data)
+    setUserData(data)
+  }
+
+  const fetchUserData=async()=>{
+    auth.onAuthStateChanged(async(user)=>{
+    setUserData(user)
+    })
+  }
+  const fetchFlights=(data)=>{
+     setExploreResults(data);
+  }
+
+  useEffect(()=>{
+    let storedUser=localStorage.getItem('currentUser')
+    if(storedUser){
+      fetchUserData();
+    }
+  },[])
+
+  useEffect(()=>{
+    setExploreResults(exploreResults)
+    
+  },[exploreResults])
+
   return (
-    <AuthProvider>
        <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="login" element={<LoginPage />} />
+          <Route path="/" element={<Layout userData={userData}/>}>
+            <Route index element={<Home fetchFlights={fetchFlights}/>} />
+            <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="user-dashboard" element={<UserDashboard />} />
+            <Route path="explore-results" element={<ExploreResults exploreResults={exploreResults}/>} />
+            <Route path="user-dashboard" element={<UserDashboard userData={userData}/>} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
-   
   );
 }
 

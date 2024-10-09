@@ -3,8 +3,7 @@ import { auth, db } from "../firebase-config";
 import errorMessages from '../utils/errorMessages.json';
 import { collection, query, where, getDocs  } from "firebase/firestore";
 
-export const loginUser=async(loginEmail, loginPassword, setError, resetFields, navigate, setLoading, rememberMe,dispatch )=>{
-    setLoading(true);
+export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
     if(loginEmail&&loginPassword){
         try{
           await signInWithEmailAndPassword(auth,loginEmail,loginPassword)
@@ -15,27 +14,21 @@ export const loginUser=async(loginEmail, loginPassword, setError, resetFields, n
             ...doc.data(),
             id: doc.id,
         }))
-          dispatch({ type: 'LOGIN_SUCCESS', payload: auth.currentUser, phone: filteredData[0].phone});
-          resetFields();
-          navigate('/')
           if(rememberMe){
-            localStorage.setItem('currentUser', JSON.stringify(auth.currentUser));
+            localStorage.setItem('currentUser', auth.currentUser.uid);
           }
         }catch(error){
-          console.log(auth.currentUser)
-          setError(errorMessages[error.code] || "An error occurred during login.");
+          throw(errorMessages[error.code])
         }
     }else{
-        setError('Fields cannot be empty.');
+      throw('Fields cannot be empty')
     }
-    setLoading(false)
 }
 
-export const logoutUser = async (dispatch, navigate) => {
+export const logoutUser = async (navigate) => {
   try {
     await signOut(auth);
     localStorage.removeItem('currentUser');
-    dispatch({ type: 'LOGOUT' });
     navigate('/')
   } catch (error) {
     console.error("Logout failed:", error);

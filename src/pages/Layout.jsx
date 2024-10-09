@@ -2,10 +2,10 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-function Layout() {
+function Layout(props) {
     return (
       <div className="">
-        <Header/>
+        <Header userData={props.userData}/>
         <Outlet/>
         <Footer/>
       </div>

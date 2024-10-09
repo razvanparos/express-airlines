@@ -1,17 +1,30 @@
 import { Link, useNavigate } from "react-router-dom";
 import Loader from '../components/Loader';
-import { useRegisterForm } from "../hooks/useRegisterForm";
 import { registerUser } from "../services/registerService";
+import { useState } from "react";
 
 
 function RegisterPage() {
     const navigate = useNavigate();
-    const { state, setField, setError, setLoading, resetFields } = useRegisterForm();
-    const { registerEmail, registerPassword, registerName, registerPhone, registerError, loading } = state;
+    const [registerName, setRegisterName]=useState('');
+    const [registerPhone, setRegisterPhone]=useState('');
+    const [registerEmail, setRegisterEmail]=useState('');
+    const [registerPassword, setRegisterPassword]=useState('');
+    const [registerError, setRegisterError]=useState('');
+    const [loading, setLoading]=useState(false);
+
 
     const handleRegister = async (e) => {
       e.preventDefault();
-      await registerUser(registerEmail, registerPassword, registerName, registerPhone, setError, resetFields, navigate, setLoading);
+      setLoading(true);
+      try{
+        await registerUser(registerName,registerPhone, registerEmail, registerPassword);
+        navigate('/')
+      }catch(error){
+        setRegisterError(error)
+      }
+      
+      setLoading(false);
     };
     
     return (
@@ -19,13 +32,13 @@ function RegisterPage() {
         <p className="font-bold">Register page</p>
         <form action="" onSubmit={handleRegister} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
           <label htmlFor="name">Name</label>
-          <input type="text" className="border-2" value={registerName} onChange={(e)=>setField('registerName',e.target.value)}/>
+          <input type="text" className="border-2" value={registerName} onChange={(e)=>setRegisterName(e.target.value)}/>
           <label htmlFor="phone">Phone</label>
-          <input type="number" className="border-2" value={registerPhone} onChange={(e)=>setField('registerPhone', e.target.value)}/>
+          <input type="number" className="border-2" value={registerPhone} onChange={(e)=>setRegisterPhone(e.target.value)}/>
           <label htmlFor="email">Email</label>
-          <input type="text" className="border-2" value={registerEmail} onChange={(e)=>setField('registerEmail', e.target.value)}/>
+          <input type="text" className="border-2" value={registerEmail} onChange={(e)=>setRegisterEmail(e.target.value)}/>
           <label htmlFor="password">Password</label>
-          <input className="border-2" type="password" value={registerPassword} onChange={(e)=>setField('registerPassword', e.target.value)}/>
+          <input className="border-2" type="password" value={registerPassword} onChange={(e)=>setRegisterPassword(e.target.value)}/>
           <p className="text-red-600">{registerError}</p>
           <button type="submit" className="bg-blue-300 py-3">{loading?<Loader/>:'Register'}</button>
           <Link to='/login' className="border-2 p-2 flex justify-center">Already have an account? Login now!</Link>

@@ -38,8 +38,8 @@ function LoginPage(props) {
           <p>Remember me</p>
         </div>
         <p className="text-red-500">{loginError}</p>
-        <button type="submit" className="bg-blue-300 py-3">{loading?<Loader/>:'Login'}</button>
-        <Link to='/register' className="border-2 p-2 flex justify-center">Don't have an account? Register now!</Link>
+        <button type="submit" className="bg-primaryBlue p-2 text-white rounded-xl">{loading?<Loader/>:'Login'}</button>
+        <Link to='/register' className="p-2 flex justify-center">Don't have an account? Register now!</Link>
       </form>
       
     </div>

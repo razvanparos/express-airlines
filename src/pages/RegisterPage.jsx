@@ -40,8 +40,8 @@ function RegisterPage() {
           <label htmlFor="password">Password</label>
           <input className="border-2" type="password" value={registerPassword} onChange={(e)=>setRegisterPassword(e.target.value)}/>
           <p className="text-red-600">{registerError}</p>
-          <button type="submit" className="bg-blue-300 py-3">{loading?<Loader/>:'Register'}</button>
-          <Link to='/login' className="border-2 p-2 flex justify-center">Already have an account? Login now!</Link>
+          <button type="submit" className="bg-primaryBlue rounded-xl text-white py-3">{loading?<Loader/>:'Register'}</button>
+          <Link to='/login' className="p-2 flex justify-center">Already have an account? Login now!</Link>
         </form>
     </div>
     );

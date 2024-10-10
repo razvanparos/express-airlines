@@ -3,18 +3,23 @@ import { db } from "../firebase-config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import airports from '../utils/airports.json'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Loader from "../components/Loader";
+
 
 function Home(props) {
     const navigate = useNavigate();
     const [departure, setDeparture]=useState('');
     const [destination, setDestination]=useState('');
-    const [numberPassengers, setNumberPassengers]=useState(1);
+    const [adultsNumber, setAdultsNumber]=useState(1);
     const [showDepartureAirportsList, setShowDepartureAirportsList]=useState(false);
     const [showDestinationAirportsList, setShowDestinationAirportsList]=useState(false);
-    const [showSelectDepartureDate, setShowSelectDepartureDate]=useState(false);
     const [departuresList, setDeparturesList]=useState([]);
     const [destinationsList, setDestinationsList]=useState([]);
-
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(()=>{
       let filteredAirports = airports.filter(airport=>airport.name.toLowerCase().includes(departure.toLowerCase()))
@@ -44,21 +49,28 @@ function Home(props) {
 
     const getFLights=async(e)=>{
       e.preventDefault();
-      console.log(departure + ' ' + destination)
+      setLoading(true)
       const flightsRef = collection(db, "Flights");
-          const q = query(flightsRef, where("departure", "==", departure), where("destination","==",destination));
-          const querySnapshot = await getDocs(q);
-          const filteredData = querySnapshot.docs.map((doc)=>({
+          const departureFlight = query(flightsRef, where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString()));
+          const returnFlight = query(flightsRef, where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString()));
+          const departureSnapshot = await getDocs(departureFlight);
+          const returnSnapshot = await getDocs(returnFlight);
+          const departureData = departureSnapshot.docs.map((doc)=>({
             ...doc.data(),
             id: doc.id,
         }))
-        console.log(filteredData)
-        // if(filteredData.length>0){
-        //   props.fetchFlights(filteredData)
-        //   navigate('/explore-results')
-        // }else{
-        //   console.log('No flights found')
-        // }
+          const returnData = returnSnapshot.docs.map((doc)=>({
+            ...doc.data(),
+            id: doc.id,
+        }))
+        console.log(departureData,returnData)
+        if(departureData.length>0&&returnData.length>0){
+          props.fetchFlights(departureData,returnData)
+          navigate('/explore-results')
+        }else{
+          console.log('No flights found')
+        }
+        setLoading(false)
     }
 
     const handleDepartureListItemClick=(name)=>{
@@ -69,6 +81,15 @@ function Home(props) {
       setDestination(name);
       setShowDestinationAirportsList(false)   
     }
+
+    useEffect(()=>{
+      if(adultsNumber<1){
+        setAdultsNumber(1)
+      }
+      if(adultsNumber>8){
+        setAdultsNumber(8)
+      }
+    },[adultsNumber])
 
     return (
       <main className="flex flex-col items-center min-h-[565px] ">
@@ -85,14 +106,15 @@ function Home(props) {
               return <p className="mb-2" key={index} onClick={()=>{handleDestinationListItemClick(item.name)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
-          <input onBlur={()=>{setShowSelectDepartureDate(false)}} onFocus={()=>{setShowSelectDepartureDate(true)}} placeholder="Departure date" type="text" className="py-3 px-2 mb-[1px]"/>
-          <input onBlur={()=>{setShowSelectDepartureDate(false)}} onFocus={()=>{setShowSelectDepartureDate(true)}} placeholder="Return date" type="text" className="py-3 px-2"/>
-          <div className={`${showSelectDepartureDate?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white text-black`}>
-          
+          <DatePicker className="py-3 px-2 mb-[1px] w-full" minDate={new Date()} placeholderText="Departure date" selected={startDate} onChange={(date) => setStartDate(date)} />
+          <DatePicker className="py-3 px-2 mb-[1px] w-full bg-white" minDate={startDate} disabled={startDate?false:true} placeholderText="Return date" selected={endDate} onChange={(date) => setEndDate(date)} />
+          {/* <input type="text" className="rounded-b-xl py-3 px-2" value={`${adultsNumber} Adult`} onChange={(e)=>{setAdultsNumber(e.target.value)}}/>         */}
+          <div className={`rounded-b-xl py-3 px-2 bg-white flex items-center gap-x-3`}>
+            <p>{`${adultsNumber} ${adultsNumber>1?'Adults':'Adult'}`}</p>
+            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="bg-gray-300 rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
+            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="bg-gray-300 rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
           </div>
-          <input type="text" className="rounded-b-xl py-3 px-2" value={`${numberPassengers} Passenger`} onChange={(e)=>{setNumberPassengers(e.target.value)}}/>        
-          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">Search</button>
-
+          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
       </main>
     );

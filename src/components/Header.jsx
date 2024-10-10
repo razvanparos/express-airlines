@@ -10,7 +10,7 @@ function Header(props) {
         <BiSolidPlaneAlt className="text-xl" />
       </div>
       {/* <button onClick={()=>{console.log(props.userData)}}>click</button> */}
-      {props.userData?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl"/></Link>:<Link to="/login" className="p-1 ">Login</Link>}
+      {props.userData?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl"/></Link>:<Link to="/login" className="p-1 bg-primaryBlue rounded-xl p-2 ">Login</Link>}
     </header>
   );
 }

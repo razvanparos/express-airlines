@@ -18,6 +18,9 @@ export default function App() {
   const [userData, setUserData]=useState('');
   const [departureFlights, setDepartureFlights]=useState('');
   const [returnFlights, setReturnFlights]=useState('');
+  const [adultsNumber, setAdultsNumber]=useState(1);
+  const [departureAirport, setDepartureAirport]=useState('');
+  const [destinationAirport, setDestinationAirport]=useState('');
  
   const getUserDataFromLogin=(data)=>{
     console.log(data)
@@ -29,9 +32,12 @@ export default function App() {
     setUserData(user)
     })
   }
-  const fetchFlights=(dep,ret)=>{
+  const fetchFlights=(dep,ret,nr,depAir,destAir)=>{
      setDepartureFlights(dep)
      setReturnFlights(ret)
+     setAdultsNumber(nr)
+     setDepartureAirport(depAir)
+     setDestinationAirport(destAir)
   }
 
   useEffect(()=>{
@@ -41,11 +47,6 @@ export default function App() {
     }
   },[])
 
-  // useEffect(()=>{
-  //   setExploreResults(exploreResults)
-    
-  // },[exploreResults])
-
   return (
        <BrowserRouter>
         <Routes>
@@ -53,7 +54,7 @@ export default function App() {
             <Route index element={<Home fetchFlights={fetchFlights}/>} />
             <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="explore-results" element={<ExploreResults departureFlights={departureFlights} returnFlights={returnFlights}/>} />
+            <Route path="explore-results" element={<ExploreResults destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
             <Route path="user-dashboard" element={<UserDashboard userData={userData}/>} />
             <Route path="*" element={<NoPage />} />
           </Route>

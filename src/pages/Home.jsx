@@ -11,6 +11,8 @@ import Loader from "../components/Loader";
 function Home(props) {
     const navigate = useNavigate();
     const [departure, setDeparture]=useState('');
+    const [departureAirport, setDepartureAirport]=useState('');
+    const [destinationAirport, setDestinationAirport]=useState('');
     const [destination, setDestination]=useState('');
     const [adultsNumber, setAdultsNumber]=useState(1);
     const [showDepartureAirportsList, setShowDepartureAirportsList]=useState(false);
@@ -63,9 +65,9 @@ function Home(props) {
             ...doc.data(),
             id: doc.id,
         }))
-        console.log(departureData,returnData)
+        console.log(departureData,returnData,departureAirport,destinationAirport)
         if(departureData.length>0&&returnData.length>0){
-          props.fetchFlights(departureData,returnData)
+          props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport)
           navigate('/explore-results')
         }else{
           console.log('No flights found')
@@ -73,12 +75,14 @@ function Home(props) {
         setLoading(false)
     }
 
-    const handleDepartureListItemClick=(name)=>{
-      setDeparture(name);
+    const handleDepartureListItemClick=(item)=>{
+      setDeparture(item.name);
+      setDepartureAirport(item);
       setShowDepartureAirportsList(false)   
     }
-    const handleDestinationListItemClick=(name)=>{
-      setDestination(name);
+    const handleDestinationListItemClick=(item)=>{
+      setDestination(item.name);
+      setDestinationAirport(item)
       setShowDestinationAirportsList(false)   
     }
 
@@ -97,22 +101,21 @@ function Home(props) {
           <input placeholder="Choose departure" type="text" className="rounded-t-xl py-3 px-2" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
           <div className={`${showDepartureAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {departuresList.length>0 ? departuresList?.map((item,index)=>{
-              return <p className="mb-2" key={index} onClick={()=>{handleDepartureListItemClick(item.name)}}>{`${item.name} (${item.iata_code})`}</p>
+              return <p className="mb-2" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
           <input placeholder="Choose destination" type="text" className="py-3 px-2" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
           <div className={`${showDestinationAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
-              return <p className="mb-2" key={index} onClick={()=>{handleDestinationListItemClick(item.name)}}>{`${item.name} (${item.iata_code})`}</p>
+              return <p className="mb-2" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
           <DatePicker className="py-3 px-2 mb-[1px] w-full" minDate={new Date()} placeholderText="Departure date" selected={startDate} onChange={(date) => setStartDate(date)} />
           <DatePicker className="py-3 px-2 mb-[1px] w-full bg-white" minDate={startDate} disabled={startDate?false:true} placeholderText="Return date" selected={endDate} onChange={(date) => setEndDate(date)} />
-          {/* <input type="text" className="rounded-b-xl py-3 px-2" value={`${adultsNumber} Adult`} onChange={(e)=>{setAdultsNumber(e.target.value)}}/>         */}
           <div className={`rounded-b-xl py-3 px-2 bg-white flex items-center gap-x-3`}>
             <p>{`${adultsNumber} ${adultsNumber>1?'Adults':'Adult'}`}</p>
-            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="bg-gray-300 rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
-            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="bg-gray-300 rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
+            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
+            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
           </div>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>

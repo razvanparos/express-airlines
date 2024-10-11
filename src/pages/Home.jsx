@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs  } from "firebase/firestore";
+import { collection, query, where, getDocs,orderBy  } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -53,8 +53,8 @@ function Home(props) {
       e.preventDefault();
       setLoading(true)
       const flightsRef = collection(db, "Flights");
-          const departureFlight = query(flightsRef, where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString()));
-          const returnFlight = query(flightsRef, where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString()));
+          const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString()));
+          const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString()));
           const departureSnapshot = await getDocs(departureFlight);
           const returnSnapshot = await getDocs(returnFlight);
           const departureData = departureSnapshot.docs.map((doc)=>({

@@ -12,6 +12,7 @@ import NoPage from "./pages/NoPage";
 import UserDashboard from "./pages/UserDashboard";
 import { auth } from "./firebase-config";
 import ExploreResults from "./pages/ExploreResults";
+import FlightDetails from "./pages/FlightDetails";
 
 
 export default function App() {
@@ -21,6 +22,8 @@ export default function App() {
   const [adultsNumber, setAdultsNumber]=useState(1);
   const [departureAirport, setDepartureAirport]=useState('');
   const [destinationAirport, setDestinationAirport]=useState('');
+  const [departureDate, setDepartureDate]=useState('');
+  const [returnDate, setReturnDate]=useState('');
  
   const getUserDataFromLogin=(data)=>{
     console.log(data)
@@ -32,17 +35,19 @@ export default function App() {
     setUserData(user)
     })
   }
-  const fetchFlights=(dep,ret,nr,depAir,destAir)=>{
+  const fetchFlights=(dep,ret,nr,depAir,destAir,start,end)=>{
+    console.log(start,end)
      setDepartureFlights(dep)
      setReturnFlights(ret)
      setAdultsNumber(nr)
      setDepartureAirport(depAir)
      setDestinationAirport(destAir)
+     setDepartureDate(start)
+     setReturnDate(end)
   }
 
   useEffect(()=>{
-    let storedUser=localStorage.getItem('currentUser')
-    if(storedUser){
+    if(localStorage.getItem('currentUser')||sessionStorage.getItem('currentUser')){
       fetchUserData();
     }
   },[])
@@ -54,8 +59,9 @@ export default function App() {
             <Route index element={<Home fetchFlights={fetchFlights}/>} />
             <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="explore-results" element={<ExploreResults destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
+            <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
             <Route path="user-dashboard" element={<UserDashboard userData={userData}/>} />
+            <Route path="flight-details" element={<FlightDetails/>} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

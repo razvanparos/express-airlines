@@ -16,6 +16,9 @@ export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
         }))
           if(rememberMe){
             localStorage.setItem('currentUser', auth.currentUser.uid);
+            sessionStorage.setItem('currentUser', auth.currentUser.uid)
+          }else{
+            sessionStorage.setItem('currentUser', auth.currentUser.uid)
           }
         }catch(error){
           throw(errorMessages[error.code])
@@ -29,6 +32,7 @@ export const logoutUser = async (navigate) => {
   try {
     await signOut(auth);
     localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser')
     navigate('/')
   } catch (error) {
     console.error("Logout failed:", error);

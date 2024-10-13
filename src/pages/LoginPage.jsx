@@ -18,7 +18,12 @@ function LoginPage(props) {
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
       props.getUserDataFromLogin(auth.currentUser)
-      navigate('/')
+      if(sessionStorage.getItem('currentBooking')){
+        navigate('/flight-details')
+      }else{
+        navigate('/')
+      }
+      
     }catch(error){
       setLoginError(error)
     }
@@ -30,9 +35,9 @@ function LoginPage(props) {
       <p className="font-bold">Login page</p>
       <form action="" onSubmit={handleLogin} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
         <label htmlFor="email">Email</label>
-        <input type="text" className="border-2" value={loginEmail} onChange={(e)=>{setLoginEmail(e.target.value)}}/>
+        <input type="text" className="border-2 rounded-lg p-2" value={loginEmail} onChange={(e)=>{setLoginEmail(e.target.value)}}/>
         <label htmlFor="password">Password</label>
-        <input className="border-2" type="password" value={loginPassword} onChange={(e)=>{setLoginPassword(e.target.value)}}/>
+        <input className="border-2 rounded-lg p-2" type="password" value={loginPassword} onChange={(e)=>{setLoginPassword(e.target.value)}}/>
         <div className="flex gap-x-2">
           <input type="checkbox" className="w-[20px]" value={rememberMe} onChange={()=>{setRememberMe(!rememberMe)}}/>
           <p>Remember me</p>

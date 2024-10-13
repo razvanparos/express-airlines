@@ -53,26 +53,26 @@ function Home(props) {
       e.preventDefault();
       setLoading(true)
       const flightsRef = collection(db, "Flights");
-          const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString()));
-          const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString()));
-          const departureSnapshot = await getDocs(departureFlight);
-          const returnSnapshot = await getDocs(returnFlight);
-          const departureData = departureSnapshot.docs.map((doc)=>({
-            ...doc.data(),
-            id: doc.id,
-        }))
-          const returnData = returnSnapshot.docs.map((doc)=>({
-            ...doc.data(),
-            id: doc.id,
-        }))
-        console.log(departureData,returnData,departureAirport,destinationAirport)
-        if(departureData.length>0&&returnData.length>0){
-          props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport)
-          navigate('/explore-results')
-        }else{
-          console.log('No flights found')
-        }
-        setLoading(false)
+      const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString()),where("freeSeats",">=",adultsNumber));
+      const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString()),where("freeSeats",">=",adultsNumber));
+      const departureSnapshot = await getDocs(departureFlight);
+      const returnSnapshot = await getDocs(returnFlight);
+      const departureData = departureSnapshot.docs.map((doc)=>({
+        ...doc.data(),
+        id: doc.id,
+      }))
+        const returnData = returnSnapshot.docs.map((doc)=>({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      console.log(departureData,returnData,departureAirport,destinationAirport)
+      if(departureData.length>0&&returnData.length>0){
+        props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,new Date(startDate).toLocaleDateString(),new Date(endDate).toLocaleDateString())
+        navigate('/explore-results')
+      }else{
+        console.log('No flights found')
+      }
+      setLoading(false)
     }
 
     const handleDepartureListItemClick=(item)=>{

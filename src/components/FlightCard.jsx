@@ -1,4 +1,3 @@
-import { IoIosAirplane } from "react-icons/io";
 
 function FlightCard(props){
 

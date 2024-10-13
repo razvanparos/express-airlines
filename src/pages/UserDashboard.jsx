@@ -5,6 +5,11 @@ import { useEffect } from "react";
 
 function UserDashboard(props) {
     const navigate = useNavigate();
+    useEffect(()=>{
+      if(!sessionStorage.getItem('currentUser')){
+          navigate('/')
+      }
+  },[])
 
   return (
     <div className="min-h-[565px]">

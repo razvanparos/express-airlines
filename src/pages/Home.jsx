@@ -53,8 +53,8 @@ function Home(props) {
       e.preventDefault();
       setLoading(true)
       const flightsRef = collection(db, "Flights");
-      const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString()),where("freeSeats",">=",adultsNumber));
-      const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString()),where("freeSeats",">=",adultsNumber));
+      const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString('us-US')),where("freeSeats",">=",adultsNumber));
+      const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString('us-US')),where("freeSeats",">=",adultsNumber));
       const departureSnapshot = await getDocs(departureFlight);
       const returnSnapshot = await getDocs(returnFlight);
       const departureData = departureSnapshot.docs.map((doc)=>({
@@ -117,8 +117,6 @@ function Home(props) {
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
           </div>
-          <p className="text-white">{new Date(startDate).toLocaleDateString()} </p>
-          <p className="text-white">{new Date(endDate).toLocaleDateString()}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
       </main>

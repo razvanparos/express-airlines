@@ -6,6 +6,7 @@ function FlightDetails() {
     const [currentBooking,setCurrentBooking]=useState('');
     const [selectedDepartureSeats,setSelectedDepartureSeats]=useState([]);
     const [selectedReturnSeats,setSelectedReturnSeats]=useState([]);
+    const [continueError,setContinueError]=useState('');
     
     useEffect(()=>{
         if(!sessionStorage.getItem('currentBooking')||!sessionStorage.getItem('currentUser')){
@@ -39,15 +40,32 @@ function FlightDetails() {
         } 
       }
     }
+    const handleContinue=()=>{
+      if(selectedDepartureSeats.length===currentBooking.adultsNumber&&selectedReturnSeats.length===currentBooking.adultsNumber){
+        setContinueError('')
+        let finalBooking =JSON.parse(sessionStorage.getItem('currentBooking')) 
+        finalBooking.selectedDepartureSeats=selectedDepartureSeats
+        finalBooking.selectedReturnSeats=selectedReturnSeats
+        sessionStorage.setItem('currentBooking',JSON.stringify(finalBooking))
+        navigate('/flight-summary')
+      }else{
+        setContinueError('Please select seats for all passengers')
+      }
+    }
 
   return (
-    <div className="">
+    <div className="flex flex-col gap-y-2">
+      <div className="bg-darkBlue text-white flex py-2 justify-center flex-col items-center">
+        <p>{`${currentBooking.departureFlight?.departure} - ${currentBooking.departureFlight?.destination}`}</p>
+        <p>{`${currentBooking.returnFlight?.departure} - ${currentBooking.returnFlight?.destination}`}</p>
+        <p>{`${currentBooking.adultsNumber} ${currentBooking.adultsNumber===1?'Adult':'Adults'}`}</p>
+      </div>
       <p className="bg-primaryBlue w-full p-2 rounded-t-xl text-white text-center font-bold">{`Select seats for ${currentBooking.departureFlight?.departure} - ${currentBooking.returnFlight?.departure} flight`}</p>
       <div className="flex flex-col items-center">
         <p className="w-full p-2 font-bold">{`${selectedDepartureSeats.length}/${currentBooking.adultsNumber}`}</p>
         <div className="p-4 inline-grid justify-items-center grid-cols-6 gap-y-4 w-fit">
           {currentBooking.departureFlight?.seats.map((seat,i)=>{
-            return <div onClick={()=>{handleDepartureSeatClick(seat)}} key={i} className={`border-2 ${selectedDepartureSeats.includes(seat.seatNumber)?'border-primaryBlue':'border-green-400'} ${seat.occupied?'border-gray-400':''} p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
+            return <div onClick={()=>{handleDepartureSeatClick(seat)}} key={i} className={`border-2 ${selectedDepartureSeats.includes(seat.seatNumber)?'border-primaryBlue':''} ${seat.occupied?'border-gray-400':'border-green-400'} p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
           })}
         </div>
       </div>
@@ -55,11 +73,18 @@ function FlightDetails() {
       <p className="bg-primaryBlue w-full p-2 rounded-t-xl text-white text-center font-bold">{`Select seats for ${currentBooking.returnFlight?.departure} - ${currentBooking.departureFlight?.departure} flight`}</p>
       <div className="flex flex-col items-center">
       <p className="w-full p-2 font-bold">{`${selectedReturnSeats.length}/${currentBooking.adultsNumber}`}</p>
-        <div className="p-4 inline-grid justify-items-center grid-cols-6 gap-y-4 w-fit">
+        <div className="p-4 inline-grid justify-items-center grid-cols-6 gap-y-4 w-fit max-h-[190px] overflow-scroll">
           {currentBooking.returnFlight?.seats.map((seat,i)=>{
-            return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':'border-green-400'} ${seat.occupied?'border-gray-400':''} p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
+            return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
+          })}
+          {currentBooking.returnFlight?.seats.map((seat,i)=>{
+            return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
           })}
         </div>
+      </div>
+      <div className="bg-gray-200 p-2 flex justify-between items-center text-red-500">
+        <p>{continueError}</p>
+        <button onClick={handleContinue} className="bg-primaryBlue rounded-lg text-white p-2">Continue</button>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import UserDashboard from "./pages/UserDashboard";
 import { auth } from "./firebase-config";
 import ExploreResults from "./pages/ExploreResults";
 import FlightDetails from "./pages/FlightDetails";
+import FlightSummary from "./pages/FlightSummary";
 
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
             <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
             <Route path="user-dashboard" element={<UserDashboard userData={userData}/>} />
             <Route path="flight-details" element={<FlightDetails/>} />
+            <Route path="flight-summary" element={<FlightSummary/>} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

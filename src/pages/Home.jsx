@@ -49,12 +49,20 @@ function Home(props) {
       }
     },[destination])
 
+    const formatDateToISO = (date) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = (d.getMonth() + 1).toString().padStart(2, '0');
+      const day = d.getDate().toString().padStart(2, '0'); 
+      return `${month}/${day}/${year}`; 
+    };
+
     const getFLights=async(e)=>{
       e.preventDefault();
       setLoading(true)
       const flightsRef = collection(db, "Flights");
-      const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",new Date(startDate).toLocaleDateString('us-US')),where("freeSeats",">=",adultsNumber));
-      const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",new Date(endDate).toLocaleDateString('us-US')),where("freeSeats",">=",adultsNumber));
+      const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",formatDateToISO(startDate)),where("freeSeats",">=",adultsNumber));
+      const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",formatDateToISO(endDate)),where("freeSeats",">=",adultsNumber));
       const departureSnapshot = await getDocs(departureFlight);
       const returnSnapshot = await getDocs(returnFlight);
       const departureData = departureSnapshot.docs.map((doc)=>({
@@ -67,7 +75,7 @@ function Home(props) {
       }))
       console.log(departureData,returnData,departureAirport,destinationAirport)
       if(departureData.length>0&&returnData.length>0){
-        props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,new Date(startDate).toLocaleDateString(),new Date(endDate).toLocaleDateString())
+        props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
         navigate('/explore-results')
       }else{
         console.log('No flights found')
@@ -117,8 +125,6 @@ function Home(props) {
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
           </div>
-          <p className="text-white">{new Date(startDate).toLocaleDateString('us-US')}</p>
-          <p className="text-white">{new Date(endDate).toLocaleDateString('us-US')}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
       </main>

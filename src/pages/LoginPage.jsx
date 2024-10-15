@@ -31,7 +31,7 @@ function LoginPage(props) {
   }
 
   return (
-    <div className="flex flex-col py-4 px-2 items-center min-h-[565px]">
+    <div className="flex flex-col py-4 px-2 items-center min-h-[565px] bg-white">
       <p className="font-bold">Login page</p>
       <form action="" onSubmit={handleLogin} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
         <label htmlFor="email">Email</label>

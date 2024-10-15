@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 *, ::before, ::after {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans","Arial", sans-serif;
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
@@ -147,6 +147,7 @@
 
 html,
 :host {
+  background-color: #05203C;
   line-height: 1.5;
   /* 1 */
   -webkit-text-size-adjust: 100%;
@@ -307,6 +308,7 @@ input,
 optgroup,
 select,
 textarea {
+  -webkit-appearance: none;
   font-family: inherit;
   /* 1 */
   font-feature-settings: inherit;

@@ -35,7 +35,6 @@ function ExploreResults(props) {
             returnFlight: selectedReturnFlight,
             total: props.adultsNumber*(selectedDepartureFlight.pricePerSeat+selectedReturnFlight.pricePerSeat)
         }
-        console.log(newBooking);
         sessionStorage.setItem('currentBooking',JSON.stringify(newBooking))
         if(sessionStorage.getItem('currentUser')){
             navigate('/flight-details')
@@ -45,7 +44,7 @@ function ExploreResults(props) {
     }
 
     return (
-        <div className="">
+        <div className="bg-white">
             <div className="bg-darkBlue text-white flex py-2 justify-center flex-col items-center mb-4">
                 <p>{`${props.departureAirport?.city} - ${props.destinationAirport?.city}`}</p>
                 <p>{`${props.departureFlights[0]?.departure} - ${props.departureFlights[0]?.destination}`}</p>

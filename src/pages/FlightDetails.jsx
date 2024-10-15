@@ -54,7 +54,7 @@ function FlightDetails() {
     }
 
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex flex-col gap-y-2 bg-white">
       <div className="bg-darkBlue text-white flex py-2 justify-center flex-col items-center">
         <p>{`${currentBooking.departureFlight?.departure} - ${currentBooking.departureFlight?.destination}`}</p>
         <p>{`${currentBooking.returnFlight?.departure} - ${currentBooking.returnFlight?.destination}`}</p>
@@ -74,9 +74,6 @@ function FlightDetails() {
       <div className="flex flex-col items-center">
       <p className="w-full p-2 font-bold">{`${selectedReturnSeats.length}/${currentBooking.adultsNumber}`}</p>
         <div className="p-4 inline-grid justify-items-center grid-cols-6 gap-y-4 w-fit max-h-[190px] overflow-scroll">
-          {currentBooking.returnFlight?.seats.map((seat,i)=>{
-            return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
-          })}
           {currentBooking.returnFlight?.seats.map((seat,i)=>{
             return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-4 flex justify-center items-center `}>{seat.seatNumber}</div>
           })}

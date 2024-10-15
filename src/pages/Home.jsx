@@ -6,6 +6,7 @@ import airports from '../utils/airports.json'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../components/Loader";
+import exploreDestinations from '../assets/explore-destinations.webp'
 
 
 function Home(props) {
@@ -22,6 +23,7 @@ function Home(props) {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [loading, setLoading] = useState(false);
+    const [searchError, setSearchError] = useState('');
 
     useEffect(()=>{
       let filteredAirports = airports.filter(airport=>airport.name.toLowerCase().includes(departure.toLowerCase()))
@@ -59,27 +61,40 @@ function Home(props) {
 
     const getFLights=async(e)=>{
       e.preventDefault();
-      setLoading(true)
-      const flightsRef = collection(db, "Flights");
-      const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",formatDateToISO(startDate)),where("freeSeats",">=",adultsNumber));
-      const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",formatDateToISO(endDate)),where("freeSeats",">=",adultsNumber));
-      const departureSnapshot = await getDocs(departureFlight);
-      const returnSnapshot = await getDocs(returnFlight);
-      const departureData = departureSnapshot.docs.map((doc)=>({
-        ...doc.data(),
-        id: doc.id,
-      }))
-        const returnData = returnSnapshot.docs.map((doc)=>({
-        ...doc.data(),
-        id: doc.id,
-      }))
-      console.log(departureData,returnData,departureAirport,destinationAirport)
-      if(departureData.length>0&&returnData.length>0){
-        props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
-        navigate('/explore-results')
+      if(showDepartureAirportsList||showDestinationAirportsList){
+        setSearchError('Select airports from the list')
+        return
       }else{
-        console.log('No flights found')
+        setSearchError('')
       }
+      if(departure&&destination&&startDate&&endDate){
+        setSearchError('')
+        setLoading(true)
+        const flightsRef = collection(db, "Flights");
+        const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",formatDateToISO(startDate)),where("freeSeats",">=",adultsNumber));
+        const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",formatDateToISO(endDate)),where("freeSeats",">=",adultsNumber));
+        const departureSnapshot = await getDocs(departureFlight);
+        const returnSnapshot = await getDocs(returnFlight);
+        const departureData = departureSnapshot.docs.map((doc)=>({
+          ...doc.data(),
+          id: doc.id,
+        }))
+          const returnData = returnSnapshot.docs.map((doc)=>({
+          ...doc.data(),
+          id: doc.id,
+        }))
+        console.log(departureData,returnData,departureAirport,destinationAirport)
+        if(departureData.length>0&&returnData.length>0){
+          props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
+          navigate('/explore-results')
+        }else{
+          setSearchError('No flights found')
+        }
+      }else{
+        setSearchError('Fields cannot be empty')
+      }
+      
+      
       setLoading(false)
     }
 
@@ -125,8 +140,18 @@ function Home(props) {
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
           </div>
+          <p className="text-red-500 mt-2">{searchError}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
+
+        <article className="flex flex-col items-center my-2 p-4 bg-white">
+          <div className="w-full font-semibold text-xl">
+            <h2 className="text-gray-500">Can't decide where to go?</h2>
+            <p className="text-primaryBlue">Explore destinations all over the world!</p>
+          </div>
+            <img src={exploreDestinations} alt="" className="rounded-lg"/>
+        </article>
+      
       </main>
     );
   }

@@ -308,7 +308,6 @@ input,
 optgroup,
 select,
 textarea {
-  -webkit-appearance: none;
   font-family: inherit;
   /* 1 */
   font-feature-settings: inherit;

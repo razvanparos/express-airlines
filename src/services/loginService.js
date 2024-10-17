@@ -7,13 +7,6 @@ export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
     if(loginEmail&&loginPassword){
         try{
           await signInWithEmailAndPassword(auth,loginEmail,loginPassword)
-          const usersRef = collection(db, "UsersDetails");
-          const q = query(usersRef, where("id", "==", auth.currentUser.uid));
-          const querySnapshot = await getDocs(q);
-          const filteredData = querySnapshot.docs.map((doc)=>({
-            ...doc.data(),
-            id: doc.id,
-        }))
           if(rememberMe){
             localStorage.setItem('currentUser', auth.currentUser.uid);
             sessionStorage.setItem('currentUser', auth.currentUser.uid)
@@ -33,8 +26,23 @@ export const logoutUser = async (navigate) => {
     await signOut(auth);
     localStorage.removeItem('currentUser');
     sessionStorage.removeItem('currentUser')
+    sessionStorage.removeItem('currentBooking')
     navigate('/')
   } catch (error) {
     console.error("Logout failed:", error);
+  }
+};
+export const getUserDetails = async () => {
+  try {
+    const usersRef = collection(db, "UsersDetails");
+    const q = query(usersRef, where("id", "==", auth.currentUser.uid));
+    const querySnapshot = await getDocs(q);
+    const filteredData = querySnapshot.docs.map((doc)=>({
+      ...doc.data(),
+      id: doc.id,
+  }))
+    return filteredData;
+  } catch (error) {
+    console.error(error);
   }
 };

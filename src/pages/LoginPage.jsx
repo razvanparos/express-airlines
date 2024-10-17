@@ -1,6 +1,6 @@
 import { Link,useNavigate } from "react-router-dom";
 import Loader from '../components/Loader';
-import {loginUser} from '../services/loginService'
+import {loginUser, getUserDetails} from '../services/loginService'
 import { useState } from "react";
 import { auth } from "../firebase-config";
 
@@ -17,7 +17,9 @@ function LoginPage(props) {
     setLoading(true)
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
-      props.getUserDataFromLogin(auth.currentUser)
+      let userDetails = await getUserDetails();
+      console.log(userDetails)
+      props.getUserDataFromLogin(auth.currentUser,userDetails)
       if(sessionStorage.getItem('currentBooking')){
         navigate('/flight-details')
       }else{

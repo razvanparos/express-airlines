@@ -19,7 +19,7 @@ function RegisterPage() {
       setLoading(true);
       try{
         await registerUser(registerName,registerPhone, registerEmail, registerPassword);
-        navigate('/')
+        navigate('/login')
       }catch(error){
         setRegisterError(error)
       }

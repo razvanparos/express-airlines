@@ -83,7 +83,6 @@ function Home(props) {
           ...doc.data(),
           id: doc.id,
         }))
-        console.log(departureData,returnData,departureAirport,destinationAirport)
         if(departureData.length>0&&returnData.length>0){
           props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')
@@ -121,13 +120,13 @@ function Home(props) {
     return (
       <main className="flex flex-col items-center min-h-[565px] ">
         <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px]">
-          <input placeholder="Choose departure" type="text" className="rounded-t-xl py-3 px-2" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
+          <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
           <div className={`${showDepartureAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {departuresList.length>0 ? departuresList?.map((item,index)=>{
               return <p className="mb-2" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
-          <input placeholder="Choose destination" type="text" className="py-3 px-2" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
+          <input placeholder="Choose destination airport" type="text" className="py-3 px-2" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
           <div className={`${showDestinationAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
               return <p className="mb-2" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>

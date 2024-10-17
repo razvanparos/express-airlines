@@ -11,7 +11,8 @@ export const registerUser = async (registerName,registerPhone, registerEmail, re
       await setDoc(doc(db, "UsersDetails", `${auth.currentUser?.uid}`), {
         id: auth.currentUser?.uid,
         phone: registerPhone,
-        bookedFlights:[]
+        bookedFlights:[],
+        paymentMethods:[]
     });
     } catch (error) {
       throw errorMessages[error.code];

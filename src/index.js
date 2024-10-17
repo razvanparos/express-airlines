@@ -14,10 +14,12 @@ import { auth } from "./firebase-config";
 import ExploreResults from "./pages/ExploreResults";
 import FlightDetails from "./pages/FlightDetails";
 import FlightSummary from "./pages/FlightSummary";
+import { getUserDetails } from "./services/loginService";
 
 
 export default function App() {
   const [userData, setUserData]=useState('');
+  const [userDetails, setUserDetails]=useState('');
   const [departureFlights, setDepartureFlights]=useState('');
   const [returnFlights, setReturnFlights]=useState('');
   const [adultsNumber, setAdultsNumber]=useState(1);
@@ -26,18 +28,18 @@ export default function App() {
   const [departureDate, setDepartureDate]=useState('');
   const [returnDate, setReturnDate]=useState('');
  
-  const getUserDataFromLogin=(data)=>{
-    console.log(data)
+  const getUserDataFromLogin=(data,details)=>{
     setUserData(data)
+    setUserDetails(details)
   }
 
   const fetchUserData=async()=>{
     auth.onAuthStateChanged(async(user)=>{
     setUserData(user)
+    setUserDetails(await getUserDetails())
     })
   }
   const fetchFlights=(dep,ret,nr,depAir,destAir,start,end)=>{
-    console.log(start,end)
      setDepartureFlights(dep)
      setReturnFlights(ret)
      setAdultsNumber(nr)
@@ -61,7 +63,7 @@ export default function App() {
             <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
-            <Route path="user-dashboard" element={<UserDashboard userData={userData}/>} />
+            <Route path="user-dashboard" element={<UserDashboard userData={userData} userDetails={userDetails[0]}/>} />
             <Route path="flight-details" element={<FlightDetails/>} />
             <Route path="flight-summary" element={<FlightSummary/>} />
             <Route path="*" element={<NoPage />} />

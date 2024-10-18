@@ -5,8 +5,9 @@ import Loader from "../components/Loader";
 import {savePaymentInfo} from '../services/savePaymentInfo'
 import {updateFlightSeats} from '../services/updateFlightSeats'
 import { FaCheck } from "react-icons/fa";
+import { getSessionUserDetails } from "../services/loginService";
 
-function FlightSummary() {
+function FlightSummary(props) {
     const navigate = useNavigate();
     const [finalBooking,setFinalBooking]=useState('');
     const [cardNumber,setCardNumber]=useState('');
@@ -17,14 +18,21 @@ function FlightSummary() {
     const [savePayment,setSavePayment]=useState(false);
     const [loading,setLoading]=useState(false);
     const [thankYou,setThankYou]=useState(false);
+    const [savedPaymentMethods, setSavedPaymentMethods]=useState('');
 
     useEffect(()=>{
         if(!sessionStorage.getItem('currentBooking')||!sessionStorage.getItem('currentUser')){
             navigate('/')
         }else{
-          setFinalBooking(JSON.parse(sessionStorage.getItem('currentBooking')))
+            setFinalBooking(JSON.parse(sessionStorage.getItem('currentBooking')))
+            getUserPaymentMethods();
         }
     },[])
+
+    const getUserPaymentMethods=async()=>{
+        let sessionDetails = await getSessionUserDetails();
+        setSavedPaymentMethods(sessionDetails[0]?.paymentMethods);
+    }
 
     const handlePayment=async()=>{
         setLoading(true)
@@ -53,6 +61,7 @@ function FlightSummary() {
             await bookFlight(booking);
             await updateFlightSeats(booking);
             sessionStorage.removeItem('currentBooking')
+            props.fetchUserData();
             setThankYou(true);
             setTimeout(()=>{
                 navigate('/')
@@ -61,6 +70,13 @@ function FlightSummary() {
             setPaymentError('Please enter all payment details')
         }
         setLoading(false)
+    }
+
+    const useSavedPayments=()=>{
+        setCardNumber(savedPaymentMethods[0].cardNumber);
+        setCardHolderName(savedPaymentMethods[0].cardHolderName);
+        setExpiryDate(savedPaymentMethods[0].expiryDate);
+        setCvv(savedPaymentMethods[0].cvv);
     }
 
     return (
@@ -94,6 +110,7 @@ function FlightSummary() {
 
             <div className="bg-gray-200 flex flex-col gap-y-1 p-2">
                 <p className="font-bold text-lg">Confirm payment</p>
+                {savedPaymentMethods.length>0?<button onClick={useSavedPayments} className="text-start bg-primaryBlue w-fit text-white text-sm rounded-lg">Use saved payment method</button>:''}
                 <p>Card number</p>
                 <input value={cardNumber}  onChange={(e) => {
                     let value = e.target.value.replace(/\s+/g, '');
@@ -121,13 +138,12 @@ function FlightSummary() {
                 <p className="text-red-500">{paymentError}</p>
                 <button onClick={()=>{handlePayment()}} className="bg-primaryBlue rounded-lg text-white my-2 py-2">{loading?<Loader/>:'Pay & Book'}</button>
             </div>
-          
 
           <div className={`flex flex-col gap-y-4 pt-20 items-center ${thankYou?'opacity-100 backdrop-blur-xl pointer-events-auto':'opacity-0 pointer-events-none'} z-2 absolute overflow-hidden duration-500 h-[100vh] w-full`}>
                 <p className="font-bold text-2xl">Thank you!</p>
                 <FaCheck className="text-white bg-primaryBlue p-4 rounded-full w-[60px] h-[60px]"/>
                 <p className="text-lg font-semibold">Flight successfully booked</p>
-                <button className="bg-darkBlue text-white p-2 rounded-lg">View booked flights</button>
+                <button onClick={()=>{navigate('/user-dashboard')}} className="bg-darkBlue text-white p-2 rounded-lg">View booked flights</button>
                 <button onClick={()=>{navigate('/')}} className="bg-darkBlue text-white p-2 rounded-lg">Home</button>
           </div>
         </div>

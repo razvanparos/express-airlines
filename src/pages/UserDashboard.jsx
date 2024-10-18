@@ -5,15 +5,22 @@ import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import {removePaymentMethod} from '../services/removePaymentMethod'
 
 function UserDashboard(props) {
     const navigate = useNavigate();
     const [expandBookings, setExpandBookings] = useState(false);
+    const [expandPayment, setExpandPayment] = useState(false);
     useEffect(()=>{
       if(!sessionStorage.getItem('currentUser')){
           navigate('/')
       }
   },[])
+
+  const handleRemoveCard=async(id)=>{
+    await removePaymentMethod(id);
+    props.fetchUserData();
+  }
 
   return (
     <main className="bg-white flex flex-col gap-y-1 items-center pb-4">
@@ -54,9 +61,29 @@ function UserDashboard(props) {
             })}
           </div>
         </article>
+
         <article className="bg-gray-200 p-3 w-full">
-          <p className="font-semibold">{`Payment methods`}</p>
+          <div onClick={()=>{setExpandPayment(!expandPayment)}} className="flex justify-between">
+            <p className="font-semibold ">{`Payment methods`}</p>
+            <MdKeyboardArrowDown className={`font-bold text-3xl ${expandPayment?'rotate-180':''}`}/>
+          </div>
+          <div className={`${expandPayment?'h-fit':'h-0 overflow-hidden pointer-events-none'} flex flex-col gap-y-2`}>
+            {props.userDetails?.paymentMethods.map((b,i)=>{
+              return <section key={i} className="border-2 border-primaryBlue flex items-center justify-between p-2">
+                <div className="flex flex-col">
+                  <p className="font-bold">{b.cardHolderName}</p>
+                  <p>**** **** **** {b.cardNumber.substr(b.cardNumber.length - 4)}</p>
+                  <p>{b.expiryDate}</p>
+                </div>
+                <div className="text-end flex flex-col gap-y-4">
+                  <p>**{b.cvv[2]}</p>
+                  <button onClick={()=>{handleRemoveCard(b.id)}} className="text-white bg-red-500 rounded-lg text-sm">Remove</button>
+                </div>
+              </section>
+            })}
+          </div>
         </article>
+
         <button className="bg-darkBlue text-white w-full p-3" onClick={()=>{logoutUser(navigate)}}>Sign out</button>
     </main>
   );

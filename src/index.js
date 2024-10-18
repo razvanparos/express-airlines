@@ -63,9 +63,9 @@ export default function App() {
             <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
-            <Route path="user-dashboard" element={<UserDashboard userData={userData} userDetails={userDetails[0]}/>} />
+            <Route path="user-dashboard" element={<UserDashboard fetchUserData={fetchUserData} userData={userData} userDetails={userDetails[0]}/>} />
             <Route path="flight-details" element={<FlightDetails/>} />
-            <Route path="flight-summary" element={<FlightSummary/>} />
+            <Route path="flight-summary" element={<FlightSummary fetchUserData={fetchUserData}/>} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

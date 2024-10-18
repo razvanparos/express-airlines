@@ -46,3 +46,17 @@ export const getUserDetails = async () => {
     console.error(error);
   }
 };
+export const getSessionUserDetails = async () => {
+  try {
+    const usersRef = collection(db, "UsersDetails");
+    const q = query(usersRef, where("id", "==", sessionStorage.getItem('currentUser')));
+    const querySnapshot = await getDocs(q);
+    const filteredData = querySnapshot.docs.map((doc)=>({
+      ...doc.data(),
+      id: doc.id,
+  }))
+    return filteredData;
+  } catch (error) {
+    console.error(error);
+  }
+};

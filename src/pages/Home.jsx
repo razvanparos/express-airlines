@@ -120,24 +120,24 @@ function Home(props) {
     return (
       <main className="flex flex-col items-center min-h-[565px] ">
         <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px]">
-          <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
+          <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2 text-xl" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
           <div className={`${showDepartureAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {departuresList.length>0 ? departuresList?.map((item,index)=>{
               return <p className="mb-2" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
-          <input placeholder="Choose destination airport" type="text" className="py-3 px-2" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
+          <input placeholder="Choose destination airport" type="text" className="py-3 px-2 text-xl" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
           <div className={`${showDestinationAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
               return <p className="mb-2" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
-          <DatePicker className="py-3 px-2 mb-[1px] w-full" minDate={new Date()} placeholderText="Departure date" selected={startDate} onChange={(date) => setStartDate(date)} />
-          <DatePicker className="py-3 px-2 mb-[1px] w-full bg-white" minDate={startDate} disabled={startDate?false:true} placeholderText="Return date" selected={endDate} onChange={(date) => setEndDate(date)} />
+          <DatePicker className="py-3 px-2 mb-[1px] w-full text-xl" minDate={new Date()} placeholderText="Departure date" selected={startDate} onChange={(date) => setStartDate(date)} />
+          <DatePicker className="py-3 px-2 mb-[1px] w-full text-xl bg-white" minDate={startDate} disabled={startDate?false:true} placeholderText="Return date" selected={endDate} onChange={(date) => setEndDate(date)} />
           <div className={`rounded-b-xl py-3 px-2 bg-white flex items-center gap-x-3`}>
-            <p>{`${adultsNumber} ${adultsNumber>1?'Adults':'Adult'}`}</p>
-            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">-</button>
-            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[24px] w-[24px] flex items-center justify-center font-bold">+</button>
+            <p className='text-xl'>{`${adultsNumber} ${adultsNumber>1?'Adults':'Adult'}`}</p>
+            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber-1)}} className="text-white bg-primaryBlue rounded-md h-[28px] w-[28px] flex items-center justify-center font-bold">-</button>
+            <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[28px] w-[28px] flex items-center justify-center font-bold">+</button>
           </div>
           <p className="text-red-500 mt-2">{searchError}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>

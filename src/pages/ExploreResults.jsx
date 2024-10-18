@@ -44,7 +44,7 @@ function ExploreResults(props) {
     }
 
     return (
-        <div className="bg-white">
+        <article className="bg-white">
             <div className="bg-darkBlue text-white flex py-2 justify-center flex-col items-center mb-4">
                 <p>{`${props.departureAirport?.city} - ${props.destinationAirport?.city}`}</p>
                 <p>{`${props.departureFlights[0]?.departure} - ${props.departureFlights[0]?.destination}`}</p>
@@ -80,7 +80,7 @@ function ExploreResults(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </article>
     );
 }
 

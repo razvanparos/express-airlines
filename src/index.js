@@ -1,20 +1,22 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import './index.css';
 import './output.css';
 import reportWebVitals from './reportWebVitals';
-import LoginPage from "./pages/LoginPage";
-import Home from "./pages/Home";
-import RegisterPage from "./pages/RegisterPage";
-import Layout from "./pages/Layout";
-import NoPage from "./pages/NoPage";
-import UserDashboard from "./pages/UserDashboard";
 import { auth } from "./firebase-config";
-import ExploreResults from "./pages/ExploreResults";
-import FlightDetails from "./pages/FlightDetails";
-import FlightSummary from "./pages/FlightSummary";
 import { getUserDetails } from "./services/loginService";
+import FallbackComponent from "./components/fallbackComponent";
+
+const LoginPage = React.lazy(() => import("./pages/LoginPage"));
+const Home = React.lazy(() => import("./pages/Home"));
+const RegisterPage = React.lazy(() => import("./pages/RegisterPage"));
+const Layout = React.lazy(() => import("./pages/Layout"));
+const NoPage = React.lazy(() => import("./pages/NoPage"));
+const UserDashboard = React.lazy(() => import("./pages/UserDashboard"));
+const ExploreResults = React.lazy(() => import("./pages/ExploreResults"));
+const FlightDetails = React.lazy(() => import("./pages/FlightDetails"));
+const FlightSummary = React.lazy(() => import("./pages/FlightSummary"));
 
 
 export default function App() {
@@ -33,6 +35,11 @@ export default function App() {
     setUserDetails(details)
   }
 
+  const removeUserData=()=>{
+    setUserData('')
+    setUserDetails('')
+  }
+
   const fetchUserData=async()=>{
     auth.onAuthStateChanged(async(user)=>{
     setUserData(user)
@@ -48,27 +55,34 @@ export default function App() {
      setDepartureDate(start)
      setReturnDate(end)
   }
-
+ 
   useEffect(()=>{
-    if(localStorage.getItem('currentUser')||sessionStorage.getItem('currentUser')){
+    if(sessionStorage.getItem('currentUser')){
       fetchUserData();
     }
+    if(localStorage.getItem('currentUser')){
+      sessionStorage.setItem('currentUser', localStorage.getItem('currentUser'))
+      fetchUserData();
+    }
+
   },[])
 
   return (
-       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout userData={userData}/>}>
-            <Route index element={<Home fetchFlights={fetchFlights}/>} />
-            <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
-            <Route path="user-dashboard" element={<UserDashboard fetchUserData={fetchUserData} userData={userData} userDetails={userDetails[0]}/>} />
-            <Route path="flight-details" element={<FlightDetails/>} />
-            <Route path="flight-summary" element={<FlightSummary fetchUserData={fetchUserData}/>} />
-            <Route path="*" element={<NoPage />} />
-          </Route>
-        </Routes>
+      <BrowserRouter>
+        <Suspense fallback={<FallbackComponent/>}>
+          <Routes>
+            <Route path="/" element={<Layout userData={userData}/>}>
+              <Route index element={<Home fetchFlights={fetchFlights}/>} />
+              <Route path="login" element={<LoginPage getUserDataFromLogin={getUserDataFromLogin}/>} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
+              <Route path="user-dashboard" element={<UserDashboard removeUserData={removeUserData} fetchUserData={fetchUserData} userData={userData} userDetails={userDetails[0]}/>} />
+              <Route path="flight-details" element={<FlightDetails/>} />
+              <Route path="flight-summary" element={<FlightSummary fetchUserData={fetchUserData}/>} />
+              <Route path="*" element={<NoPage />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
   );
 }

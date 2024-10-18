@@ -22,14 +22,19 @@ function UserDashboard(props) {
     props.fetchUserData();
   }
 
+  const handleLogOut=async()=>{
+    await logoutUser(navigate);
+    props.removeUserData();
+  }
+
   return (
-    <main className="bg-white flex flex-col gap-y-1 items-center pb-4">
+    <article className="bg-white flex flex-col gap-y-1 items-center pb-4">
         <h3 className="bg-primaryBlue text-white w-full text-center text-lg py-4 font-semibold">User dashboard</h3>
         <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaUser />{props.userData?.displayName}</p>
         <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><MdEmail />{props.userData?.email}</p>
         <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaPhone />{props.userDetails?.phone}</p>
         
-        <article  className={`bg-gray-200 p-3 w-full duration-200 ${expandBookings?'h-fit':'h-[50px] overflow-hidden'}`}>
+        <section  className={`bg-gray-200 p-3 w-full duration-200 ${expandBookings?'h-fit':'h-[50px] overflow-hidden'}`}>
           <div onClick={()=>{setExpandBookings(!expandBookings)}} className="flex justify-between">
             <p className="font-semibold mb-4">{`My bookings`}</p>
             <MdKeyboardArrowDown className={`font-bold text-3xl ${expandBookings?'rotate-180':''}`}/>
@@ -60,9 +65,9 @@ function UserDashboard(props) {
               </section>
             })}
           </div>
-        </article>
+        </section>
 
-        <article className="bg-gray-200 p-3 w-full">
+        <section className="bg-gray-200 p-3 w-full">
           <div onClick={()=>{setExpandPayment(!expandPayment)}} className="flex justify-between">
             <p className="font-semibold ">{`Payment methods`}</p>
             <MdKeyboardArrowDown className={`font-bold text-3xl ${expandPayment?'rotate-180':''}`}/>
@@ -82,10 +87,10 @@ function UserDashboard(props) {
               </section>
             })}
           </div>
-        </article>
+        </section>
 
-        <button className="bg-darkBlue text-white w-full p-3" onClick={()=>{logoutUser(navigate)}}>Sign out</button>
-    </main>
+        <button className="bg-darkBlue text-white w-full p-3" onClick={handleLogOut}>Sign out</button>
+    </article>
   );
 }
 

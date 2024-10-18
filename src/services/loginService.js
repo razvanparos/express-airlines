@@ -24,28 +24,32 @@ export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
 export const logoutUser = async (navigate) => {
   try {
     await signOut(auth);
+    navigate('/')
     localStorage.removeItem('currentUser');
     sessionStorage.removeItem('currentUser')
     sessionStorage.removeItem('currentBooking')
-    navigate('/')
   } catch (error) {
     console.error("Logout failed:", error);
   }
 };
+
 export const getUserDetails = async () => {
-  try {
-    const usersRef = collection(db, "UsersDetails");
-    const q = query(usersRef, where("id", "==", auth.currentUser.uid));
-    const querySnapshot = await getDocs(q);
-    const filteredData = querySnapshot.docs.map((doc)=>({
-      ...doc.data(),
-      id: doc.id,
-  }))
-    return filteredData;
-  } catch (error) {
-    console.error(error);
+  if(auth.currentUser.uid){
+     try {
+      const usersRef = collection(db, "UsersDetails");
+      const q = query(usersRef, where("id", "==", auth.currentUser.uid));
+      const querySnapshot = await getDocs(q);
+      const filteredData = querySnapshot.docs.map((doc)=>({
+        ...doc.data(),
+        id: doc.id,
+    }))
+      return filteredData;
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
+
 export const getSessionUserDetails = async () => {
   try {
     const usersRef = collection(db, "UsersDetails");

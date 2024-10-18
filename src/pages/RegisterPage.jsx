@@ -28,7 +28,7 @@ function RegisterPage() {
     };
     
     return (
-      <div className="flex flex-col py-4 px-2 items-center min-h-[565px] bg-white">
+      <article className="flex flex-col py-4 px-2 items-center min-h-[565px] bg-white">
         <p className="font-bold">Register page</p>
         <form action="" onSubmit={handleRegister} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
           <label htmlFor="name">Name</label>
@@ -43,7 +43,7 @@ function RegisterPage() {
           <button type="submit" className="bg-primaryBlue rounded-xl text-white py-3">{loading?<Loader/>:'Register'}</button>
           <Link to='/login' className="p-2 flex justify-center">Already have an account? Login now!</Link>
         </form>
-      </div>
+      </article>
     );
   }
   

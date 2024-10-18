@@ -62,6 +62,7 @@ function FlightSummary(props) {
             await updateFlightSeats(booking);
             sessionStorage.removeItem('currentBooking')
             props.fetchUserData();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             setThankYou(true);
             setTimeout(()=>{
                 navigate('/')
@@ -80,7 +81,7 @@ function FlightSummary(props) {
     }
 
     return (
-        <div className="flex flex-col">
+        <article className="flex flex-col">
             <div className="flex justify-between items-center px-2 py-4 bg-primaryBlue">
                 <p className="text-lg font-bold text-white">{`Trip for ${finalBooking.adultsNumber} passengers`}</p>
                 <p className="text-white text-xl font-bold">${finalBooking.total}</p>
@@ -146,7 +147,7 @@ function FlightSummary(props) {
                 <button onClick={()=>{navigate('/user-dashboard')}} className="bg-darkBlue text-white p-2 rounded-lg">View booked flights</button>
                 <button onClick={()=>{navigate('/')}} className="bg-darkBlue text-white p-2 rounded-lg">Home</button>
           </div>
-        </div>
+        </article>
     );
 }
 

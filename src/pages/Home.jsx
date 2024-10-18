@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../components/Loader";
 import exploreDestinations from '../assets/explore-destinations.webp'
+import { createFlights } from "../services/createFlights";
 
 
 function Home(props) {
@@ -87,7 +88,8 @@ function Home(props) {
           props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')
         }else{
-          setSearchError('No flights found')
+          createFlights(departure,destination,formatDateToISO(startDate),formatDateToISO(endDate));
+          getFLights(e);
         }
       }else{
         setSearchError('Fields cannot be empty')
@@ -118,7 +120,7 @@ function Home(props) {
     },[adultsNumber])
 
     return (
-      <main className="flex flex-col items-center min-h-[565px] ">
+      <div className="flex flex-col items-center min-h-[565px] ">
         <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px]">
           <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2 text-xl" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
           <div className={`${showDepartureAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
@@ -151,7 +153,7 @@ function Home(props) {
             <img src={exploreDestinations} alt="" className="rounded-lg"/>
         </article>
       
-      </main>
+      </div>
     );
   }
   

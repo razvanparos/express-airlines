@@ -54,7 +54,7 @@ function FlightDetails() {
     }
 
   return (
-    <div className="flex flex-col gap-y-2 bg-white">
+    <article className="flex flex-col gap-y-2 bg-white">
       <div className="bg-darkBlue text-white flex py-2 justify-center flex-col items-center">
         <p>{`${currentBooking.departureFlight?.departure} - ${currentBooking.departureFlight?.destination}`}</p>
         <p>{`${currentBooking.returnFlight?.departure} - ${currentBooking.returnFlight?.destination}`}</p>
@@ -83,7 +83,7 @@ function FlightDetails() {
         <p>{continueError}</p>
         <button onClick={handleContinue} className="bg-primaryBlue rounded-lg text-white p-2">Continue</button>
       </div>
-    </div>
+    </article>
   );
 }
 

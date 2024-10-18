@@ -6,7 +6,9 @@ function Layout(props) {
     return (
       <div className="">
         <Header userData={props.userData}/>
-        <Outlet/>
+        <main>
+          <Outlet/>
+        </main>
         <Footer/>
       </div>
     );

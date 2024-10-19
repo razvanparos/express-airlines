@@ -88,7 +88,7 @@ function Home(props) {
           props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')
         }else{
-          createFlights(departure,destination,formatDateToISO(startDate),formatDateToISO(endDate));
+          await createFlights(departure,destination,formatDateToISO(startDate),formatDateToISO(endDate));
           getFLights(e);
         }
       }else{

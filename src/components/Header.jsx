@@ -4,12 +4,12 @@ import { FaUserCircle } from "react-icons/fa";
 
 function Header(props) {
   return (
-    <header className="bg-darkBlue h-[60px] flex items-center px-4 justify-between text-white">
+    <header className="bg-darkBlue h-[60px] flex items-center px-4 justify-between text-white md:h-[100px]">
       <div className="flex items-center gap-x-2">
-        <Link to="/"><h2 className="text-lg font-semibold">Airline Express</h2></Link>
-        <BiSolidPlaneAlt className="text-xl" />
+        <Link to="/"><h2 className="text-lg font-semibold md:text-2xl">Airline Express</h2></Link>
+        <BiSolidPlaneAlt className="text-xl md:text-3xl" />
       </div>
-      {props.userData?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl"/></Link>:<Link to="/login" className=" bg-primaryBlue rounded-xl p-2 ">Login</Link>}
+      {props.userData?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl md:text-3xl"/></Link>:<Link to="/login" className=" bg-primaryBlue rounded-xl p-2 md:text-xl">Login</Link>}
     </header>
   );
 }

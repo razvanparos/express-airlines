@@ -1,11 +1,11 @@
 import { db } from "../firebase-config";
 import { doc, setDoc } from "firebase/firestore"; 
 
-export const createFlights = async (departure,destination,startDate,endDate) => {
+export const createFlights = async (departure,destination,startDate,endDate,dist) => {
     let newId1 = "id" + Math.random().toString(16).slice(2)
     let newId2 = "id" + Math.random().toString(16).slice(2)
-    let price = Math.floor(Math.random() * (80 - 50) + 50);
-    let price2 = Math.floor(Math.random() * (80 - 50) + 50);
+    let price =  Math.floor(dist*0.06) + 15;
+    let price2 = Math.floor(dist*0.06) + 15;
     let letters = ['A','B','C','D','E','F']
     let emptySeats = [];
     for(let i=1;i<=8;i++){

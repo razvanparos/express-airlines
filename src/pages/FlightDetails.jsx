@@ -66,9 +66,9 @@ function FlightDetails() {
         <div className="p-3 inline-grid justify-items-center grid-cols-7 gap-y-4 w-fit">
           {currentBooking.departureFlight?.seats.map((seat,i)=>{
             if(seat.seatNumber[1]==='C'){
-              return [<div onClick={()=>{handleDepartureSeatClick(seat)}} key={i} className={`border-2 ${selectedDepartureSeats.includes(seat.seatNumber)?'border-primaryBlue':''} ${seat.occupied?'border-gray-400':'border-green-400'} p-3 flex justify-center items-center `}>{seat.seatNumber}</div>,<div></div>]
+              return [<div onClick={()=>{handleDepartureSeatClick(seat)}} key={i} className={`border-2 cursor-pointer hover:bg-gray-200 ${selectedDepartureSeats.includes(seat.seatNumber)?'border-primaryBlue':''} ${seat.occupied?'border-gray-400':'border-green-400'} p-3 flex justify-center items-center `}>{seat.seatNumber}</div>,<div></div>]
             }else{
-              return <div onClick={()=>{handleDepartureSeatClick(seat)}} key={i} className={`border-2 ${selectedDepartureSeats.includes(seat.seatNumber)?'border-primaryBlue':''} ${seat.occupied?'border-gray-400':'border-green-400'} p-3 flex justify-center items-center `}>{seat.seatNumber}</div>
+              return <div onClick={()=>{handleDepartureSeatClick(seat)}} key={i} className={`cursor-pointer hover:bg-gray-200 border-2 ${selectedDepartureSeats.includes(seat.seatNumber)?'border-primaryBlue':''} ${seat.occupied?'border-gray-400':'border-green-400'} p-3 flex justify-center items-center `}>{seat.seatNumber}</div>
             }
             
           })}
@@ -81,10 +81,10 @@ function FlightDetails() {
         <div className="p-4 inline-grid justify-items-center grid-cols-7 gap-y-4 w-fit max-h-[290px] overflow-scroll">
           {currentBooking.returnFlight?.seats.map((seat,i)=>{
             if(seat.seatNumber[1]==='C'){
-              return [<div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-3 flex justify-center items-center `}>{seat.seatNumber}</div>,<div></div>]
+              return [<div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 cursor-pointer hover:bg-gray-200 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-3 flex justify-center items-center `}>{seat.seatNumber}</div>,<div></div>]
 
             }else{
-              return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-3 flex justify-center items-center `}>{seat.seatNumber}</div>
+              return <div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 cursor-pointer hover:bg-gray-200 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-3 flex justify-center items-center `}>{seat.seatNumber}</div>
             }
           })}
         </div>

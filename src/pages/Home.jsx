@@ -7,7 +7,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../components/Loader";
 import exploreDestinations from '../assets/explore-destinations.webp'
+import beachImg from '../assets/beach-img.jpg'
 import { createFlights } from "../services/createFlights";
+import { distanceCalculator } from "../services/distanceCalculator";
 
 
 function Home(props) {
@@ -88,7 +90,8 @@ function Home(props) {
           props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')
         }else{
-          await createFlights(departure,destination,formatDateToISO(startDate),formatDateToISO(endDate));
+          let dist = distanceCalculator(departureAirport._geoloc.lat,departureAirport._geoloc.lng,destinationAirport._geoloc.lat,destinationAirport._geoloc.lng);
+          await createFlights(departure,destination,formatDateToISO(startDate),formatDateToISO(endDate),dist);
           getFLights(e);
         }
       }else{
@@ -120,8 +123,8 @@ function Home(props) {
     },[adultsNumber])
 
     return (
-      <div className="flex flex-col items-center min-h-[565px] ">
-        <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px]">
+      <div className="flex flex-col items-center">
+        <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:w-[70%]">
           <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2 text-xl" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
           <div className={`${showDepartureAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {departuresList.length>0 ? departuresList?.map((item,index)=>{
@@ -145,12 +148,16 @@ function Home(props) {
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
 
-        <article className="flex flex-col items-center my-2 p-4 bg-white">
+        <article className="flex flex-col items-start my-2 p-4 bg-white w-full h-fit">
           <div className="w-full font-semibold text-xl">
             <h2 className="text-gray-500">Can't decide where to go?</h2>
-            <p className="text-primaryBlue">Explore destinations all over the world!</p>
+            <p className="text-primaryBlue md:text-3xl">Explore destinations all over the world!</p>
           </div>
-            <img src={exploreDestinations} alt="" className="rounded-lg"/>
+          <div className="flex flex-col justify-between gap-[12px] h-fit md:flex-row md:max-h-[400px]">
+            <img src={beachImg} alt="" className="rounded-lg md:w-[50%]  object-cover object-bottom"/>
+            <img src={exploreDestinations} alt="" className="rounded-lg md:w-[50%] object-cover object-bottom"/>
+          </div>
+            
         </article>
       
       </div>

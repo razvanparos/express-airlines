@@ -50,23 +50,24 @@ function ExploreResults(props) {
                 <p>{`${props.departureFlights[0]?.departure} - ${props.departureFlights[0]?.destination}`}</p>
                 <p>{`${props.adultsNumber} ${props.adultsNumber===1?'Adult':'Adults'}`}</p>
             </div>
+            <div className="py-4">
             {props.departureFlights ? <div className="flex flex-col gap-y-2 items-center justify-center px-2">
-                <p className="bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Select departure flight from ${props.departureFlights[0]?.departure} to ${props.departureFlights[0]?.destination}`}</p>
+                <p className="2xl:max-w-[30%] bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Select departure flight from ${props.departureFlights[0]?.departure} to ${props.departureFlights[0]?.destination}`}</p>
                 {props.departureFlights.map((flight,i)=>{
                 return <FlightCard selectedDepartureFlight={selectedDepartureFlight} setSelectedDepartureFlight={setSelectedDepartureFlight} adultsNumber={props.adultsNumber} return={false} key={i} flight={flight} departureAirport={props.departureAirport} destinationAirport={props.destinationAirport}/>
             })}
             </div>:<p>No results</p>}
 
             {props.returnFlights ? <div className="mt-4 flex flex-col gap-y-2 items-center px-2 mb-4">
-                <p ref={returnRef} className="bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Select return flight from ${props.departureFlights[0]?.destination} to ${props.departureFlights[0]?.departure}`}</p>
+                <p ref={returnRef} className="2xl:max-w-[30%] bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Select return flight from ${props.departureFlights[0]?.destination} to ${props.departureFlights[0]?.departure}`}</p>
                 {props.returnFlights.map((flight,i)=>{
                 return <FlightCard selectedReturnFlight={selectedReturnFlight} setSelectedReturnFlight={setSelectedReturnFlight} adultsNumber={props.adultsNumber} return={true} key={i} flight={flight} departureAirport={props.departureAirport} destinationAirport={props.destinationAirport}/>
             })}
             </div>:<p>No results</p>}
 
-            <div ref={summaryRef} className={`${showTripSummary?'h-fit overflow-auto':'h-0 overflow-hidden'} duration-200 mt-4 flex gap-y-2 flex-col px-2 mb-4`}>
-                <p className="bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Your trip summary to ${props.destinationAirport.city}`}</p>
-                <div className="border-2 rounded-lg p-3 flex justify-between">
+            <div ref={summaryRef} className={`${showTripSummary?'h-fit overflow-auto':'h-0 overflow-hidden'} duration-200 flex gap-y-2 flex-col w-full items-center px-2`}>
+                <p className="2xl:max-w-[30%] bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Your trip summary to ${props.destinationAirport.city}`}</p>
+                <div className="border-2 rounded-lg p-3 flex w-full justify-between 2xl:max-w-[30%]">
                     <div>
                         <p className="font-bold">{`${selectedDepartureFlight.departure} - ${selectedReturnFlight.departure}`}</p>
                         <p>{`${props.departureDate} (${selectedDepartureFlight.takeOff} - ${selectedDepartureFlight.landing})`}</p>
@@ -79,6 +80,7 @@ function ExploreResults(props) {
                         <button onClick={bookNow} className="bg-primaryBlue px-3 py-2 rounded-lg text-white">Book now</button>
                     </div>
                 </div>
+            </div>
             </div>
         </article>
     );

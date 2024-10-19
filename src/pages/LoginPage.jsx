@@ -32,7 +32,7 @@ function LoginPage(props) {
   }
 
   return (
-    <article className="flex flex-col py-4 px-2 items-center min-h-[565px] bg-white">
+    <article className="flex flex-col py-4 px-2 items-center bg-white lg:py-[80px]">
       <p className="font-bold">Login page</p>
       <form action="" onSubmit={handleLogin} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
         <label htmlFor="email">Email</label>

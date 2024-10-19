@@ -19,7 +19,7 @@ function FlightCard(props){
   }
 
   return (
-    <section onClick={cardClick} className={`${props.selectedDepartureFlight?.id===props.flight?.id&&props.return===false?'border-primaryBlue':''} ${props.selectedReturnFlight?.id===props.flight?.id&&props.return===true?'border-primaryBlue':''} p-3 border-2 w-full rounded-lg cursor-pointer`}>
+    <section onClick={cardClick} className={`${props.selectedDepartureFlight?.id===props.flight?.id&&props.return===false?'border-primaryBlue':''} ${props.selectedReturnFlight?.id===props.flight?.id&&props.return===true?'border-primaryBlue':''} p-3 border-2 w-full rounded-lg cursor-pointer 2xl:max-w-[30%]`}>
       {props.return?<p className="font-bold">{`${props.flight.departure}(${props.destinationAirport.iata_code}) - ${props.flight.destination}(${props.departureAirport.iata_code})`}</p>:<p className="font-bold">{`${props.flight.departure}(${props.departureAirport.iata_code}) - ${props.flight.destination}(${props.destinationAirport.iata_code})`}</p>}
       <div className="flex justify-between">
         <div>

@@ -28,7 +28,7 @@ function RegisterPage() {
     };
     
     return (
-      <article className="flex flex-col py-4 px-2 items-center min-h-[565px] bg-white">
+      <article className="flex flex-col py-4 px-2 items-center bg-white">
         <p className="font-bold">Register page</p>
         <form action="" onSubmit={handleRegister} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
           <label htmlFor="name">Name</label>

@@ -28,15 +28,16 @@ function UserDashboard(props) {
   }
 
   return (
-    <article className="bg-white flex flex-col gap-y-1 items-center pb-4">
+    <article className="bg-gray-200 flex flex-col gap-y-1 pb-4 select-none">
         <h3 className="bg-primaryBlue text-white w-full text-center text-lg py-4 font-semibold">User dashboard</h3>
+        <div className="2xl:px-[10%]">
         <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaUser />{props.userData?.displayName}</p>
         <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><MdEmail />{props.userData?.email}</p>
         <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaPhone />{props.userDetails?.phone}</p>
         
         <section  className={`bg-gray-200 p-3 w-full duration-200 ${expandBookings?'h-fit':'h-[50px] overflow-hidden'}`}>
-          <div onClick={()=>{setExpandBookings(!expandBookings)}} className="flex justify-between">
-            <p className="font-semibold mb-4">{`My bookings`}</p>
+          <div onClick={()=>{setExpandBookings(!expandBookings)}} className="flex justify-between cursor-pointer">
+            <p className="font-semibold mb-4 ">{`My bookings`}</p>
             <MdKeyboardArrowDown className={`font-bold text-3xl ${expandBookings?'rotate-180':''}`}/>
           </div>
           <div className="flex flex-col gap-y-2">
@@ -68,7 +69,7 @@ function UserDashboard(props) {
         </section>
 
         <section className="bg-gray-200 p-3 w-full">
-          <div onClick={()=>{setExpandPayment(!expandPayment)}} className="flex justify-between">
+          <div onClick={()=>{setExpandPayment(!expandPayment)}} className="flex justify-between cursor-pointer">
             <p className="font-semibold ">{`Payment methods`}</p>
             <MdKeyboardArrowDown className={`font-bold text-3xl ${expandPayment?'rotate-180':''}`}/>
           </div>
@@ -89,7 +90,8 @@ function UserDashboard(props) {
           </div>
         </section>
 
-        <button className="bg-darkBlue text-white w-full p-3" onClick={handleLogOut}>Sign out</button>
+        <button className="bg-darkBlue text-white w-full p-3 2xl:rounded-lg" onClick={handleLogOut}>Sign out</button>
+        </div>
     </article>
   );
 }

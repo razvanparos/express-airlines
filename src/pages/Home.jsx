@@ -123,18 +123,18 @@ function Home(props) {
     },[adultsNumber])
 
     return (
-      <div className="flex flex-col items-center">
-        <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:w-[70%]">
+      <div className="flex flex-col items-center ">
+        <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:px-[10%]">
           <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2 text-xl" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
-          <div className={`${showDepartureAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
+          <div className={`${showDepartureAirportsList?'h-[120px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {departuresList.length>0 ? departuresList?.map((item,index)=>{
-              return <p className="mb-2" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
+              return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
           <input placeholder="Choose destination airport" type="text" className="py-3 px-2 text-xl" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
-          <div className={`${showDestinationAirportsList?'h-[100px] p-2':'h-[0px]'} duration-200 bg-white`}>
+          <div className={`${showDestinationAirportsList?'h-[120px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
-              return <p className="mb-2" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
+              return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
             }):<p>No airports found</p>}
           </div>
           <DatePicker className="py-3 px-2 mb-[1px] w-full text-xl" minDate={new Date()} placeholderText="Departure date" selected={startDate} onChange={(date) => setStartDate(date)} />
@@ -148,7 +148,7 @@ function Home(props) {
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
 
-        <article className="flex flex-col items-start my-2 p-4 bg-white w-full h-fit">
+        <article className="flex flex-col items-start my-2 p-4 bg-white w-full h-fit lg:px-[10%]">
           <div className="w-full font-semibold text-xl">
             <h2 className="text-gray-500">Can't decide where to go?</h2>
             <p className="text-primaryBlue md:text-3xl">Explore destinations all over the world!</p>

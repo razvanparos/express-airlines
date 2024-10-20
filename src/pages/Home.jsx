@@ -1,5 +1,3 @@
-import { collection, query, where, getDocs,orderBy  } from "firebase/firestore";
-import { db } from "../firebase-config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import airports from '../utils/airports.json'
@@ -10,6 +8,7 @@ import exploreDestinations from '../assets/explore-destinations.webp'
 import beachImg from '../assets/beach-img.jpg'
 import { createFlights } from "../services/createFlights";
 import { distanceCalculator } from "../services/distanceCalculator";
+import homeService from "../services/homeService";
 
 
 function Home(props) {
@@ -73,21 +72,9 @@ function Home(props) {
       if(departure&&destination&&startDate&&endDate){
         setSearchError('')
         setLoading(true)
-        const flightsRef = collection(db, "Flights");
-        const departureFlight = query(flightsRef, orderBy("pricePerSeat","asc"), where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",formatDateToISO(startDate)),where("freeSeats",">=",adultsNumber));
-        const returnFlight = query(flightsRef,orderBy("pricePerSeat","asc"), where("destination", "==", departure), where("departure","==",destination),where("flightDate","==",formatDateToISO(endDate)),where("freeSeats",">=",adultsNumber));
-        const departureSnapshot = await getDocs(departureFlight);
-        const returnSnapshot = await getDocs(returnFlight);
-        const departureData = departureSnapshot.docs.map((doc)=>({
-          ...doc.data(),
-          id: doc.id,
-        }))
-          const returnData = returnSnapshot.docs.map((doc)=>({
-          ...doc.data(),
-          id: doc.id,
-        }))
-        if(departureData.length>0&&returnData.length>0){
-          props.fetchFlights(departureData,returnData,adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
+        let queryResponse = await homeService.getFlights(departure,destination,adultsNumber,formatDateToISO(startDate),formatDateToISO(endDate));
+        if(queryResponse[0].length>0&&queryResponse[1].length>0){
+          props.fetchFlights(queryResponse[0],queryResponse[1],adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')
         }else{
           let dist = distanceCalculator(departureAirport._geoloc.lat,departureAirport._geoloc.lng,destinationAirport._geoloc.lat,destinationAirport._geoloc.lng);
@@ -97,8 +84,6 @@ function Home(props) {
       }else{
         setSearchError('Fields cannot be empty')
       }
-      
-      
       setLoading(false)
     }
 
@@ -145,10 +130,10 @@ function Home(props) {
             <button type="button" onClick={()=>{setAdultsNumber(adultsNumber+1)}} className="text-white bg-primaryBlue rounded-md h-[28px] w-[28px] flex items-center justify-center font-bold">+</button>
           </div>
           <p className="text-red-500 mt-2">{searchError}</p>
-          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
+          <button type="submit" className=" bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg">{loading?<Loader/>:'Search'}</button>
         </form>
 
-        <article className="flex flex-col items-start my-2 p-4 bg-white w-full h-fit lg:px-[10%]">
+        <article className="flex flex-col items-start my-2 p-4 2xl:py-16 bg-white w-full h-fit lg:px-[10%]">
           <div className="w-full font-semibold text-xl">
             <h2 className="text-gray-500">Can't decide where to go?</h2>
             <p className="text-primaryBlue md:text-3xl">Explore destinations all over the world!</p>

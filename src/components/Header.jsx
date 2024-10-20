@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BiSolidPlaneAlt } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 
+
 function Header(props) {
   return (
     <header className="bg-darkBlue h-[60px] flex items-center px-4 justify-between text-white md:h-[100px] lg:px-[10%]">

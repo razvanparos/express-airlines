@@ -17,6 +17,7 @@ const UserDashboard = React.lazy(() => import("./pages/UserDashboard"));
 const ExploreResults = React.lazy(() => import("./pages/ExploreResults"));
 const FlightDetails = React.lazy(() => import("./pages/FlightDetails"));
 const FlightSummary = React.lazy(() => import("./pages/FlightSummary"));
+const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 
 
 export default function App() {
@@ -29,6 +30,12 @@ export default function App() {
   const [destinationAirport, setDestinationAirport]=useState('');
   const [departureDate, setDepartureDate]=useState('');
   const [returnDate, setReturnDate]=useState('');
+
+  useEffect(()=>{
+    if(userDetails[0]?.isAdmin){
+      window.location.href('/admin-dashboard')
+    }
+  },[])
  
   const getUserDataFromLogin=(data,details)=>{
     setUserData(data)
@@ -78,6 +85,7 @@ export default function App() {
               <Route path="explore-results" element={<ExploreResults returnDate={returnDate} departureDate={departureDate} destinationAirport={destinationAirport} departureAirport={departureAirport} adultsNumber={adultsNumber} departureFlights={departureFlights} returnFlights={returnFlights}/>} />
               <Route path="user-dashboard" element={<UserDashboard removeUserData={removeUserData} fetchUserData={fetchUserData} userData={userData} userDetails={userDetails[0]}/>} />
               <Route path="flight-details" element={<FlightDetails/>} />
+              <Route path="admin-dashboard" element={<AdminDashboard/>} />
               <Route path="flight-summary" element={<FlightSummary fetchUserData={fetchUserData}/>} />
               <Route path="*" element={<NoPage />} />
             </Route>

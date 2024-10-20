@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {logoutUser} from '../services/loginService'
+import {getUserDetails, logoutUser} from '../services/loginService'
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -7,21 +7,23 @@ import { FaPhone } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {removePaymentMethod} from '../services/removePaymentMethod'
 
+
 function UserDashboard(props) {
     const navigate = useNavigate();
     const [expandBookings, setExpandBookings] = useState(false);
-    const [expandPayment, setExpandPayment] = useState(false);
+    const [expandPayment, setExpandPayment] = useState(false); 
+
     useEffect(()=>{
       if(!sessionStorage.getItem('currentUser')){
           navigate('/')
       }
   },[])
-
+  
   const handleRemoveCard=async(id)=>{
     await removePaymentMethod(id);
     props.fetchUserData();
   }
-
+  
   const handleLogOut=async()=>{
     await logoutUser(navigate);
     props.removeUserData();
@@ -41,7 +43,7 @@ function UserDashboard(props) {
               <MdKeyboardArrowDown className={`font-bold text-3xl ${expandBookings?'rotate-180':''}`}/>
             </div>
             <div className="flex flex-col gap-y-2">
-              {props.userDetails?.bookedFlights.map((b,i)=>{
+              {props.userDetails?.bookedFlights?.map((b,i)=>{
                 return <section key={i} className="border-2 border-primaryBlue flex justify-between p-2">
                   <div className="flex flex-col">
                     <p className="font-bold">Departure</p>
@@ -74,7 +76,7 @@ function UserDashboard(props) {
               <MdKeyboardArrowDown className={`font-bold text-3xl ${expandPayment?'rotate-180':''}`}/>
             </div>
             <div className={`${expandPayment?'h-fit':'h-0 overflow-hidden pointer-events-none'} flex flex-col gap-y-2`}>
-              {props.userDetails?.paymentMethods.map((b,i)=>{
+              {props.userDetails?.paymentMethods?.map((b,i)=>{
                 return <section key={i} className="border-2 border-primaryBlue flex items-center justify-between p-2">
                   <div className="flex flex-col">
                     <p className="font-bold">{b.cardHolderName}</p>

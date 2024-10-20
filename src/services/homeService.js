@@ -3,7 +3,7 @@ import { where,orderBy  } from "firebase/firestore";
 
 
 const homeService = {
-  getFlights: async(departure,destination,adultsNumber, startDate,endDate) => {
+  getFlights: async(departure, destination, adultsNumber, startDate, endDate) => {
 
     return await DbRequest.queryDb({
       orderBy: orderBy("pricePerSeat","asc"),

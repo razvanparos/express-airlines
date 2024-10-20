@@ -14,7 +14,7 @@ function Footer() {
           <li>Trips</li>
           <li>International sites</li>
         </ul>
-        <p className="text-xs">&#169; Airline Express Ltd {new Date().getFullYear()} by Razvan Paros</p>
+        <a className="text-xs cursor-pointer" href="https://razvanparos.vercel.app/" target="_blank">&#169; Airline Express Ltd {new Date().getFullYear()} by Razvan Paros &#x1F517;</a>
       </footer>
     );
   }

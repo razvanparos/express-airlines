@@ -34,20 +34,6 @@ export const logoutUser = async (navigate) => {
 };
 
 export const getUserDetails = async () => {
-  if(auth.currentUser.uid){
-     try {
-      const usersRef = collection(db, "UsersDetails");
-      const q = query(usersRef, where("id", "==", auth.currentUser.uid));
-      const querySnapshot = await getDocs(q);
-      const filteredData = querySnapshot.docs.map((doc)=>({
-        ...doc.data(),
-        id: doc.id,
-    }))
-      return filteredData;
-    } catch (error) {
-      console.error(error);
-    }
-  }else{
     try {
       const usersRef = collection(db, "UsersDetails");
       const q = query(usersRef, where("id", "==", sessionStorage.getItem('currentUser')));
@@ -60,7 +46,6 @@ export const getUserDetails = async () => {
     } catch (error) {
       console.error(error);
     }
-  }
 };
 
 export const getSessionUserDetails = async () => {

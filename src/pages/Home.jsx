@@ -29,7 +29,7 @@ function Home(props) {
     const [searchError, setSearchError] = useState('');
 
     useEffect(()=>{
-      let filteredAirports = airports.filter(airport=>airport.name.toLowerCase().includes(departure.toLowerCase()))
+      let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
       if(departure.localeCompare(departuresList[0]?.name)===0){
         setShowDepartureAirportsList(false)
       }
@@ -42,7 +42,7 @@ function Home(props) {
     },[departure])
 
     useEffect(()=>{
-      let filteredAirports = airports.filter(airport=>airport.name.toLowerCase().includes(destination.toLowerCase()))
+      let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(destination.toLowerCase())||airport.name.toLowerCase().includes(destination.toLowerCase()))
       if(destination.localeCompare(destinationsList[0]?.name)===0){
         setShowDestinationAirportsList(false)
       }
@@ -128,13 +128,13 @@ function Home(props) {
           <input placeholder="Choose departure airport" type="text" className="rounded-t-xl py-3 px-2 text-xl" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
           <div className={`${showDepartureAirportsList?'h-[120px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {departuresList.length>0 ? departuresList?.map((item,index)=>{
-              return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
+              return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
             }):<p>No airports found</p>}
           </div>
           <input placeholder="Choose destination airport" type="text" className="py-3 px-2 text-xl" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
           <div className={`${showDestinationAirportsList?'h-[120px] p-2':'h-[0px]'} duration-200 bg-white`}>
             {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
-              return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code})`}</p>
+              return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
             }):<p>No airports found</p>}
           </div>
           <DatePicker className="py-3 px-2 mb-[1px] w-full text-xl" minDate={new Date()} placeholderText="Departure date" selected={startDate} onChange={(date) => setStartDate(date)} />

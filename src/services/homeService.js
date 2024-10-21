@@ -1,7 +1,6 @@
 import DbRequest from './dbRequestService';
 import { where,orderBy  } from "firebase/firestore";
 
-
 const homeService = {
   getFlights: async(departure, destination, adultsNumber, startDate, endDate) => {
 

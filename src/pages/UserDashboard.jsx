@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {getUserDetails, logoutUser} from '../services/loginService'
+import { logoutUser} from '../services/loginService'
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -32,7 +32,7 @@ function UserDashboard(props) {
   return (
     <article className="bg-gray-200 flex flex-col gap-y-1 pb-4 select-none">
         <h3 className="bg-primaryBlue text-white w-full text-center text-lg py-4 font-semibold">User dashboard</h3>
-        <div className="2xl:px-[10%]">
+        <div className="2xl:px-[10%] flex flex-col items-center">
           <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaUser />{props.userData?.displayName}</p>
           <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><MdEmail />{props.userData?.email}</p>
           <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaPhone />{props.userDetails?.phone}</p>
@@ -92,7 +92,7 @@ function UserDashboard(props) {
             </div>
           </section>
 
-          <button className="bg-darkBlue text-white w-full p-3 2xl:rounded-lg 2xl:w-[10%]" onClick={handleLogOut}>Sign out</button>
+          <button className="bg-darkBlue rounded-lg w-[50%] text-white p-3 2xl:rounded-lg 2xl:w-[10%]" onClick={handleLogOut}>Sign out</button>
         </div>
     </article>
   );

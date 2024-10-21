@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { bookFlight} from '../services/bookFlight'
 import Loader from "../components/Loader";
@@ -19,6 +19,7 @@ function FlightSummary(props) {
     const [loading,setLoading]=useState(false);
     const [thankYou,setThankYou]=useState(false);
     const [savedPaymentMethods, setSavedPaymentMethods]=useState('');
+    const timeoutRef = useRef(null);
 
     useEffect(()=>{
         if(!sessionStorage.getItem('currentBooking')||!sessionStorage.getItem('currentUser')){
@@ -26,6 +27,11 @@ function FlightSummary(props) {
         }else{
             setFinalBooking(JSON.parse(sessionStorage.getItem('currentBooking')))
             getUserPaymentMethods();
+        }
+        return ()=>{
+            if(timeoutRef.current!=null){
+                clearTimeout(timeoutRef.current)
+            }
         }
     },[])
 
@@ -64,7 +70,7 @@ function FlightSummary(props) {
             props.fetchUserData();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setThankYou(true);
-            setTimeout(()=>{
+            timeoutRef.current = setTimeout(()=>{
                 navigate('/')
             },15000)
         }else{
@@ -81,7 +87,7 @@ function FlightSummary(props) {
     }
 
     return (
-        <article className="flex flex-col bg-gray-200">
+        <article className="flex flex-col bg-gray-200 justify-center">
             <div className="flex justify-between items-center px-2 py-4 bg-primaryBlue 2xl:px-[10%]">
                 <p className="text-lg font-bold text-white">{`Trip for ${finalBooking.adultsNumber} ${finalBooking.adultsNumber===1?'passenger':'passengers'} `}</p>
                 <p className="text-white text-xl font-bold">${finalBooking.total}</p>
@@ -109,7 +115,7 @@ function FlightSummary(props) {
                     </div>
                 </div> 
                 
-                <div className=" flex flex-col gap-y-1 p-2 bg-gray-200 2xl:px-[10%]">
+                <div className=" flex flex-col gap-y-1 p-2 bg-gray-200 2xl:px-[10%] 2xl:max-w-[800px]">
                     <p className="font-bold text-lg">Confirm payment</p>
                     {savedPaymentMethods.length>0?<button onClick={useSavedPayments} className="text-start bg-primaryBlue w-fit text-white text-sm rounded-lg">Use saved payment method</button>:''}
                     <p>Card number</p>

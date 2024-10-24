@@ -10,8 +10,8 @@ import {removePaymentMethod} from '../services/removePaymentMethod'
 
 function UserDashboard(props) {
     const navigate = useNavigate();
-    const [expandBookings, setExpandBookings] = useState(false);
-    const [expandPayment, setExpandPayment] = useState(false); 
+    const [expandBookings, setExpandBookings] = useState(true);
+    const [expandPayment, setExpandPayment] = useState(true); 
 
     useEffect(()=>{
       if(!sessionStorage.getItem('currentUser')){

@@ -10,7 +10,6 @@ import { createFlights } from "../services/createFlights";
 import { distanceCalculator } from "../services/distanceCalculator";
 import homeService from "../services/homeService";
 
-
 function Home(props) {
     const navigate = useNavigate();
     const [departure, setDeparture]=useState('');
@@ -126,7 +125,7 @@ function Home(props) {
                 return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
               }):<p>No airports found</p>}
             </div>
-            <div className={`${showDepartureAirportsListDesktop?'h-[120px] shadow-2xl p-3 mt-2 rounded-xl ':'h-[0px] hidden'} duration-200 bg-white absolute top-[100%] h-fit`}>
+            <div className={`${showDepartureAirportsListDesktop?'h-[120px] hidden 2xl:block shadow-2xl p-3 mt-2 rounded-xl':'h-[0px] hidden'} duration-200 bg-white absolute top-[100%] h-fit`}>
               {departuresList.length>0 ? departuresList?.map((item,index)=>{
                 return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
               }):<p>No airports found</p>}
@@ -139,7 +138,7 @@ function Home(props) {
                   return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
                 }):<p>No airports found</p>}
               </div>
-              <div className={`${showDestinationAirportsListDesktop?'h-[120px] w-full shadow-2xl p-3 mt-2 rounded-xl visible':'h-[0px] hidden'} duration-200 bg-white absolute top-[100%] h-fit`}>
+              <div className={`${showDestinationAirportsListDesktop?'h-[120px] hidden 2xl:block w-full shadow-2xl p-3 mt-2 rounded-xl visible':'h-[0px] hidden'} duration-200 bg-white absolute top-[100%] h-fit`}>
                 {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
                   return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
                 }):<p>No airports found</p>}

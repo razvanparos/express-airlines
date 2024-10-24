@@ -6,6 +6,7 @@ import {savePaymentInfo} from '../services/savePaymentInfo'
 import {updateFlightSeats} from '../services/updateFlightSeats'
 import { FaCheck } from "react-icons/fa";
 import { getSessionUserDetails } from "../services/loginService";
+import { updateChartsData } from "../services/updateChartsData";
 
 function FlightSummary(props) {
     const navigate = useNavigate();
@@ -68,6 +69,7 @@ function FlightSummary(props) {
             await updateFlightSeats(booking);
             sessionStorage.removeItem('currentBooking')
             props.fetchUserData();
+            updateChartsData();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setThankYou(true);
             timeoutRef.current = setTimeout(()=>{

@@ -1,4 +1,4 @@
-import { collection, query, getDocs} from "firebase/firestore";
+import { collection, query, getDocs, orderBy} from "firebase/firestore";
 import { db } from "../firebase-config";
 
 class DbRequest {
@@ -17,6 +17,26 @@ class DbRequest {
             id: doc.id,
         }))
         return [departureData,returnData];
+  }
+  async queryAllFlights(){
+    const flightsRef = collection(db, "Flights");
+      const q = query(flightsRef);
+      const querySnapshot = await getDocs(q);
+      const filteredData = querySnapshot.docs.map((doc)=>({
+        ...doc.data(),
+        id: doc.id,
+    }))
+    return filteredData;
+  }
+  async queryChartsData(){
+    const chartsRef = collection(db, "ChartsData");
+      const q = query(chartsRef, orderBy("date", "desc"),);
+      const querySnapshot = await getDocs(q);
+      const filteredData = querySnapshot.docs.map((doc)=>({
+        ...doc.data(),
+        id: doc.id,
+    }))
+    return filteredData;
   }
 }
 

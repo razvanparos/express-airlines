@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs, doc, updateDoc, arrayUnion } from "firebase/firestore"; 
+import { collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore"; 
 
 export const updateFlightSeats = async (booking) => {
     try {

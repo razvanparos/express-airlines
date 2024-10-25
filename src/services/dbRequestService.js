@@ -30,7 +30,7 @@ class DbRequest {
   }
   async queryChartsData(){
     const chartsRef = collection(db, "ChartsData");
-      const q = query(chartsRef, orderBy("date", "desc"),);
+      const q = query(chartsRef, orderBy("date", "asc"),);
       const querySnapshot = await getDocs(q);
       const filteredData = querySnapshot.docs.map((doc)=>({
         ...doc.data(),

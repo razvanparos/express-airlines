@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs  } from "firebase/firestore";
+import { collection, query, where, getDocs,writeBatch  } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore"; 
 import homeService from "./homeService";
 
@@ -50,6 +50,16 @@ export const updateChartsData = async () => {
             total: queryResponse?.reduce((total,f)=>total+(f.pricePerSeat*f.freeSeats),0)
           });
       }
+      let queryChartsDataResponse = await homeService.getChartData();
+      console.log(queryChartsDataResponse)
+      if(queryChartsDataResponse.length>5){
+        console.log('more than 5')
+        const batch = writeBatch(db);
+        const docRef = doc(db, "ChartsData", queryChartsDataResponse[0].id);
+        batch.delete(docRef);
+        await batch.commit();
+      }
+        
     } catch (error) {
       
     }

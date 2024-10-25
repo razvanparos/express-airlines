@@ -79,7 +79,7 @@ function FlightDetails() {
       <p className="bg-primaryBlue w-full p-2 rounded-t-xl text-white text-center font-bold">{`Select seats for ${currentBooking.returnFlight?.departure} - ${currentBooking.departureFlight?.departure} flight`}</p>
       <div className="flex flex-col items-center">
       <p className="w-full p-2 font-bold">{`${selectedReturnSeats.length}/${currentBooking.adultsNumber}`}</p>
-        <div className="p-4 inline-grid justify-items-center grid-cols-7 gap-y-4 w-fit max-h-[290px] overflow-scroll overflow-x-hidden">
+        <div className="p-4 inline-grid justify-items-center grid-cols-7 gap-y-4 w-fit">
           {currentBooking.returnFlight?.seats.map((seat,i)=>{
             if(seat.seatNumber[1]==='C'){
               return [<div onClick={()=>{handleReturnSeatClick(seat)}} key={i} className={`border-2 cursor-pointer hover:bg-gray-200 ${seat.occupied?'border-gray-400':'border-green-400'} ${selectedReturnSeats.includes(seat.seatNumber)?'border-primaryBlue':''}  p-3 flex justify-center items-center `}>{seat.seatNumber}</div>,<div key={`${i}empty`}></div>]

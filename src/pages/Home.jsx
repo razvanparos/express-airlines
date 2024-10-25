@@ -9,7 +9,6 @@ import beachImg from '../assets/beach-img.jpg'
 import { createFlights } from "../services/createFlights";
 import { distanceCalculator } from "../services/distanceCalculator";
 import homeService from "../services/homeService";
-import { updateChartsData } from "../services/updateChartsData";
 
 function Home(props) {
     const navigate = useNavigate();
@@ -117,7 +116,6 @@ function Home(props) {
 
     return (
       <div className="flex flex-col items-center relative">
-        <button className="text-white" onClick={updateChartsData}>press me</button>
         <h1 className="text-white mt-[20px] sm:text-2xl">Search for flights all over the world</h1>
         <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:px-[10%] 2xl:pb-[80px] 2xl:grid 2xl:grid-cols-8">
           <div className="relative 2xl:col-span-2 mb-[1px] 2xl:mb-[0px]">

@@ -14,7 +14,6 @@ export const updateChartsData = async () => {
             return `${month}/${day}/${year}`; 
         };
         today = formatDateToISO(today)
-        console.log(today)
         const chartsRef = collection(db, "ChartsData");
         const q = query(chartsRef, where("date", "==", today));
         const querySnapshot = await getDocs(q);
@@ -22,7 +21,6 @@ export const updateChartsData = async () => {
             ...doc.data(),
             id: doc.id,
     }))
-      console.log(filteredData);
       let queryResponse = await homeService.getAllFlights();
       if(filteredData.length===0){
         var newId = "id" + Math.random().toString(16).slice(2)
@@ -51,7 +49,6 @@ export const updateChartsData = async () => {
           });
       }
       let queryChartsDataResponse = await homeService.getChartData();
-      console.log(queryChartsDataResponse)
       if(queryChartsDataResponse.length>5){
         console.log('more than 5')
         const batch = writeBatch(db);

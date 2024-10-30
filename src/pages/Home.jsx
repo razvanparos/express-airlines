@@ -117,7 +117,7 @@ function Home(props) {
     return (
       <div className="flex flex-col items-center relative">
         <h1 className="text-white mt-[20px] sm:text-2xl">Search for flights all over the world</h1>
-        <form onSubmit={getFLights} action="" className="flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:px-[10%] 2xl:pb-[80px] 2xl:grid 2xl:grid-cols-8">
+        <form onSubmit={getFLights} action="" className="relative flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:px-[10%] 2xl:pb-[80px] 2xl:grid 2xl:grid-cols-8">
           <div className="relative 2xl:col-span-2 mb-[1px] 2xl:mb-[0px]">
             <input placeholder="Choose departure airport" type="text" className="2xl:border-r-2 rounded-t-xl py-3 px-4 text-xl w-full 2xl:rounded-bl-lg 2xl:rounded-tr-none 2xl:h-[80px]" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
             <div className={`${showDepartureAirportsList?'h-fit p-2 2xl:hidden':'h-[0px] 2xl:w-0 2xl:hidden overflow-hidden'} duration-200 bg-white`}>
@@ -154,6 +154,7 @@ function Home(props) {
           </div>
           <p className="text-red-500 mt-2 2xl:hidden">{searchError}</p>
           <button type="submit" className=" bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loading?<Loader/>:'Search'}</button>
+          <p className="text-red-500 mt-2 hidden 2xl:block w-full">{searchError}</p>
         </form>
 
         <article className="flex flex-col items-start my-2 p-4 2xl:py-16 bg-white w-full h-fit lg:px-[10%]">

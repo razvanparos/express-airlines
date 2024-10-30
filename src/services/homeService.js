@@ -9,6 +9,11 @@ const homeService = {
       whereDestination: [where("departure", "==", destination), where("destination","==",departure),where("flightDate","==",endDate),where("freeSeats",">=",adultsNumber)],
     });
   },
+  getFlightsAdmin: async(departure, destination, flightDate) => {
+    return await DbRequest.queryDbAdmin({
+      whereCondition: [where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",flightDate)],
+    });
+  },
 
   getAllFlights:async()=>{
     return await DbRequest.queryAllFlights()

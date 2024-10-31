@@ -39,3 +39,28 @@ export const createFlights = async (departure,destination,startDate,endDate,dist
         seats:emptySeats
     });
   };
+export const createFlightsAdmin = async (flightData) => {
+    let newId = "id" + Math.random().toString(16).slice(2)
+    let letters = ['A','B','C','D','E','F']
+    let emptySeats = [];
+    for(let i=1;i<=8;i++){
+        for(let j =1;j<=6;j++){
+            emptySeats.push({
+                occupied: false,
+                seatNumber: i+letters[j-1],
+            })
+        }
+    }
+    await setDoc(doc(db, "Flights", newId), {
+        departure: flightData.departure,
+        destination: flightData.destination,
+        flightDate: flightData.date,
+        freeSeats: emptySeats.length,
+        id: newId,
+        landing: flightData.landing,
+        takeOff:flightData.takeoff,
+        pricePerSeat: flightData.pricePerSeat,
+        seats:emptySeats 
+    });
+   
+  };

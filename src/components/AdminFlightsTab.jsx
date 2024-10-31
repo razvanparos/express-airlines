@@ -6,10 +6,7 @@ import homeService from "../services/homeService";
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import React, { PureComponent } from 'react';
 import DbRequest from '../services/dbRequestService';
-
-
-
-
+import { createFlights, createFlightsAdmin } from "../services/createFlights";
 
 
 function FlightsTab() {
@@ -28,10 +25,13 @@ function FlightsTab() {
     const [newFlightDate, setNewFlightDate] = useState(formatDate(new Date()));
     const [minDate, setMinDate] = useState(formatDate(new Date()));
     const [loading, setLoading] = useState(false);
+    const [loadingAdd, setLoadingAdd] = useState(false);
     const [searchError, setSearchError] = useState('');
+    const [addError, setAddError] = useState('');
     const [noFlightsfound, setNoFlightsFound] = useState('');
     const [adminFlights, setAdminFlights] = useState([]);
     const [editFlight, setEditFlight] = useState('');
+    const [addFlightTab, setAddFlightTab] = useState(false);
 
     function formatDateToISO(date){
         const d = new Date(date);
@@ -82,6 +82,7 @@ function FlightsTab() {
   
     const getFLights=async(e)=>{
         e.preventDefault();
+        setAddFlightTab(false);
         if(showDepartureAirportsList||showDestinationAirportsList){
             setSearchError('Select airports from the list')
             return
@@ -102,6 +103,27 @@ function FlightsTab() {
             setSearchError('Fields cannot be empty')
         }
         setLoading(false)
+    }
+    const addFlightFunction=async(e)=>{
+        e.preventDefault();
+        setLoadingAdd(true)
+        const flightData = {
+          departure: document.getElementById("departureAirport").value,
+          destination: document.getElementById("destinationAirport").value,
+          date: formatDateToISO(document.getElementById("date").value),
+          takeoff: document.getElementById("departureTime").value,
+          landing: document.getElementById("arrivalTime").value,
+          pricePerSeat: document.getElementById("pricePerSeat").value,
+        };
+        const hasEmptyValue = Object.values(flightData).some(value => !value);
+        if(!hasEmptyValue){
+          setAddError('')
+          await createFlightsAdmin(flightData);
+          setAddFlightTab(false)
+        }else{
+          setAddError('Empty fields')
+        }    
+        setLoadingAdd(false)
     }
     
     const handleDepartureListItemClick=(item)=>{
@@ -163,13 +185,13 @@ function FlightsTab() {
               </div>
           </div>
         
-          {/* <DatePicker className="border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" minDate={new Date()} placeholderText="Flight date" selected={startDate} onChange={(date) => setStartDate(date)} />       */}
           <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightDate} min={minDate} onChange={(e)=>{setFlightDate(e.target.value)}}/>
           <p className="text-red-500 mt-2 2xl:hidden">{searchError}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loading?<Loader/>:'Search'}</button>
           <p className="text-red-500 mt-2 hidden 2xl:block w-full">{searchError}</p>
         </form>
-        <button className="bg-primaryBlue w-full md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
+        <button onClick={()=>{setAddFlightTab(true)}} className=" w-[90%] ml-4 lg:ml-0 bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
+        {!addFlightTab?
         <section className="p-4 lg:px-[0]">
           <div className="flex flex-col gap-y-4">
             {adminFlights?.map((f,i)=>{
@@ -232,6 +254,25 @@ function FlightsTab() {
           </div>
           <p className="text-red-500">{noFlightsfound}</p>
         </section>
+
+        :
+        
+        <form onSubmit={addFlightFunction} id="addForm" action="" className="flex flex-col px-4 lg:px-0 w-full 2xl:grid 2xl:grid-cols-10">
+          <div className="relative 2xl:col-span-2 mb-[1px] 2xl:mb-[0px]">
+            <input id="departureAirport" placeholder="Departure airport" type="text" className=" border-2 border-primaryBlue rounded-t-xl py-3 px-4 text-md w-full 2xl:rounded-bl-lg 2xl:rounded-tr-none 2xl:h-[80px]" />
+          </div>
+          <div className="relative 2xl:col-span-2 mb-[1px] 2xl:mb-[0px]">
+              <input id="destinationAirport" placeholder="Destination airport" type="text" className="border-2 border-primaryBlue h-full py-3 px-4 text-md w-full" /> 
+          </div>
+          <input id="date" type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]"  min={minDate} />
+          <input id="departureTime" type="time" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
+          <input id="arrivalTime" type="time" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
+          <input id="pricePerSeat" type="number" placeholder="Price per seat" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
+          <p className="text-red-500 mt-2 2xl:hidden">{addError}</p>
+          <button onClick={()=>{setAddFlightTab(false)}} type="submit" className="bg-gray-400 text-white font-semibold my-4 py-2 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">Cancel</button>
+          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loadingAdd?<Loader/>:'Add'}</button>
+          <p className="text-red-500 mt-2 hidden 2xl:block w-full">{addError}</p>
+      </form>}
     </section>
   );
 }

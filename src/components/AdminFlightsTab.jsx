@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import airports from '../utils/airports.json'
 import homeService from "../services/homeService";
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
-import React, { PureComponent } from 'react';
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, Legend } from 'recharts';
+import React from 'react';
 import DbRequest from '../services/dbRequestService';
-import { createFlights, createFlightsAdmin } from "../services/createFlights";
+import { createFlightsAdmin } from "../services/createFlights";
 
 
 function FlightsTab() {
@@ -142,6 +141,8 @@ function FlightsTab() {
         setAdminFlights(queryResponse);
       }else{
         setEditFlight(id)
+        let focusRef = document.getElementById(id);
+        focusRef.focus();
         setNewDeparture(departure)
         setNewDestination(destination)
         setNewFlightDate(formatDateToISO(flightDate))
@@ -152,8 +153,6 @@ function FlightsTab() {
       let queryResponse = await homeService.getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
       setAdminFlights(queryResponse);
     }
-  
-
 
     return (
     <section className="flex flex-col gap-y-[20px]">
@@ -190,7 +189,9 @@ function FlightsTab() {
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loading?<Loader/>:'Search'}</button>
           <p className="text-red-500 mt-2 hidden 2xl:block w-full">{searchError}</p>
         </form>
-        <button onClick={()=>{setAddFlightTab(true)}} className=" w-[90%] ml-4 lg:ml-0 bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
+        <div className="px-4 lg:px-0">
+          <button onClick={()=>{setAddFlightTab(true)}} className=" w-full bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
+        </div>
         {!addFlightTab?
         <section className="p-4 lg:px-[0]">
           <div className="flex flex-col gap-y-4">
@@ -199,7 +200,7 @@ function FlightsTab() {
               className="border-2 w-full gap-y-[40px] p-2 2xl:p-[40px] rounded-lg flex flex-col lg:flex-row justify-between items-center bg-gray-200">
               <div className="flex flex-col gap-y-2">
                 <p className="text-primaryBlue font-bold">{f.id}</p>
-                <p><strong>Departure:</strong> <input type="text"
+                <p><strong>Departure:</strong> <input type="text" id={f.id}
                     className={`${editFlight===f.id?'pointer-events-auto':'pointer-events-none bg-gray-200'}
                     rounded-lg`} value={editFlight===f.id?newDeparture:f.departure}
                     onChange={(e)=>{setNewDeparture(e.target.value)}}/></p>
@@ -264,8 +265,11 @@ function FlightsTab() {
           <div className="relative 2xl:col-span-2 mb-[1px] 2xl:mb-[0px]">
               <input id="destinationAirport" placeholder="Destination airport" type="text" className="border-2 border-primaryBlue h-full py-3 px-4 text-md w-full" /> 
           </div>
+          <p className="2xl:hidden">Flight date:</p>
           <input id="date" type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]"  min={minDate} />
+          <p className="2xl:hidden">Departure time:</p>
           <input id="departureTime" type="time" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
+          <p className="2xl:hidden">Arrival time:</p>
           <input id="arrivalTime" type="time" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
           <input id="pricePerSeat" type="number" placeholder="Price per seat" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
           <p className="text-red-500 mt-2 2xl:hidden">{addError}</p>

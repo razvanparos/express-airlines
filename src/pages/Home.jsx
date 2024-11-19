@@ -7,7 +7,7 @@ import Loader from "../components/Loader";
 import exploreDestinations from '../assets/explore-destinations.webp'
 import beachImg from '../assets/beach-img.jpg'
 import { createFlights } from "../services/createFlights";
-import { distanceCalculator } from "../services/distanceCalculator";
+import { distanceCalculator } from "../services/distanceCalculator/distanceCalculator";
 import homeService from "../services/homeService";
 
 function Home(props) {

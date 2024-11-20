@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-config";
-import errorMessages from '../utils/errorMessages.json';
+import errorMessages from '../mock-data/errorMessages.json';
 import { doc, setDoc } from "firebase/firestore"; 
 
 export const registerUser = async (registerName,registerPhone, registerEmail, registerPassword) => {

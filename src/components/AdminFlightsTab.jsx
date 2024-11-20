@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
-import airports from '../utils/airports.json'
+import airports from '../mock-data/airports.json'
 import homeService from "../services/homeService";
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, Legend } from 'recharts';
 import React from 'react';

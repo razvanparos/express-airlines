@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { bookFlight} from '../services/bookFlight'
 import Loader from "../components/Loader";
@@ -7,8 +7,9 @@ import {updateFlightSeats} from '../services/updateFlightSeats'
 import { FaCheck } from "react-icons/fa";
 import { getSessionUserDetails } from "../services/loginService";
 import { updateChartsData } from "../services/updateChartsData";
+import { AppContext } from "../context/AppContext";
 
-function FlightSummary(props) {
+function FlightSummary() {
     const navigate = useNavigate();
     const [finalBooking,setFinalBooking]=useState('');
     const [cardNumber,setCardNumber]=useState('');
@@ -21,6 +22,8 @@ function FlightSummary(props) {
     const [thankYou,setThankYou]=useState(false);
     const [savedPaymentMethods, setSavedPaymentMethods]=useState('');
     const timeoutRef = useRef(null);
+
+    const {fetchUserData}=useContext(AppContext)
 
     useEffect(()=>{
         if(!sessionStorage.getItem('currentBooking')||!sessionStorage.getItem('currentUser')){
@@ -68,7 +71,7 @@ function FlightSummary(props) {
             await bookFlight(booking);
             await updateFlightSeats(booking);
             sessionStorage.removeItem('currentBooking')
-            props.fetchUserData();
+            fetchUserData();
             updateChartsData();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setThankYou(true);

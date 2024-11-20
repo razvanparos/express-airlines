@@ -1,6 +1,6 @@
 import {signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { auth, db } from "../firebase-config";
-import errorMessages from '../utils/errorMessages.json';
+import errorMessages from '../mock-data/errorMessages.json';
 import { collection, query, where, getDocs  } from "firebase/firestore";
 
 export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{

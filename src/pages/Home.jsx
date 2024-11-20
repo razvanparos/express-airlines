@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import airports from '../utils/airports.json'
+import airports from '../mock-data/airports.json'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../components/Loader";
@@ -9,8 +9,9 @@ import beachImg from '../assets/beach-img.jpg'
 import { createFlights } from "../services/createFlights";
 import { distanceCalculator } from "../services/distanceCalculator/distanceCalculator";
 import homeService from "../services/homeService";
+import { AppContext } from "../context/AppContext";
 
-function Home(props) {
+function Home() {
     const navigate = useNavigate();
     const [departure, setDeparture]=useState('');
     const [departureAirport, setDepartureAirport]=useState('');
@@ -27,6 +28,8 @@ function Home(props) {
     const [endDate, setEndDate] = useState('');
     const [loading, setLoading] = useState(false);
     const [searchError, setSearchError] = useState('');
+
+    const {fetchFlights} = useContext(AppContext);
 
     useEffect(()=>{
       let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
@@ -81,7 +84,7 @@ function Home(props) {
         setLoading(true)
         let queryResponse = await homeService.getFlights(departure,destination,adultsNumber,formatDateToISO(startDate),formatDateToISO(endDate));
         if(queryResponse[0].length>0&&queryResponse[1].length>0){
-          props.fetchFlights(queryResponse[0],queryResponse[1],adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
+          fetchFlights(queryResponse[0],queryResponse[1],adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')
         }else{
           let dist = distanceCalculator(departureAirport._geoloc.lat,departureAirport._geoloc.lng,destinationAirport._geoloc.lat,destinationAirport._geoloc.lng);

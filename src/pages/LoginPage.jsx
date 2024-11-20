@@ -1,10 +1,11 @@
 import { Link,useNavigate } from "react-router-dom";
 import Loader from '../components/Loader';
 import {loginUser, getUserDetails} from '../services/loginService'
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { auth } from "../firebase-config";
+import { AppContext } from "../context/AppContext";
 
-function LoginPage(props) {
+function LoginPage() {
   const navigate = useNavigate();
   const [loginEmail, setLoginEmail]=useState('');
   const [loginPassword, setLoginPassword]=useState('');
@@ -12,13 +13,15 @@ function LoginPage(props) {
   const [loading, setLoading]=useState(false);
   const [loginError, setLoginError]=useState('');
 
+  const {getUserDataFromLogin}=useContext(AppContext)
+
   const handleLogin = async(e)=>{
     e.preventDefault();
     setLoading(true)
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
       let userDetails = await getUserDetails();
-      props.getUserDataFromLogin(auth.currentUser,userDetails)
+      getUserDataFromLogin(auth.currentUser,userDetails)
       if(sessionStorage.getItem('currentBooking')){
         navigate('/flight-details')
       }else if(userDetails[0].isAdmin){

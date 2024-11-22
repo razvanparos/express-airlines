@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { auth } from "../firebase-config";
-import homeService from "../services/homeService";
+import { getUserDetails } from "../services/authService";
 
 export const AppContext = createContext();
 
@@ -25,7 +25,9 @@ export const AppProvider = ({ children }) => {
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        setUserDetails(await homeService.getUserDetails("UsersDetails"));
+        let response = await getUserDetails("UsersDetails")
+        console.log(response)
+        setUserDetails(await getUserDetails("UsersDetails"));
       } else {
         removeUserData();
       }

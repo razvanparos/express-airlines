@@ -3,7 +3,8 @@ import { logoutUser} from '../services/authService'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
 import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip  } from 'recharts';
-import homeService from "../services/homeService";
+import {getAllFlights} from "../services/flightService";
+import {getChartData} from "../services/chartsService"
 import { updateChartsData } from "../services/chartsService";
 import FlightsTab from "../components/AdminFlightsTab";
 import { AppContext } from "../context/AppContext";
@@ -17,14 +18,14 @@ function AdminDashboard() {
   const navigate=useNavigate();
   const fetchData = async () => {
     await updateChartsData();
-    let queryResponse = await homeService.getChartData("ChartsData");
+    let queryResponse = await getChartData("ChartsData");
     let querySales=[];
     queryResponse.forEach((q)=>{querySales.push({
       date: q.date,
       sales: q.sales,
       potentialSales: q.total+q.sales
     })})
-    let allFlights = await homeService.getAllFlights('Flights');
+    let allFlights = await getAllFlights('Flights');
     let flightsUntilToday = allFlights.filter(f=>new Date(f.flightDate)< new Date())
     setFlightsNrUntilToday(flightsUntilToday.length)
     setFlightsNr(allFlights.length)

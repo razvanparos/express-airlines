@@ -2,8 +2,8 @@ import {signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { auth, db } from "../firebase-config";
 import errorMessages from '../mock-data/errorMessages.json';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore"; 
-
+import { doc, setDoc, where } from "firebase/firestore"; 
+import DbRequest from './dbRequestService';
 
 export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
     if(loginEmail&&loginPassword){
@@ -56,3 +56,9 @@ export const registerUser = async (registerName,registerPhone, registerEmail, re
     }
   };
   
+  export const getUserDetails = async(table)=>{
+    return await DbRequest.queryDb({
+      table:table,
+      whereDeparture: [where("id", "==", sessionStorage.getItem('currentUser'))],
+    })
+  }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import airports from '../mock-data/airports.json'
-import homeService from "../services/homeService";
+import {getFlightsAdmin} from "../services/flightService";
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, Legend } from 'recharts';
 import React from 'react';
 import DbRequest from '../services/dbRequestService';
@@ -91,7 +91,7 @@ function FlightsTab() {
         if(departure&&destination&&flightDate){
             setSearchError('')
             setLoading(true)
-            let queryResponse = await homeService.getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
+            let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
             console.log(queryResponse)
             if(queryResponse.length<1){
               setNoFlightsFound('No flights found')
@@ -138,7 +138,7 @@ function FlightsTab() {
       if(editFlight){
         setEditFlight('')
         await DbRequest.updateFlight(id,newDeparture,newDestination,newFlightDate);
-        let queryResponse = await homeService.getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
+        let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
         setAdminFlights(queryResponse);
       }else{
         setEditFlight(id)
@@ -151,7 +151,7 @@ function FlightsTab() {
     }
     const cancelFlight=async(id)=>{
       await DbRequest.removeFlight(id)
-      let queryResponse = await homeService.getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
+      let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
       setAdminFlights(queryResponse);
     }
 

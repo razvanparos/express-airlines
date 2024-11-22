@@ -3,7 +3,7 @@ import Loader from '../components/Loader';
 import {loginUser} from '../services/authService'
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import homeService from "../services/homeService";
+import {getUserDetails} from "../services/authService";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function LoginPage() {
     setLoading(true)
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
-      let userDetails = await homeService.getUserDetails('UsersDetails');
+      let userDetails = await getUserDetails('UsersDetails');
       getUserDataFromLogin(userDetails)
       if(sessionStorage.getItem('currentBooking')){
         navigate('/flight-details')

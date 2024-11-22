@@ -13,8 +13,7 @@ function UserDashboard() {
     const navigate = useNavigate();
     const [expandBookings, setExpandBookings] = useState(true);
     const [expandPayment, setExpandPayment] = useState(true); 
-
-    const {removeUserData, fetchUserData, userData, userDetails}=useContext(AppContext)
+    const {removeUserData, fetchUserData, userDetails}=useContext(AppContext)
 
     useEffect(()=>{
       if(!sessionStorage.getItem('currentUser')){
@@ -36,8 +35,8 @@ function UserDashboard() {
     <article className="bg-gray-200 flex flex-col gap-y-1 pb-4 select-none">
         <h3 className="bg-primaryBlue text-white w-full text-center text-lg py-4 font-semibold">User dashboard</h3>
         <div className="2xl:px-[10%] flex flex-col items-center">
-          <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaUser />{userData?.displayName}</p>
-          <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><MdEmail />{userData?.email}</p>
+          <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaUser />{userDetails[0]?.fullName}</p>
+          <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><MdEmail />{userDetails[0]?.email}</p>
           <p className="bg-gray-200 p-4 w-full flex items-center gap-x-2"><FaPhone />{userDetails[0]?.phone}</p>
           
           <section  className={`bg-gray-200 p-3 w-full duration-200 ${expandBookings?'h-fit':'h-[50px] overflow-hidden'}`}>

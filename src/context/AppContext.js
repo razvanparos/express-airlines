@@ -5,7 +5,6 @@ import { getUserDetails } from "../services/loginService";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [userData, setUserData] = useState('');
   const [userDetails, setUserDetails] = useState('');
   const [departureFlights, setDepartureFlights] = useState('');
   const [returnFlights, setReturnFlights] = useState('');
@@ -15,20 +14,21 @@ export const AppProvider = ({ children }) => {
   const [departureDate, setDepartureDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
 
-  const getUserDataFromLogin = (data, details) => {
-    setUserData(data);
+  const getUserDataFromLogin = (details) => {
     setUserDetails(details);
   };
 
   const removeUserData = () => {
-    setUserData('');
     setUserDetails('');
   };
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
-      setUserData(user);
-      setUserDetails(await getUserDetails());
+      if (user) {
+        setUserDetails(await getUserDetails());
+      } else {
+        removeUserData();
+      }
     });
   };
 
@@ -55,7 +55,6 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        userData,
         userDetails,
         departureFlights,
         returnFlights,

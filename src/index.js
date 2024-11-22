@@ -1,11 +1,12 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import './index.css';
 import './output.css';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from "./context/AppContext";
 import FallbackComponent from "./components/fallbackComponent";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const LoginPage = React.lazy(() => import("./pages/LoginPage"));
 const Home = React.lazy(() => import("./pages/Home"));
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="register" element={<RegisterPage />} />
             <Route path="explore-results" element={<ExploreResults />} />
             <Route path="user-dashboard" element={<UserDashboard />} />
+            <Route path="admin-dashboard" element={<AdminDashboard />} />
             <Route path="flight-details" element={<FlightDetails />} />
             <Route path="flight-summary" element={<FlightSummary />} />
             <Route path="*" element={<NoPage />} />

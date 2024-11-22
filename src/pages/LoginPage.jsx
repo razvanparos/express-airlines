@@ -21,7 +21,7 @@ function LoginPage() {
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
       let userDetails = await getUserDetails();
-      getUserDataFromLogin(auth.currentUser,userDetails)
+      getUserDataFromLogin(userDetails)
       if(sessionStorage.getItem('currentBooking')){
         navigate('/flight-details')
       }else if(userDetails[0].isAdmin){

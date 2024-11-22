@@ -12,7 +12,9 @@ export const registerUser = async (registerName,registerPhone, registerEmail, re
         id: auth.currentUser?.uid,
         phone: registerPhone,
         bookedFlights:[],
-        paymentMethods:[]
+        paymentMethods:[],
+        fullName: auth.currentUser.displayName,
+        email: auth.currentUser.email
     });
     } catch (error) {
       throw errorMessages[error.code];

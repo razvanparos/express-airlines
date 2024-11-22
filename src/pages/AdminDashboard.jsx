@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { logoutUser} from '../services/loginService'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
@@ -6,9 +6,11 @@ import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tool
 import homeService from "../services/homeService";
 import { updateChartsData } from "../services/updateChartsData";
 import FlightsTab from "../components/AdminFlightsTab";
+import { AppContext } from "../context/AppContext";
 
 
-function AdminDashboard(props) {
+function AdminDashboard() {
+  const {removeUserData}=useContext(AppContext)
   const COLORS = ['green','#0062E3'];
   const COLORS2 = ['purple','#0062E3'];
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -56,7 +58,7 @@ function AdminDashboard(props) {
     
     const handleLogOut=async()=>{
       await logoutUser(navigate);
-      props.removeUserData();
+      removeUserData();
     }
 
   return (

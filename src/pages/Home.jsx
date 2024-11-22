@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../components/Loader";
 import exploreDestinations from '../assets/explore-destinations.webp'
 import beachImg from '../assets/beach-img.jpg'
-import { createFlights } from "../services/createFlights";
+import { createFlights } from "../services/flightService";
 import { distanceCalculator } from "../services/distanceCalculator/distanceCalculator";
 import homeService from "../services/homeService";
 import { AppContext } from "../context/AppContext";
@@ -82,7 +82,7 @@ function Home() {
       if(departure&&destination&&startDate&&endDate){
         setSearchError('')
         setLoading(true)
-        let queryResponse = await homeService.getFlights(departure,destination,adultsNumber,formatDateToISO(startDate),formatDateToISO(endDate));
+        let queryResponse = await homeService.getFlights(departure,destination,adultsNumber,formatDateToISO(startDate),formatDateToISO(endDate),'Flights');
         if(queryResponse[0].length>0&&queryResponse[1].length>0){
           fetchFlights(queryResponse[0],queryResponse[1],adultsNumber,departureAirport,destinationAirport,formatDateToISO(startDate),formatDateToISO(endDate))
           navigate('/explore-results')

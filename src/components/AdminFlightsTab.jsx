@@ -5,7 +5,7 @@ import homeService from "../services/homeService";
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, Legend } from 'recharts';
 import React from 'react';
 import DbRequest from '../services/dbRequestService';
-import { createFlightsAdmin } from "../services/createFlights";
+import { createFlightsAdmin } from "../services/flightService";
 
 
 function FlightsTab() {
@@ -91,7 +91,8 @@ function FlightsTab() {
         if(departure&&destination&&flightDate){
             setSearchError('')
             setLoading(true)
-            let queryResponse = await homeService.getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
+            let queryResponse = await homeService.getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
+            console.log(queryResponse)
             if(queryResponse.length<1){
               setNoFlightsFound('No flights found')
             }else {

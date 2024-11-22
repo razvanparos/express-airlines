@@ -1,7 +1,9 @@
 import {signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { auth, db } from "../firebase-config";
 import errorMessages from '../mock-data/errorMessages.json';
-import { collection, query, where, getDocs  } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore"; 
+
 
 export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
     if(loginEmail&&loginPassword){
@@ -33,32 +35,24 @@ export const logoutUser = async (navigate) => {
   }
 };
 
-export const getUserDetails = async () => {
-    try {
-      const usersRef = collection(db, "UsersDetails");
-      const q = query(usersRef, where("id", "==", sessionStorage.getItem('currentUser')));
-      const querySnapshot = await getDocs(q);
-      const filteredData = querySnapshot.docs.map((doc)=>({
-        ...doc.data(),
-        id: doc.id,
-    }))
-      return filteredData;
-    } catch (error) {
-      console.error(error);
-    }
-};
 
-export const getSessionUserDetails = async () => {
-  try {
-    const usersRef = collection(db, "UsersDetails");
-    const q = query(usersRef, where("id", "==", sessionStorage.getItem('currentUser')));
-    const querySnapshot = await getDocs(q);
-    const filteredData = querySnapshot.docs.map((doc)=>({
-      ...doc.data(),
-      id: doc.id,
-  }))
-    return filteredData;
-  } catch (error) {
-    console.error(error);
-  }
-};
+export const registerUser = async (registerName,registerPhone, registerEmail, registerPassword) => {
+    if (registerEmail && registerPassword && registerName && registerPhone) {
+      try {
+        await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
+        await setDoc(doc(db, "UsersDetails", `${auth.currentUser?.uid}`), {
+          id: auth.currentUser?.uid,
+          phone: registerPhone,
+          bookedFlights:[],
+          paymentMethods:[],
+          fullName: auth.currentUser.displayName,
+          email: auth.currentUser.email
+      });
+      } catch (error) {
+        throw errorMessages[error.code];
+      }
+    } else {
+      throw('Fields cannot be empty')
+    }
+  };
+  

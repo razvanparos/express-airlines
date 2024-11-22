@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { bookFlight} from '../services/bookFlight'
+import { bookFlight} from '../services/flightService'
 import Loader from "../components/Loader";
-import {savePaymentInfo} from '../services/savePaymentInfo'
-import {updateFlightSeats} from '../services/updateFlightSeats'
+import {savePaymentInfo} from '../services/paymentService'
+import {updateFlightSeats} from '../services/chartsService'
 import { FaCheck } from "react-icons/fa";
-import { getSessionUserDetails } from "../services/loginService";
-import { updateChartsData } from "../services/updateChartsData";
+import { updateChartsData } from "../services/chartsService";
 import { AppContext } from "../context/AppContext";
+import homeService from "../services/homeService";
 
 function FlightSummary() {
     const navigate = useNavigate();
@@ -40,7 +40,7 @@ function FlightSummary() {
     },[])
 
     const getUserPaymentMethods=async()=>{
-        let sessionDetails = await getSessionUserDetails();
+        let sessionDetails = await homeService.getUserDetails("UsersDetails");
         setSavedPaymentMethods(sessionDetails[0]?.paymentMethods);
     }
 

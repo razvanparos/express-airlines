@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import Loader from '../components/Loader';
-import { registerUser } from "../services/registerService";
+import { registerUser } from "../services/authService";
 import { useState } from "react";
 
 

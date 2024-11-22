@@ -1,56 +1,35 @@
-import { collection, query, getDocs, orderBy} from "firebase/firestore";
+import { collection, query, getDocs} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { doc, updateDoc, deleteDoc  } from "firebase/firestore"; 
 
 
 class DbRequest {
     async queryDb(queryParams){
-        const flightsRef = collection(db, 'Flights');
-        const departureFlight = query(flightsRef, queryParams.orderBy, ...queryParams.whereDeparture);
-        const returnFlight = query(flightsRef, queryParams.orderBy, ...queryParams.whereDestination);
-        const departureSnapshot = await getDocs(departureFlight);
-        const returnSnapshot = await getDocs(returnFlight);
-        const departureData = departureSnapshot.docs.map((doc)=>({
+        const tableRef = collection(db, queryParams.table);
+        const tableQuery1 = query(tableRef, queryParams.orderBy, ...queryParams.whereDeparture);
+        if(queryParams.whereDestination){
+          const tableQuery2 = query(tableRef, queryParams.orderBy, ...queryParams.whereDestination);
+          const table1Snapshot = await getDocs(tableQuery1);
+          const table2Snapshot = await getDocs(tableQuery2);
+          const filterdData1 = table1Snapshot.docs.map((doc)=>({
             ...doc.data(),
             id: doc.id,
-        }))
-            const returnData = returnSnapshot.docs.map((doc)=>({
+          }))
+          const filterdData2 = table2Snapshot.docs.map((doc)=>({
+              ...doc.data(),
+              id: doc.id,
+          }))
+          return [filterdData1,filterdData2];
+        }else{
+          const table1Snapshot = await getDocs(tableQuery1);
+          const filterdData1 = table1Snapshot.docs.map((doc)=>({
             ...doc.data(),
             id: doc.id,
-        }))
-        return [departureData,returnData];
+          }))
+          return filterdData1
+        }
   }
-    async queryDbAdmin(queryParams){
-        const flightsRef = collection(db, 'Flights');
-        const departureFlight = query(flightsRef, ...queryParams.whereCondition);
-        const departureSnapshot = await getDocs(departureFlight);
-        const departureData = departureSnapshot.docs.map((doc)=>({
-            ...doc.data(),
-            id: doc.id,
-        }))
-        return departureData;
-  }
-  async queryAllFlights(){
-    const flightsRef = collection(db, "Flights");
-      const q = query(flightsRef);
-      const querySnapshot = await getDocs(q);
-      const filteredData = querySnapshot.docs.map((doc)=>({
-        ...doc.data(),
-        id: doc.id,
-    }))
-    return filteredData;
-  }
-  async queryChartsData(){
-    const chartsRef = collection(db, "ChartsData");
-      const q = query(chartsRef, orderBy("date", "asc"),);
-      const querySnapshot = await getDocs(q);
-      const filteredData = querySnapshot.docs.map((doc)=>({
-        ...doc.data(),
-        id: doc.id,
-    }))
-    return filteredData;
-  }
-
+  
   async updateFlight(id,newDeparture,newDestination,newFlightDate){
     await updateDoc(doc(db, "Flights",id), {
       departure: newDeparture,

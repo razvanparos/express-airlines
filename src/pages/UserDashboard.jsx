@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { logoutUser} from '../services/loginService'
+import { logoutUser} from '../services/authService'
 import { useContext, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import {removePaymentMethod} from '../services/removePaymentMethod'
+import {removePaymentMethod} from '../services/paymentService'
 import { AppContext } from "../context/AppContext";
 
 

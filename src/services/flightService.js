@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, setDoc, orderBy } from "firebase/firestore"; 
+import { collection, query, where, getDocs, doc, arrayUnion, setDoc, orderBy } from "firebase/firestore"; 
 import DbRequest from './dbRequestService';
 
 export const bookFlight = async (booking) => {
@@ -9,7 +9,7 @@ export const bookFlight = async (booking) => {
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
-            await updateDoc(doc(db, "UsersDetails", userDoc.id), {
+            DbRequest.updateDb(userDoc.id,"UsersDetails",{
                 bookedFlights: arrayUnion(booking)
             });
         } else {
@@ -85,7 +85,7 @@ export const createFlightsAdmin = async (flightData) => {
     });
   };
 
-  export const updateFlightSeats = async (booking) => {
+  export const updateDbSeats = async (booking) => {
     try {
         const flightsRef = collection(db, "Flights");
         const flight1 = query(flightsRef, where("id", "==", booking.departureFlight.id));
@@ -101,7 +101,7 @@ export const createFlightsAdmin = async (flightData) => {
                     flight1Seats[i].occupied=true;
                 }
             }
-            await updateDoc(doc(db, "Flights", booking.departureFlight.id), {
+            DbRequest.updateDb(booking.departureFlight.id,"Flights",{
                 freeSeats: flight1Data.freeSeats-booking.adultsNumber,
                 seats: flight1Seats
             });
@@ -117,7 +117,7 @@ export const createFlightsAdmin = async (flightData) => {
                     flight2Seats[i].occupied=true;
                 }
             }
-            await updateDoc(doc(db, "Flights", booking.returnFlight.id), {
+            DbRequest.updateDb(booking.returnFlight.id,"Flights",{
                 freeSeats: flight2Data.freeSeats-booking.adultsNumber,
                 seats: flight2Seats
             });
@@ -132,22 +132,22 @@ export const createFlightsAdmin = async (flightData) => {
 export const getFlights= async(departure, destination, adultsNumber, startDate, endDate, table) => {
     return await DbRequest.queryDb({
       orderBy: orderBy("pricePerSeat","asc"),
-      whereDeparture: [where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",startDate),where("freeSeats",">=",adultsNumber)],
-      whereDestination: [where("departure", "==", destination), where("destination","==",departure),where("flightDate","==",endDate),where("freeSeats",">=",adultsNumber)],
+      whereCondition: [where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",startDate),where("freeSeats",">=",adultsNumber)],
+      whereCondition2: [where("departure", "==", destination), where("destination","==",departure),where("flightDate","==",endDate),where("freeSeats",">=",adultsNumber)],
       table: table
     });
   }
 
   export const  getFlightsAdmin= async(departure, destination, flightDate,table) => {
     return await DbRequest.queryDb({
-      whereDeparture: [where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",flightDate)],
-      table:table
+        whereCondition: [where("departure", "==", departure), where("destination","==",destination),where("flightDate","==",flightDate)],
+        table:table
     });
   }
 
   export const getAllFlights=async(table)=>{
     return await DbRequest.queryDb({
       table:table,
-      whereDeparture:'',
+      whereCondition:'',
     })
   }

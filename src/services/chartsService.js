@@ -66,7 +66,7 @@ export const updateChartsData = async () => {
     return await DbRequest.queryDb({
       orderBy: orderBy("date", "asc"),
       table:table,
-      whereDeparture:'',
+      whereCondition:'',
     })
   }
 

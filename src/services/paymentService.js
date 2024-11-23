@@ -1,5 +1,6 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs, doc, updateDoc, arrayUnion } from "firebase/firestore"; 
+import { collection, query, where, getDocs, arrayUnion } from "firebase/firestore"; 
+import DbRequest from '../services/dbRequestService'
 
 export const removePaymentMethod = async (id) => {
     try {
@@ -11,7 +12,7 @@ export const removePaymentMethod = async (id) => {
             const userData = userDoc.data();
             let updatedPaymentMethods = userData.paymentMethods;
             updatedPaymentMethods=updatedPaymentMethods.filter(m=>m.id!==id)
-            await updateDoc(doc(db, "UsersDetails", userDoc.id), {
+            DbRequest.updateDb(userDoc.id,"UsersDetails",{
                 paymentMethods: updatedPaymentMethods
             });
         } else {
@@ -30,8 +31,7 @@ export const savePaymentInfo = async (payment) => {
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
-            const userData = userDoc.data();
-            await updateDoc(doc(db, "UsersDetails", userDoc.id), {
+            DbRequest.updateDb(userDoc.id,"UsersDetails",{
                 paymentMethods: arrayUnion(payment)
             });
         } else {

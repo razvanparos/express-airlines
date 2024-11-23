@@ -137,8 +137,12 @@ function FlightsTab() {
     const editMode=async(id)=>{
       if(editFlight){
         setEditFlight('')
-        await DbRequest.updateFlight(id,newDeparture,newDestination,newFlightDate);
-        let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
+        await DbRequest.updateDb(id,"Flights",{
+          departure: newDeparture,
+          destination: newDestination,
+          flightDate: newFlightDate
+        });
+        let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
         setAdminFlights(queryResponse);
       }else{
         setEditFlight(id)
@@ -150,8 +154,8 @@ function FlightsTab() {
       }
     }
     const cancelFlight=async(id)=>{
-      await DbRequest.removeFlight(id)
-      let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate));
+      await DbRequest.removeFromDb(id,"Flights")
+      let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
       setAdminFlights(queryResponse);
     }
 

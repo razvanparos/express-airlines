@@ -59,6 +59,6 @@ export const registerUser = async (registerName,registerPhone, registerEmail, re
   export const getUserDetails = async(table)=>{
     return await DbRequest.queryDb({
       table:table,
-      whereDeparture: [where("id", "==", sessionStorage.getItem('currentUser'))],
+      whereCondition: [where("id", "==", sessionStorage.getItem('currentUser'))],
     })
   }

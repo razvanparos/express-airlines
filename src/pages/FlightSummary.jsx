@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { bookFlight} from '../services/flightService'
 import Loader from "../components/Loader";
 import {savePaymentInfo} from '../services/paymentService'
-import {updateFlightSeats} from '../services/flightService'
+import {updateDbSeats} from '../services/flightService'
 import { FaCheck } from "react-icons/fa";
 import { updateChartsData } from "../services/chartsService";
 import { AppContext } from "../context/AppContext";
@@ -69,7 +69,7 @@ function FlightSummary() {
                 await savePaymentInfo(paymentInfo)
             }
             await bookFlight(booking);
-            await updateFlightSeats(booking);
+            await updateDbSeats(booking);
             sessionStorage.removeItem('currentBooking')
             fetchUserData();
             updateChartsData();

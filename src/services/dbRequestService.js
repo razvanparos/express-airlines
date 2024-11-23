@@ -6,9 +6,9 @@ import { doc, updateDoc, deleteDoc  } from "firebase/firestore";
 class DbRequest {
     async queryDb(queryParams){
         const tableRef = collection(db, queryParams.table);
-        const tableQuery1 = query(tableRef, queryParams.orderBy, ...queryParams.whereDeparture);
-        if(queryParams.whereDestination){
-          const tableQuery2 = query(tableRef, queryParams.orderBy, ...queryParams.whereDestination);
+        const tableQuery1 = query(tableRef, queryParams.orderBy, ...queryParams.whereCondition);
+        if(queryParams.whereCondition2){
+          const tableQuery2 = query(tableRef, queryParams.orderBy, ...queryParams.whereCondition2);
           const table1Snapshot = await getDocs(tableQuery1);
           const table2Snapshot = await getDocs(tableQuery2);
           const filterdData1 = table1Snapshot.docs.map((doc)=>({
@@ -30,15 +30,12 @@ class DbRequest {
         }
   }
   
-  async updateFlight(id,newDeparture,newDestination,newFlightDate){
-    await updateDoc(doc(db, "Flights",id), {
-      departure: newDeparture,
-      destination: newDestination,
-      flightDate: newFlightDate
-  });
+  async updateDb(id,table,updateParams){
+    await updateDoc(doc(db,table,id), updateParams);
   }
-  async removeFlight(id){
-    await deleteDoc(doc(db, "Flights", id));
+
+  async removeFromDb(id,table){
+    await deleteDoc(doc(db,table,id));
   }
 }
 

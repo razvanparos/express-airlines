@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs,writeBatch, doc, setDoc, orderBy} from "firebase/firestore";
+import { collection, query, where, getDocs,writeBatch, doc, orderBy} from "firebase/firestore";
 import {getAllFlights} from "./flightService";
 import DbRequest from './dbRequestService';
 
@@ -24,19 +24,19 @@ export const updateChartsData = async () => {
       let queryResponse = await getAllFlights();
       if(filteredData.length===0){
         var newId = "id" + Math.random().toString(16).slice(2)
-        await setDoc(doc(db, "ChartsData", newId), {
-            id: newId,
-            date: today,
-            occupiedSeats: queryResponse?.reduce((total,f)=>{f.seats.forEach((s)=>{if(s.occupied){total+=1}}) 
-                return total;},0),
-            freeSeats: queryResponse?.reduce((total,f)=>total+f.seats.length,0),
-            sales: queryResponse?.reduce((total, flight) => {
-              const occupiedSeatsCount = flight.seats.filter(seat => seat.occupied).length;
-              return total + (flight.pricePerSeat * occupiedSeatsCount);}, 0),
-            total: queryResponse?.reduce((total,f)=>total+(f.pricePerSeat*f.freeSeats),0)
-          })
+        DbRequest.setDb(newId,"ChartsData",{
+              id: newId,
+              date: today,
+              occupiedSeats: queryResponse?.reduce((total,f)=>{f.seats.forEach((s)=>{if(s.occupied){total+=1}}) 
+                  return total;},0),
+              freeSeats: queryResponse?.reduce((total,f)=>total+f.seats.length,0),
+              sales: queryResponse?.reduce((total, flight) => {
+                const occupiedSeatsCount = flight.seats.filter(seat => seat.occupied).length;
+                return total + (flight.pricePerSeat * occupiedSeatsCount);}, 0),
+              total: queryResponse?.reduce((total,f)=>total+(f.pricePerSeat*f.freeSeats),0)
+            })
         }else{
-          await setDoc(doc(db, "ChartsData", filteredData[0].id), {
+          DbRequest.setDb(newId,"ChartsData",{
             id: filteredData[0].id,
             date: today,
             occupiedSeats: queryResponse?.reduce((total,f)=>{f.seats.forEach((s)=>{if(s.occupied){total+=1}}) 
@@ -46,7 +46,7 @@ export const updateChartsData = async () => {
               const occupiedSeatsCount = flight.seats.filter(seat => seat.occupied).length;
               return total + (flight.pricePerSeat * occupiedSeatsCount);}, 0),
             total: queryResponse?.reduce((total,f)=>total+(f.pricePerSeat*f.freeSeats),0)
-          });
+          })
       }
       let queryChartsDataResponse = await getChartData();
       if(queryChartsDataResponse.length>5){

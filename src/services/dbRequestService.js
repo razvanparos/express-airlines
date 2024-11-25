@@ -1,6 +1,7 @@
-import { collection, query, getDocs} from "firebase/firestore";
+import { collection, query, getDocs, setDoc} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { doc, updateDoc, deleteDoc  } from "firebase/firestore"; 
+import errorMessages from '../mock-data/errorMessages.json';
 
 
 class DbRequest {
@@ -36,6 +37,14 @@ class DbRequest {
 
   async removeFromDb(id,table){
     await deleteDoc(doc(db,table,id));
+  }
+
+  async setDb(id,table,setParams){
+    try {
+      await setDoc(doc(db, table, id), setParams);
+    } catch (error) {
+      throw errorMessages[error.code];
+    }
   }
 }
 

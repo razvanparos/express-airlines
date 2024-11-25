@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs, doc, arrayUnion, setDoc, orderBy } from "firebase/firestore"; 
+import { collection, query, where, getDocs, arrayUnion, orderBy } from "firebase/firestore"; 
 import DbRequest from './dbRequestService';
 
 export const bookFlight = async (booking) => {
@@ -36,18 +36,18 @@ export const createFlights = async (departure,destination,startDate,endDate,dist
             })
         }
     }
-    await setDoc(doc(db, "Flights", newId1), {
-        departure: departure,
-        destination: destination,
-        flightDate: startDate,
-        freeSeats: emptySeats.length,
-        id: newId1,
-        landing: "16:00",
-        takeOff:"13:00",
-        pricePerSeat: price,
-        seats:emptySeats 
-    });
-    await setDoc(doc(db, "Flights", newId2), {
+    DbRequest.setDb(newId1,"Flights",{
+            departure: departure,
+            destination: destination,
+            flightDate: startDate,
+            freeSeats: emptySeats.length,
+            id: newId1,
+            landing: "16:00",
+            takeOff:"13:00",
+            pricePerSeat: price,
+            seats:emptySeats 
+    })
+    DbRequest.setDb(newId2,"Flights",{
         departure: destination,
         destination: departure,
         flightDate: endDate,
@@ -72,7 +72,7 @@ export const createFlightsAdmin = async (flightData) => {
             })
         }
     }
-    await setDoc(doc(db, "Flights", newId), {
+    DbRequest.setDb(newId,"Flights", {
         departure: flightData.departure,
         destination: flightData.destination,
         flightDate: flightData.date,

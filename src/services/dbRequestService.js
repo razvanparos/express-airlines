@@ -1,8 +1,6 @@
 import { collection, query, getDocs, setDoc} from "firebase/firestore";
 import { db } from "../firebase-config";
 import { doc, updateDoc, deleteDoc  } from "firebase/firestore"; 
-import errorMessages from '../mock-data/errorMessages.json';
-
 
 class DbRequest {
     async queryDb(queryParams){
@@ -30,6 +28,19 @@ class DbRequest {
           return filterdData1
         }
   }
+    async queryDbData(queryParams){
+        const tableRef = collection(db, queryParams.table);
+        const tableQuery1 = query(tableRef, queryParams.orderBy, ...queryParams.whereCondition);
+        if(queryParams.whereCondition2){
+          const tableQuery2 = query(tableRef, queryParams.orderBy, ...queryParams.whereCondition2);
+          const table1Snapshot = await getDocs(tableQuery1);
+          const table2Snapshot = await getDocs(tableQuery2);
+          return [table1Snapshot,table2Snapshot];
+        }else{
+          const table1Snapshot = await getDocs(tableQuery1);
+          return table1Snapshot
+        }
+  }
   
   async updateDb(id,table,updateParams){
     await updateDoc(doc(db,table,id), updateParams);
@@ -43,7 +54,7 @@ class DbRequest {
     try {
       await setDoc(doc(db, table, id), setParams);
     } catch (error) {
-      throw errorMessages[error.code];
+      throw error;
     }
   }
 }

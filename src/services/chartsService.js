@@ -1,5 +1,5 @@
 import { db } from "../firebase-config";
-import { collection, query, where, getDocs,writeBatch, doc, orderBy} from "firebase/firestore";
+import { where,writeBatch, doc, orderBy } from "firebase/firestore";
 import {getAllFlights} from "./flightService";
 import DbRequest from './dbRequestService';
 
@@ -14,14 +14,11 @@ export const updateChartsData = async () => {
             return `${month}/${day}/${year}`; 
         };
         today = formatDateToISO(today)
-        const chartsRef = collection(db, "ChartsData");
-        const q = query(chartsRef, where("date", "==", today));
-        const querySnapshot = await getDocs(q);
-        const filteredData = querySnapshot.docs.map((doc)=>({
-            ...doc.data(),
-            id: doc.id,
-    }))
-      let queryResponse = await getAllFlights();
+        let filteredData = await DbRequest.queryDb({
+          table:'ChartsData',
+          whereCondition: [where("date", "==", today)],
+        })
+      let queryResponse =  await getAllFlights('Flights');
       if(filteredData.length===0){
         var newId = "id" + Math.random().toString(16).slice(2)
         DbRequest.setDb(newId,"ChartsData",{
@@ -36,7 +33,7 @@ export const updateChartsData = async () => {
               total: queryResponse?.reduce((total,f)=>total+(f.pricePerSeat*f.freeSeats),0)
             })
         }else{
-          DbRequest.setDb(newId,"ChartsData",{
+          DbRequest.setDb(filteredData[0].id,"ChartsData",{
             id: filteredData[0].id,
             date: today,
             occupiedSeats: queryResponse?.reduce((total,f)=>{f.seats.forEach((s)=>{if(s.occupied){total+=1}}) 
@@ -48,9 +45,8 @@ export const updateChartsData = async () => {
             total: queryResponse?.reduce((total,f)=>total+(f.pricePerSeat*f.freeSeats),0)
           })
       }
-      let queryChartsDataResponse = await getChartData();
+      let queryChartsDataResponse = await getChartData('ChartsData');
       if(queryChartsDataResponse.length>5){
-        console.log('more than 5')
         const batch = writeBatch(db);
         const docRef = doc(db, "ChartsData", queryChartsDataResponse[0].id);
         batch.delete(docRef);
@@ -58,7 +54,7 @@ export const updateChartsData = async () => {
       }
         
     } catch (error) {
-      
+      console.log(error)
     }
   };
 

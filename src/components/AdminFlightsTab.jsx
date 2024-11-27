@@ -2,18 +2,13 @@ import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import airports from '../mock-data/airports.json'
 import {getFlightsAdmin} from "../services/flightService";
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, Legend } from 'recharts';
 import React from 'react';
-import DbRequest from '../services/dbRequestService';
 import { createFlightsAdmin } from "../services/flightService";
-
+import AdminFlightCard from "./AdminFlightCard";
 
 function FlightsTab() {
-    const COLORS = ['green','#0062E3'];
     const [departure, setDeparture]=useState('');
-    const [newDeparture, setNewDeparture]=useState('');
     const [destination, setDestination]=useState('');
-    const [newDestination, setNewDestination]=useState('');
     const [showDepartureAirportsList, setShowDepartureAirportsList]=useState(false);
     const [showDepartureAirportsListDesktop, setShowDepartureAirportsListDesktop]=useState(false);
     const [showDestinationAirportsList, setShowDestinationAirportsList]=useState(false);
@@ -21,7 +16,6 @@ function FlightsTab() {
     const [departuresList, setDeparturesList]=useState([]);
     const [destinationsList, setDestinationsList]=useState([]);
     const [flightDate, setFlightDate] = useState(formatDate(new Date()));
-    const [newFlightDate, setNewFlightDate] = useState(formatDate(new Date()));
     const [minDate, setMinDate] = useState(formatDate(new Date()));
     const [loading, setLoading] = useState(false);
     const [loadingAdd, setLoadingAdd] = useState(false);
@@ -46,7 +40,6 @@ function FlightsTab() {
         const day = d.getDate().toString().padStart(2, '0'); 
         return `${year}-${month}-${day}`; 
       };
-
     useEffect(()=>{
         let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
         if(departure.localeCompare(departuresList[0]?.name)===0){
@@ -125,7 +118,6 @@ function FlightsTab() {
         }    
         setLoadingAdd(false)
     }
-    
     const handleDepartureListItemClick=(item)=>{
         setDeparture(item.name);
         setShowDepartureAirportsList(false)   
@@ -134,31 +126,6 @@ function FlightsTab() {
         setDestination(item.name);
         setShowDestinationAirportsList(false)   
     }
-    const editMode=async(id)=>{
-      if(editFlight){
-        setEditFlight('')
-        await DbRequest.updateDb(id,"Flights",{
-          departure: newDeparture,
-          destination: newDestination,
-          flightDate: newFlightDate
-        });
-        let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
-        setAdminFlights(queryResponse);
-      }else{
-        setEditFlight(id)
-        let focusRef = document.getElementById(id);
-        focusRef.focus();
-        setNewDeparture(departure)
-        setNewDestination(destination)
-        setNewFlightDate(formatDateToISO(flightDate))
-      }
-    }
-    const cancelFlight=async(id)=>{
-      await DbRequest.removeFromDb(id,"Flights")
-      let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
-      setAdminFlights(queryResponse);
-    }
-
     return (
     <section className="flex flex-col gap-y-[20px]">
       <form onSubmit={getFLights} action="" className="flex flex-col px-4 lg:px-0 pt-8 w-full 2xl:grid 2xl:grid-cols-4">
@@ -188,8 +155,7 @@ function FlightsTab() {
                 }):<p>No airports found</p>}
               </div>
           </div>
-        
-          <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightDate} min={minDate} onChange={(e)=>{setFlightDate(e.target.value)}}/>
+          <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightDate} onChange={(e)=>{setFlightDate(e.target.value)}}/>
           <p className="text-red-500 mt-2 2xl:hidden">{searchError}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loading?<Loader/>:'Search'}</button>
           <p className="text-red-500 mt-2 hidden 2xl:block w-full">{searchError}</p>
@@ -201,68 +167,20 @@ function FlightsTab() {
         <section className="p-4 lg:px-[0]">
           <div className="flex flex-col gap-y-4">
             {adminFlights?.map((f,i)=>{
-            return <div key={i}
-              className="border-2 w-full gap-y-[40px] p-2 2xl:p-[40px] rounded-lg flex flex-col lg:flex-row justify-between items-center bg-gray-200">
-              <div className="flex flex-col gap-y-2">
-                <p className="text-primaryBlue font-bold">{f.id}</p>
-                <p><strong>Departure:</strong> <input type="text" id={f.id}
-                    className={`${editFlight===f.id?'pointer-events-auto':'pointer-events-none bg-gray-200'}
-                    rounded-lg`} value={editFlight===f.id?newDeparture:f.departure}
-                    onChange={(e)=>{setNewDeparture(e.target.value)}}/></p>
-                <p><strong>Destination:</strong> <input type="text"
-                    className={`${editFlight===f.id?'pointer-events-auto':'pointer-events-none bg-gray-200'}
-                    rounded-lg`} value={editFlight===f.id?newDestination:f.destination}
-                    onChange={(e)=>{setNewDestination(e.target.value)}}/></p>
-                <p><strong>Flight Date:</strong> <input type="text"
-                    className={`${editFlight===f.id?'pointer-events-auto':'pointer-events-none bg-gray-200'}
-                    rounded-lg`} value={editFlight===f.id?newFlightDate:f.flightDate}
-                    onChange={(e)=>{setNewFlightDate(e.target.value)}}/></p>
-                <p><strong>Takeoff: </strong>{f.takeOff}</p>
-                <p><strong>Landing: </strong>{f.landing}</p>
-              </div>
-              <div>
-                <BarChart width={300} height={200} data={[{ name: 'Sales' , sold:
-                  (f.seats.length-f.freeSeats)*f.pricePerSeat, potentialSales: f.seats.length*f.pricePerSeat, }]}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="sold" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-                  <Bar dataKey="potentialSales" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
-                </BarChart>
-              </div>
-              <div className="relative flex flex-col items-center">
-                <p>Occupied seats</p>
-                <PieChart width={200} height={200}>
-                  <Pie data={[ { name: 'Occupied Seats' , value: f.seats.length-f.freeSeats }, { name: 'Free Seats' ,
-                    value: f.freeSeats }, ]} innerRadius={60} outerRadius={90} fill="#00C49F" paddingAngle={0}
-                    dataKey="value">
-                    {[
-                    { name: 'Occupied Seats', value: f.seats.length-f.freeSeats },
-                    { name: 'Free Seats', value: f.freeSeats },
-                    ].map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-                <p className="absolute text-black bottom-[38%] font-bold">{`${f.seats.length-f.freeSeats} /
-                  ${f.seats.length}`}</p>
-              </div>
-              <div className="w-full md:w-fit flex md:flex-col justify-between gap-y-[20px]">
-                <button onClick={()=>{editMode(f.id)}} className={`${editFlight===f.id?'bg-green-600':'bg-primaryBlue'}
-                  text-white p-2 rounded-lg`}>{editFlight===f.id?'Save':'Edit flight'}</button>
-                <button onClick={()=>{cancelFlight(f.id)}} className="bg-red-600 text-white p-2 rounded-lg">Cancel
-                  flight</button>
-              </div>
-            </div>
+              return <AdminFlightCard key={i}
+              flight={f}
+              editFlight={editFlight}
+              departure={departure}
+              destination={destination}
+              flightDate={formatDateToISO(flightDate)}
+              setEditFlight={setEditFlight}
+              setAdminFlights={setAdminFlights}
+              />
             })}
           </div>
           <p className="text-red-500">{noFlightsfound}</p>
         </section>
-
         :
-        
         <form onSubmit={addFlightFunction} id="addForm" action="" className="flex flex-col px-4 lg:px-0 w-full 2xl:grid 2xl:grid-cols-10">
           <div className="relative 2xl:col-span-2 mb-[1px] 2xl:mb-[0px]">
             <input id="departureAirport" placeholder="Departure airport" type="text" className=" border-2 border-primaryBlue rounded-t-xl py-3 px-4 text-md w-full 2xl:rounded-bl-lg 2xl:rounded-tr-none 2xl:h-[80px]" />
@@ -285,5 +203,4 @@ function FlightsTab() {
     </section>
   );
 }
-
 export default FlightsTab;

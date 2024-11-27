@@ -25,8 +25,7 @@ export const AppProvider = ({ children }) => {
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        let response = await getUserDetails("UsersDetails")
-        console.log(response)
+        // let response = await getUserDetails("UsersDetails")
         setUserDetails(await getUserDetails("UsersDetails"));
       } else {
         removeUserData();

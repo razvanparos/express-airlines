@@ -1,15 +1,14 @@
-import { db } from "../firebase-config";
-import { collection, query, where, getDocs, arrayUnion, orderBy } from "firebase/firestore"; 
+import { where, arrayUnion, orderBy } from "firebase/firestore"; 
 import DbRequest from './dbRequestService';
 
 export const bookFlight = async (booking) => {
     try {
-        const usersRef = collection(db, "UsersDetails");
-        const q = query(usersRef, where("id", "==", sessionStorage.getItem('currentUser')));
-        const querySnapshot = await getDocs(q);
+        let querySnapshot = await DbRequest.queryDb({
+            table:'UsersDetails',
+            whereCondition: [where("id", "==", sessionStorage.getItem('currentUser'))],
+        })
         if (!querySnapshot.empty) {
-            const userDoc = querySnapshot.docs[0];
-            DbRequest.updateDb(userDoc.id,"UsersDetails",{
+            DbRequest.updateDb(querySnapshot[0].id,"UsersDetails",{
                 bookedFlights: arrayUnion(booking)
             });
         } else {
@@ -87,13 +86,13 @@ export const createFlightsAdmin = async (flightData) => {
 
   export const updateDbSeats = async (booking) => {
     try {
-        const flightsRef = collection(db, "Flights");
-        const flight1 = query(flightsRef, where("id", "==", booking.departureFlight.id));
-        const flight2 = query(flightsRef, where("id", "==", booking.returnFlight.id));
-        const flight1Snapshot = await getDocs(flight1);
-        const flight2Snapshot = await getDocs(flight2);
-        if (!flight1Snapshot.empty) {
-            const flight1Doc = flight1Snapshot.docs[0];
+        let response = await DbRequest.queryDbData({
+            whereCondition: [where("id", "==", booking.departureFlight.id)],
+            whereCondition2: [where("id", "==", booking.returnFlight.id)],
+            table: "Flights"
+        })
+        if (!response[0].empty) {
+            const flight1Doc = response[0].docs[0];
             const flight1Data = flight1Doc.data();
             let flight1Seats = flight1Data.seats;
             for(let i=0;i<=flight1Seats.length;i++){
@@ -108,8 +107,8 @@ export const createFlightsAdmin = async (flightData) => {
         } else {
             console.error("No user found with the specified ID.");
         }
-        if (!flight2Snapshot.empty) {
-            const flight2Doc = flight2Snapshot.docs[0];
+        if (!response[1].empty) {
+            const flight2Doc = response[1].docs[0];
             const flight2Data = flight2Doc.data();
             let flight2Seats = flight2Data.seats;
             for(let i=0;i<=flight2Seats.length;i++){

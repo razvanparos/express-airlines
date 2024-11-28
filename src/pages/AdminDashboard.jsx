@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { logoutUser} from '../services/authService'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
-import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip  } from 'recharts';
+import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip  } from 'recharts';
 import {getAllFlights} from "../services/flightService";
 import {getChartData} from "../services/chartsService"
 import { updateChartsData } from "../services/chartsService";
@@ -11,7 +11,7 @@ import { AppContext } from "../context/AppContext";
 
 
 function AdminDashboard() {
-  const {removeUserData}=useContext(AppContext)
+  const {dispatch}=useContext(AppContext)
   const COLORS = ['green','#0062E3'];
   const COLORS2 = ['purple','#0062E3'];
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -59,7 +59,12 @@ function AdminDashboard() {
     
     const handleLogOut=async()=>{
       await logoutUser(navigate);
-      removeUserData();
+      dispatch({
+        type: "SET_USER_DATA",
+        payload: {
+          userDetails: {},
+        },
+      });
     }
 
   return (

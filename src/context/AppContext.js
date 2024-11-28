@@ -1,48 +1,28 @@
-import React, { createContext, useState, useEffect } from "react";
-import { auth } from "../firebase-config";
+import React, { createContext, useEffect, useReducer } from "react";
 import { getUserDetails } from "../services/authService";
-
+import initialState from "./initial-state";
+import combineReducers from "./reducers/combine-reducers";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [userDetails, setUserDetails] = useState('');
-  const [departureFlights, setDepartureFlights] = useState('');
-  const [returnFlights, setReturnFlights] = useState('');
-  const [adultsNumber, setAdultsNumber] = useState(1);
-  const [departureAirport, setDepartureAirport] = useState('');
-  const [destinationAirport, setDestinationAirport] = useState('');
-  const [departureDate, setDepartureDate] = useState('');
-  const [returnDate, setReturnDate] = useState('');
-
-  const getUserDataFromLogin = (details) => {
-    setUserDetails(details);
-  };
-
+  const [state, dispatch] = useReducer(combineReducers, initialState);
   const removeUserData = () => {
-    setUserDetails('');
-  };
-
-  const fetchUserData = async () => {
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        // let response = await getUserDetails("UsersDetails")
-        setUserDetails(await getUserDetails("UsersDetails"));
-      } else {
-        removeUserData();
-      }
+    dispatch({
+      type: "SET_USER_DATA",
+      payload: {
+        userDetails: {},
+      },
     });
   };
-
-  const fetchFlights = (dep, ret, nr, depAir, destAir, start, end) => {
-    setDepartureFlights(dep);
-    setReturnFlights(ret);
-    setAdultsNumber(nr);
-    setDepartureAirport(depAir);
-    setDestinationAirport(destAir);
-    setDepartureDate(start);
-    setReturnDate(end);
+  const fetchUserData = async () => {
+    let response = await getUserDetails("UsersDetails")
+    dispatch({
+      type: "SET_USER_DATA",
+      payload: {
+        userDetails: response,
+      },
+    });
   };
-
   useEffect(() => {
     if (sessionStorage.getItem("currentUser")) {
       fetchUserData();
@@ -56,18 +36,10 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        userDetails,
-        departureFlights,
-        returnFlights,
-        adultsNumber,
-        departureAirport,
-        destinationAirport,
-        departureDate,
-        returnDate,
-        getUserDataFromLogin,
+        state,
+        dispatch,
         removeUserData,
         fetchUserData,
-        fetchFlights,
       }}
     >
       {children}

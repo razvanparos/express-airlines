@@ -13,7 +13,8 @@ function UserDashboard() {
     const navigate = useNavigate();
     const [expandBookings, setExpandBookings] = useState(true);
     const [expandPayment, setExpandPayment] = useState(true); 
-    const {removeUserData, fetchUserData, userDetails}=useContext(AppContext)
+    const {removeUserData, fetchUserData, state}=useContext(AppContext)
+    const { userDetails } = state;
 
     useEffect(()=>{
       if(!sessionStorage.getItem('currentUser')){

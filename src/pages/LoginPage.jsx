@@ -13,7 +13,7 @@ function LoginPage() {
   const [loading, setLoading]=useState(false);
   const [loginError, setLoginError]=useState('');
 
-  const {getUserDataFromLogin}=useContext(AppContext)
+  const {dispatch}=useContext(AppContext)
 
   const handleLogin = async(e)=>{
     e.preventDefault();
@@ -21,7 +21,12 @@ function LoginPage() {
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
       let userDetails = await getUserDetails('UsersDetails');
-      getUserDataFromLogin(userDetails)
+      dispatch({
+        type: "SET_USER_DATA",
+        payload: {
+          userDetails: userDetails,
+        },
+      });
       if(sessionStorage.getItem('currentBooking')){
         navigate('/flight-details')
       }else if(userDetails[0].isAdmin){

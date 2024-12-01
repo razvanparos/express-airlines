@@ -19,6 +19,7 @@ const FlightDetails = React.lazy(() => import("./pages/FlightDetails"));
 const FlightSummary = React.lazy(() => import("./pages/FlightSummary"));
 
 export default function App() {
+  
   return (
     <AppProvider>
       <BrowserRouter>

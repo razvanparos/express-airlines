@@ -2,19 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { logoutUser} from '../services/authService'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
-import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip  } from 'recharts';
 import {getAllFlights} from "../services/flightService";
 import {getChartData} from "../services/chartsService"
 import { updateChartsData } from "../services/chartsService";
 import FlightsTab from "../components/AdminFlightsTab";
 import { AppContext } from "../context/AppContext";
-
+import AdminDashboardCharts from "../components/AdminDashboardCharts";
 
 function AdminDashboard() {
   const {dispatch}=useContext(AppContext)
-  const COLORS = ['green','#0062E3'];
-  const COLORS2 = ['purple','#0062E3'];
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
   const navigate=useNavigate();
   const fetchData = async () => {
     await updateChartsData();
@@ -33,7 +30,6 @@ function AdminDashboard() {
     setOccupiedSeats(queryResponse[queryResponse.length-1].occupiedSeats)
     setFreeSeats(queryResponse[queryResponse.length-1].freeSeats)
   }
-  
     const [occupiedSeats, setOccupiedSeats] = useState()
     const [freeSeats, setFreeSeats] = useState()
     const [salesData, setSalesData] = useState([])
@@ -66,122 +62,31 @@ function AdminDashboard() {
         },
       });
     }
-
   return (
     <div className="bg-white lg:px-[10%]">
-
       <section className="bg-primaryBlue w-full h-fit flex justify-between items-center lg:rounded-b-lg py-4 px-4">
         <div className="hidden lg:block"></div>
         <p className="font-bold lg:text-2xl text-white">Admin Dashboard</p>
         <button className="rounded-lg text-white" onClick={handleLogOut}>Sign out</button>
       </section>
-
       <section className="w-full px-4 lg:px-0 flex flex-col md:flex-row justify-between items-end gap-y-4">
         <div className="border-2 border-primaryBlue mt-4 w-full md:w-fit flex rounded-lg">
           <p onClick={()=>{setAdminTab('Charts')}} className={`${adminTab=='Charts'?'text-white bg-primaryBlue':''} text-primaryBlue duration-300 w-[50%] p-2 px-4 cursor-pointer select-none`}>Charts</p>
           <p onClick={()=>{setAdminTab('Flights')}} className={`${adminTab=='Flights'?'text-white bg-primaryBlue':''} text-primaryBlue w-[50%] duration-300 p-2 px-4 cursor-pointer select-none`}>Flights</p>
         </div>
       </section> 
-
       {adminTab=='Charts'?
-      <article className="py-[20px] flex flex-col xl:grid xl:grid-cols-3 lg:gap-x-8 items-center px-4 lg:px-0 gap-y-[16px]">
-        <section className="h-full flex flex-col justify-between items-center relative bg-gray-200 rounded-lg w-full p-4">
-            <p className="text-lg">{`Flights until ${new Date().getDate()} ${MONTHS[new Date().getMonth()]} ${new Date().getFullYear()}`}</p>
-            <PieChart width={200} height={200} >
-              <Pie
-                data={[
-                  { name: 'Completed flights until today', value: flightsNrUntilToday },
-                  { name: 'Upcoming flights', value: flightsNr-flightsNrUntilToday },
-                ]}
-                innerRadius={60}
-                outerRadius={90}
-                fill="#00C49F"
-                paddingAngle={0}
-                dataKey="value"
-              >
-                {
-                  [{ name: 'Completed flights until today', value: flightsNrUntilToday },
-                    { name: 'Upcoming flights', value: flightsNr-flightsNrUntilToday },
-                  ].map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS2[index % COLORS2.length]} />))
-                }
-              </Pie>
-              <Tooltip />
-            </PieChart>
-            <p className="absolute text-black bottom-[48%] lg:bottom-[48%] font-bold">{`${flightsNrUntilToday} / ${flightsNr}`}</p> 
-            <div>
-              <div className="flex items-center gap-x-2">
-                <div className="w-[15px] h-[15px] bg-[purple]"></div>
-                <p>Completed flights until today</p>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <div className="w-[15px] h-[15px] bg-[#0062E3]"></div>
-                <p>Upcoming flights</p>
-              </div>
-            </div>
-        </section>
-
-        <section className="h-fit flex flex-col items-center relative bg-gray-200 rounded-lg w-full p-4 ">
-          <p>Sales</p>
-          <AreaChart
-            className="text-xs"
-            width={windowWidth-20}
-            height={250}
-            data={salesData}
-            margin={{
-              top: 0,
-              right: 35,
-              left: -10,
-              bottom: 0,
-            }}
-          >
-            <XAxis dataKey="date"/>
-            <YAxis className="text-[10px]"/>
-            <Tooltip />
-            <Area type="monotone" dataKey="sales" stackId="1" stroke="#0062E3" fill="#0062E3" strokeWidth={4} />
-            <Area type="monotone" dataKey="potentialSales" stackId="1" stroke="#82ca9d" fill="#82ca9d" strokeWidth={4}/>
-          </AreaChart>
-        </section>
-        
-        <section className="h-full flex flex-col justify-between items-center relative bg-gray-200 rounded-lg w-full p-4">
-          <p className="text-lg">Occupied Seats</p>
-            <PieChart width={200} height={200} >
-              <Pie
-                data={[
-                  { name: 'Occupied Seats', value: occupiedSeats },
-                  { name: 'Free Seats', value: freeSeats },
-                ]}
-                innerRadius={60}
-                outerRadius={90}
-                fill="#00C49F"
-                paddingAngle={0}
-                dataKey="value"
-              >
-                {[
-                  { name: 'Occupied Seats', value: occupiedSeats },
-                  { name: 'Free Seats', value: freeSeats },
-                ].map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip/>
-            </PieChart>
-          <p className="absolute text-black bottom-[48%] lg:bottom-[48%] font-bold">{`${occupiedSeats} / ${freeSeats+occupiedSeats}`}</p>  
-          <div>
-              <div className="flex items-center gap-x-2">
-                <div className="w-[15px] h-[15px] bg-[green]"></div>
-                <p>Occupied seats</p>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <div className="w-[15px] h-[15px] bg-[#0062E3]"></div>
-                <p>Free seats</p>
-              </div>
-            </div>      
-        </section>
-      </article>
-      :<FlightsTab/>}
+        <AdminDashboardCharts 
+          occupiedSeats={occupiedSeats} 
+          flightsNrUntilToday={flightsNrUntilToday}
+          freeSeats={freeSeats}
+          windowWidth={windowWidth}
+          salesData={salesData}
+          flightsNr={flightsNr}
+        />
+        :<FlightsTab/>
+      }
     </div>
   );
 }
-
 export default AdminDashboard;

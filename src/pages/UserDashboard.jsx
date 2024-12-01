@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { logoutUser} from '../services/authService'
+import { getUserDetails, logoutUser} from '../services/authService'
 import { useContext, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -13,7 +13,7 @@ function UserDashboard() {
     const navigate = useNavigate();
     const [expandBookings, setExpandBookings] = useState(true);
     const [expandPayment, setExpandPayment] = useState(true); 
-    const {removeUserData, fetchUserData, state}=useContext(AppContext)
+    const {dispatch, state}=useContext(AppContext)
     const { userDetails } = state;
 
     useEffect(()=>{
@@ -24,12 +24,23 @@ function UserDashboard() {
   
   const handleRemoveCard=async(id)=>{
     await removePaymentMethod(id);
-    fetchUserData();
+    let response = await getUserDetails("UsersDetails")
+    dispatch({
+        type: "SET_USER_DATA",
+        payload: {
+            userDetails: response,
+        },
+    });
   }
   
   const handleLogOut=async()=>{
     await logoutUser(navigate);
-    removeUserData();
+    dispatch({
+      type: "SET_USER_DATA",
+      payload: {
+        userDetails: {},
+      },
+    });
   }
 
   return (

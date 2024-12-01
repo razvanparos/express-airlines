@@ -5,6 +5,8 @@ import {getFlightsAdmin} from "../services/flightService";
 import React from 'react';
 import { createFlightsAdmin } from "../services/flightService";
 import AdminFlightCard from "./AdminFlightCard";
+import { formatDateToISO } from "../common/utils";
+import { formatDate } from "../common/utils";
 
 function FlightsTab() {
     const [departure, setDeparture]=useState('');
@@ -26,20 +28,7 @@ function FlightsTab() {
     const [editFlight, setEditFlight] = useState('');
     const [addFlightTab, setAddFlightTab] = useState(false);
 
-    function formatDateToISO(date){
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = (d.getMonth() + 1).toString().padStart(2, '0');
-        const day = d.getDate().toString().padStart(2, '0'); 
-        return `${month}/${day}/${year}`; 
-      };
-    function formatDate(date){
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = (d.getMonth() + 1).toString().padStart(2, '0');
-        const day = d.getDate().toString().padStart(2, '0'); 
-        return `${year}-${month}-${day}`; 
-      };
+   
     useEffect(()=>{
         let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
         if(departure.localeCompare(departuresList[0]?.name)===0){

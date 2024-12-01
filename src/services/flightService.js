@@ -1,5 +1,7 @@
 import { where, arrayUnion, orderBy } from "firebase/firestore"; 
 import DbRequest from './dbRequestService';
+import { formatDateToISO } from "../common/utils";
+import { distanceCalculator } from "./distanceCalculator/distanceCalculator";
 
 export const bookFlight = async (booking) => {
     try {
@@ -149,4 +151,42 @@ export const getFlights= async(departure, destination, adultsNumber, startDate, 
       table:table,
       whereCondition:'',
     })
+  }
+
+  export const setFlights=async(dispatch,departure,destination,startDate,endDate,setLoading,adultsNumber,departureAirport,destinationAirport,navigate)=>{
+      let queryResponse = await getFlights(departure,destination,adultsNumber,formatDateToISO(startDate),formatDateToISO(endDate),'Flights');
+      if(queryResponse[0].length>0&&queryResponse[1].length>0){
+        dispatch({
+          type: "SET_FLIGHTS",
+          payload: {
+            flights: {
+              departureFlights:queryResponse[0],
+              returnFlights:queryResponse[1],
+              departureAirport:departureAirport,
+              adultsNumber:adultsNumber,
+              destinationAirport:destinationAirport,
+              departureDate:formatDateToISO(startDate),
+              returnDate:formatDateToISO(endDate)
+            },
+          },
+        });
+        navigate('/explore-results')
+        dispatch({
+          type: "SET_HOMESEARCH",
+          payload: {
+            homeSearch: {
+              departure:'',
+              destination:'',
+              adultsNumber:1,
+              startDate:'',
+              endDate:''
+            },
+          },
+        });
+      }else{
+        let dist = distanceCalculator(departureAirport._geoloc.lat,departureAirport._geoloc.lng,destinationAirport._geoloc.lat,destinationAirport._geoloc.lng);
+        await createFlights(departure,destination,formatDateToISO(startDate),formatDateToISO(endDate),dist);
+        setFlights(dispatch,departure,destination,startDate,endDate,setLoading,adultsNumber,departureAirport,destinationAirport,navigate);
+      }
+    setLoading(false)
   }

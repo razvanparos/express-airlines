@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Loader from "./Loader";
 import airports from '../mock-data/airports.json'
 import {getFlightsAdmin} from "../services/flightService";
@@ -7,10 +7,13 @@ import { createFlightsAdmin } from "../services/flightService";
 import AdminFlightCard from "./AdminFlightCard";
 import { formatDateToISO } from "../common/utils";
 import { formatDate } from "../common/utils";
+import LocationPicker from "./LocationPicker";
+import { AppContext } from "../context/AppContext";
 
 function FlightsTab() {
-    const [departure, setDeparture]=useState('');
-    const [destination, setDestination]=useState('');
+    const {state}=useContext(AppContext)
+    const {homeSearch}=state
+    const {departure,destination}=homeSearch
     const [showDepartureAirportsList, setShowDepartureAirportsList]=useState(false);
     const [showDepartureAirportsListDesktop, setShowDepartureAirportsListDesktop]=useState(false);
     const [showDestinationAirportsList, setShowDestinationAirportsList]=useState(false);
@@ -107,48 +110,16 @@ function FlightsTab() {
         }    
         setLoadingAdd(false)
     }
-    const handleDepartureListItemClick=(item)=>{
-        setDeparture(item.name);
-        setShowDepartureAirportsList(false)   
-    }
-    const handleDestinationListItemClick=(item)=>{
-        setDestination(item.name);
-        setShowDestinationAirportsList(false)   
-    }
     return (
     <section className="flex flex-col gap-y-[20px]">
-      <form onSubmit={getFLights} action="" className="flex flex-col px-4 lg:px-0 pt-8 w-full 2xl:grid 2xl:grid-cols-4">
-          <div className="relative 2xl:col-span-1 mb-[1px] 2xl:mb-[0px]">
-            <input placeholder="Choose departure airport" type="text" className="border-2 border-primaryBlue rounded-t-xl py-3 px-4 text-xl w-full 2xl:rounded-bl-lg 2xl:rounded-tr-none 2xl:h-[80px]" value={departure} onChange={(e)=>{setDeparture(e.target.value)}}/>
-            <div className={`${showDepartureAirportsList?'h-fit p-2 2xl:hidden border-2 border-primaryBlue':'h-[0px] 2xl:w-0 2xl :hidden overflow-hidden'}  duration-200 bg-white`}>
-              {departuresList.length>0 ? departuresList?.map((item,index)=>{
-                return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
-              }):<p>No airports found</p>}
-            </div>
-            <div className={`${showDepartureAirportsListDesktop?'h-[120px] hidden 2xl:block shadow-2xl p-3 mt-2 rounded-xl':'h-[0px] hidden'} duration-200 bg-white absolute top-[100%] h-fit`}>
-              {departuresList.length>0 ? departuresList?.map((item,index)=>{
-                return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDepartureListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
-              }):<p>No airports found</p>}
-            </div>
-          </div>
-          <div className="relative 2xl:col-span-1 mb-[1px] 2xl:mb-[0px]">
-              <input placeholder="Choose destination airport" type="text" className="border-2 border-primaryBlue h-full py-3 px-4 text-xl w-full" value={destination} onChange={(e)=>{setDestination(e.target.value)}}/>
-              <div className={`${showDestinationAirportsList?'h-fit p-2 2xl:hidden border-2 border-primaryBlue':'h-[0px] 2xl:hidden overflow-hidden'}  duration-200 bg-white`}>
-                {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
-                  return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
-                }):<p>No airports found</p>}
-              </div>
-              <div className={`${showDestinationAirportsListDesktop?'h-[120px] hidden 2xl:block w-full shadow-2xl p-3 mt-2 rounded-xl visible':'h-[0px] hidden'} duration-200 bg-white absolute top-[100%] h-fit`}>
-                {destinationsList.length>0 ? destinationsList?.map((item,index)=>{
-                  return <p className="mb-2 cursor-pointer text-lg" key={index} onClick={()=>{handleDestinationListItemClick(item)}}>{`${item.name} (${item.iata_code}), ${item.city}, ${item.country}`}</p>
-                }):<p>No airports found</p>}
-              </div>
-          </div>
+      <form onSubmit={getFLights} action="" className="flex flex-col px-4 lg:px-0 pt-8 w-full 2xl:grid 2xl:grid-cols-5">
+          <LocationPicker type={'departure'} style={'admin'} departuresList={departuresList} showDepartureAirportsList={showDepartureAirportsList} showDepartureAirportsListDesktop={showDepartureAirportsListDesktop}/>
+          <LocationPicker type={'destination'} style={'admin'} destinationsList={destinationsList} showDestinationAirportsList={showDestinationAirportsList} showDestinationAirportsListDesktop={showDestinationAirportsListDesktop}/>
           <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightDate} onChange={(e)=>{setFlightDate(e.target.value)}}/>
           <p className="text-red-500 mt-2 2xl:hidden">{searchError}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loading?<Loader/>:'Search'}</button>
           <p className="text-red-500 mt-2 hidden 2xl:block w-full">{searchError}</p>
-        </form>
+      </form>
         <div className="px-4 lg:px-0">
           <button onClick={()=>{setAddFlightTab(true)}} className=" w-full bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
         </div>

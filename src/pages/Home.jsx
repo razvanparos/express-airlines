@@ -26,8 +26,6 @@ function Home() {
     const {homeSearch}=state;
     const {departure,destination,adultsNumber,startDate,endDate}=homeSearch;
 
-   
-
     useEffect(()=>{
       let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
       if(departure.localeCompare(departuresList[0]?.name)===0){

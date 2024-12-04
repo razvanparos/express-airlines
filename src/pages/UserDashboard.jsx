@@ -7,6 +7,7 @@ import { FaPhone } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import {removePaymentMethod} from '../services/paymentService'
 import { AppContext } from "../context/AppContext";
+import MyBookingCard from "../components/MyBookingCard";
 
 
 function UserDashboard() {
@@ -58,28 +59,7 @@ function UserDashboard() {
             </div>
             <div className="flex flex-col gap-y-2">
               {userDetails[0]?.bookedFlights?.map((b,i)=>{
-                return <section key={i} className="border-2 border-primaryBlue flex justify-between p-2">
-                  <div className="flex flex-col">
-                    <p className="font-bold">Departure</p>
-                    <p>{b.departureFlight.departure}</p>
-                    <p>{b.departureFlight.destination}</p>
-                    <p>{b.departureFlight.flightDate}</p>
-                    <p>{b.departureFlight.takeOff}-{b.departureFlight.landing}</p>
-                    <div className="flex flex-wrap gap-x-2 max-w-[60%]">{b.selectedDepartureSeats.map((s,i)=>{
-                        return <div className="text-primaryBlue font-bold" key={i}>{s}</div>
-                    })}</div>
-                  </div>
-                  <div className="flex flex-col text-end items-end">
-                    <p className="font-bold">Return</p>
-                    <p className="">{b.returnFlight.departure}</p>
-                    <p className="">{b.returnFlight.destination}</p>
-                    <p>{b.returnFlight.flightDate}</p>
-                    <p>{b.returnFlight.takeOff}-{b.returnFlight.landing}</p>
-                    <div className="flex flex-wrap gap-x-2 max-w-[60%]">{b.selectedReturnSeats.map((s,i)=>{
-                        return <div className="text-primaryBlue font-bold" key={i}>{s}</div>
-                    })}</div>
-                  </div>
-                </section>
+                return <MyBookingCard key={i} b={b}/>
               })}
             </div>
           </section>

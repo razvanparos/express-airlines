@@ -1,9 +1,9 @@
 import { Link,useNavigate } from "react-router-dom";
 import Loader from '../components/Loader';
 import {loginUser} from '../services/authService'
-import { useContext, useState } from "react";
-import { AppContext } from "../context/AppContext";
+import { useState } from "react";
 import {getUserDetails} from "../services/authService";
+import authActions from "../context/actions/auth-actions";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -13,20 +13,15 @@ function LoginPage() {
   const [loading, setLoading]=useState(false);
   const [loginError, setLoginError]=useState('');
 
-  const {dispatch}=useContext(AppContext)
-
   const handleLogin = async(e)=>{
     e.preventDefault();
     setLoading(true)
     try{
       await loginUser(loginEmail, loginPassword, rememberMe);
       let userDetails = await getUserDetails('UsersDetails');
-      dispatch({
-        type: "SET_USER_DATA",
-        payload: {
-          userDetails: userDetails,
-        },
-      });
+      authActions.setUserData({
+        userDetails: userDetails,
+      })
       if(sessionStorage.getItem('currentBooking')){
         navigate('/flight-details')
       }else if(userDetails[0].isAdmin){

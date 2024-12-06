@@ -1,8 +1,10 @@
+import { SET_HOMESEARCH } from "../actions/home-actions";
+
 const homeSearchReducer = (state, action) => {
     const { homeSearch } = action.payload;
   
     switch (action.type) {
-      case "SET_HOMESEARCH":
+      case SET_HOMESEARCH:
         return { ...state, homeSearch:{
           ...state.homeSearch, 
           ...action.payload.homeSearch,

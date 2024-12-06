@@ -12,7 +12,6 @@ function Header() {
         <Link to="/"><h2 className="text-lg font-semibold md:text-2xl">Airline Express</h2></Link>
         <BiSolidPlaneAlt className="text-xl md:text-3xl" />
       </div>
-      <button onClick={()=>{console.log(state)}}>click</button>
       {state.userDetails[0]?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl md:text-3xl"/></Link>:<Link to="/login" className=" bg-primaryBlue rounded-xl p-2 px-4 md:text-xl">Login</Link>}
     </header>
   );

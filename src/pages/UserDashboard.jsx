@@ -8,6 +8,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import {removePaymentMethod} from '../services/paymentService'
 import { AppContext } from "../context/AppContext";
 import MyBookingCard from "../components/MyBookingCard";
+import authActions from "../context/actions/auth-actions";
 
 
 function UserDashboard() {
@@ -26,23 +27,15 @@ function UserDashboard() {
   const handleRemoveCard=async(id)=>{
     await removePaymentMethod(id);
     let response = await getUserDetails("UsersDetails")
-    dispatch({
-        type: "SET_USER_DATA",
-        payload: {
-            userDetails: response,
-        },
-    });
-  }
+    authActions.setUserData({
+      userDetails: response
+    })}
   
   const handleLogOut=async()=>{
     await logoutUser(navigate);
-    dispatch({
-      type: "SET_USER_DATA",
-      payload: {
-        userDetails: {},
-      },
-    });
-  }
+    authActions.setUserData({
+      userDetails: {}
+    })}
 
   return (
     <article className="bg-gray-200 flex flex-col gap-y-1 pb-4 select-none">

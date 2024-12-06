@@ -1,8 +1,10 @@
+import { SET_FLIGHTS } from "../actions/flights-actions";
+
 const flightsReducer = (state, action) => {
     const { flights } = action.payload;
   
     switch (action.type) {
-      case "SET_FLIGHTS":
+      case SET_FLIGHTS:
         return { ...state, flights };
       default:
         return false;

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import DatePicker from "react-datepicker";
 import { AppContext } from "../context/AppContext";
+import homeActions from "../context/actions/home-actions";
 
 function FlightDatePicker(props) {
 const {dispatch}=useContext(AppContext)
@@ -12,14 +13,11 @@ const {dispatch}=useContext(AppContext)
         placeholderText="Departure date" 
         selected={props.startDate} 
         onChange={(date) => {
-            dispatch({
-            type: "SET_HOMESEARCH",
-            payload: {
-                homeSearch: {
+          homeActions.setHomeSearch({
+             homeSearch: {
                 startDate:date
                 },
-            },
-            });
+          })
       }}/>
       :
       <DatePicker className="2xl:border-r-2 py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl bg-white 2xl:h-[80px]" minDate={props.startDate} 
@@ -27,13 +25,11 @@ const {dispatch}=useContext(AppContext)
         placeholderText="Return date" 
         selected={props.endDate} 
         onChange={(date) => {
-            dispatch({
-            type: "SET_HOMESEARCH",
-            payload: {
-                homeSearch: {
+          homeActions.setHomeSearch({
+             homeSearch: {
                 endDate:date
                 },
-            },});}} 
+          })}} 
         />
       }
     </>

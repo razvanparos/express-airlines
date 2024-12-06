@@ -2,33 +2,26 @@ import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, Rectangle, XAxis, YAxis, L
 import { useState } from 'react';
 import DbRequest from '../services/dbRequestService';
 import {getFlightsAdmin} from "../services/flightService";
+import { formatDate } from '../common/utils';
 
-function AdminFlightCard({flight,editFlight,setEditFlight,departure,destination,flightDate,setAdminFlights}) {
-    const COLORS = ['green','#0062E3'];
+function AdminFlightCard({flight,editFlight,changeFlightsTabState,departure,destination,flightDate,}) {
+  const COLORS = ['green','#0062E3'];
     const [newDeparture, setNewDeparture]=useState('');
     const [newDestination, setNewDestination]=useState('');
     const [newFlightDate, setNewFlightDate] = useState(formatDate(new Date()));
 
-    function formatDate(date){
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = (d.getMonth() + 1).toString().padStart(2, '0');
-        const day = d.getDate().toString().padStart(2, '0'); 
-        return `${year}-${month}-${day}`; 
-      };
-
       const editMode=async(id)=>{
         if(editFlight){
-          setEditFlight('')
+          changeFlightsTabState('editFlight','')
           await DbRequest.updateDb(id,"Flights",{
             departure: newDeparture,
             destination: newDestination,
             flightDate: newFlightDate
           });
           let queryResponse = await getFlightsAdmin(departure,destination,flightDate,"Flights");
-          setAdminFlights(queryResponse);
+          changeFlightsTabState('adminFlights',queryResponse)
         }else{
-          setEditFlight(id)
+          changeFlightsTabState('editFlight',id)
           let focusRef = document.getElementById(id);
           focusRef.focus();
           setNewDeparture(departure)
@@ -39,7 +32,7 @@ function AdminFlightCard({flight,editFlight,setEditFlight,departure,destination,
       const cancelFlight=async(id)=>{
         await DbRequest.removeFromDb(id,"Flights")
         let queryResponse = await getFlightsAdmin(departure,destination,flightDate,"Flights");
-        setAdminFlights(queryResponse);
+        changeFlightsTabState('adminFlights',queryResponse)
       }
   return (
     <div className="border-2 w-full gap-y-[40px] p-2 2xl:p-[40px] rounded-lg flex flex-col lg:flex-row justify-between items-center bg-gray-200">

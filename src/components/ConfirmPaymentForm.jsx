@@ -6,6 +6,7 @@ import {updateDbSeats} from '../services/flightService'
 import { useState,useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { getUserDetails } from "../services/authService";
+import authActions from "../context/actions/auth-actions";
 
 function ConfirmPaymentFrom(props) {
     const [cardNumber,setCardNumber]=useState('');
@@ -53,12 +54,9 @@ function ConfirmPaymentFrom(props) {
             await updateDbSeats(booking);
             sessionStorage.removeItem('currentBooking')
             let response = await getUserDetails("UsersDetails")
-            dispatch({
-                type: "SET_USER_DATA",
-                payload: {
-                    userDetails: response,
-                },
-            });
+            authActions.setUserData({
+                userDetails: response
+            })
             updateChartsData();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             props.setThankYou(true);

@@ -14,84 +14,93 @@ function FlightsTab() {
     const {state}=useContext(AppContext)
     const {homeSearch}=state
     const {departure,destination}=homeSearch
-    const [showDepartureAirportsList, setShowDepartureAirportsList]=useState(false);
-    const [showDepartureAirportsListDesktop, setShowDepartureAirportsListDesktop]=useState(false);
-    const [showDestinationAirportsList, setShowDestinationAirportsList]=useState(false);
-    const [showDestinationAirportsListDesktop, setShowDestinationAirportsListDesktop]=useState(false);
-    const [departuresList, setDeparturesList]=useState([]);
-    const [destinationsList, setDestinationsList]=useState([]);
-    const [flightDate, setFlightDate] = useState(formatDate(new Date()));
-    const [minDate, setMinDate] = useState(formatDate(new Date()));
-    const [loading, setLoading] = useState(false);
-    const [loadingAdd, setLoadingAdd] = useState(false);
-    const [searchError, setSearchError] = useState('');
-    const [addError, setAddError] = useState('');
-    const [noFlightsfound, setNoFlightsFound] = useState('');
-    const [adminFlights, setAdminFlights] = useState([]);
-    const [editFlight, setEditFlight] = useState('');
-    const [addFlightTab, setAddFlightTab] = useState(false);
+    const initialFlightsTabState={
+      showDepartureAirportsList:false,
+      showDepartureAirportsListDesktop:false,
+      showDestinationAirportsList:false,
+      showDestinationAirportsListDesktop:false,
+      departuresList:[],
+      destinationsList:[],
+      flightDate:formatDate(new Date()),
+      minDate:formatDate(new Date()),
+      loading:false,
+      loadingAdd:false,
+      searchError:'',
+      addError:'',
+      noFlightsFound:'',
+      adminFlights:[],
+      editFlight:'',
+      addFlightTab:false
+    }
+    const [flightsTabState,setFlightsTabState] = useState(initialFlightsTabState)
 
-   
+    const changeFlightsTabState = (fieldname,value)=>{
+      setFlightsTabState((prevState) => ({
+        ...prevState,
+        [fieldname]: value,
+      }));
+    }
+
     useEffect(()=>{
         let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
-        if(departure.localeCompare(departuresList[0]?.name)===0){
-          setShowDepartureAirportsList(false)
-          setShowDepartureAirportsListDesktop(false)
+        if(departure.localeCompare(flightsTabState.departuresList[0]?.name)===0){
+          changeFlightsTabState('showDepartureAirportsList',false)
+          changeFlightsTabState('showDepartureAirportsListDesktop',false)
         }
         else if(filteredAirports.length<4){
-          setShowDepartureAirportsList(true)
-          setShowDepartureAirportsListDesktop(true)
-          setDeparturesList(filteredAirports)
+          changeFlightsTabState('showDepartureAirportsList',true)
+          changeFlightsTabState('showDepartureAirportsListDesktop',true)
+          changeFlightsTabState('departuresList',filteredAirports)
         }else {
-          setShowDepartureAirportsList(false)
-          setShowDepartureAirportsListDesktop(false)
+          changeFlightsTabState('showDepartureAirportsList',false)
+          changeFlightsTabState('showDepartureAirportsListDesktop',false)
         }
       },[departure])
   
       useEffect(()=>{
         let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(destination.toLowerCase())||airport.name.toLowerCase().includes(destination.toLowerCase()))
-        if(destination.localeCompare(destinationsList[0]?.name)===0){
-          setShowDestinationAirportsList(false)
-          setShowDestinationAirportsListDesktop(false)
+        if(destination.localeCompare(flightsTabState.destinationsList[0]?.name)===0){
+          changeFlightsTabState('showDestinationAirportsList',false)
+          changeFlightsTabState('showDestinationAirportsListDesktop',false)
         }
         else if(filteredAirports.length<4){
-          setShowDestinationAirportsList(true)
-          setShowDestinationAirportsListDesktop(true)
-          setDestinationsList(filteredAirports)
+          changeFlightsTabState('showDestinationAirportsList',true)
+          changeFlightsTabState('showDestinationAirportsListDesktop',true)
+          changeFlightsTabState('destinationsList',filteredAirports)
         }else{
-          setShowDestinationAirportsList(false)
-          setShowDestinationAirportsListDesktop(false)
+          changeFlightsTabState('showDestinationAirportsList',false)
+          changeFlightsTabState('showDestinationAirportsListDesktop',false)
         }
       },[destination])
   
     const getFLights=async(e)=>{
         e.preventDefault();
-        setAddFlightTab(false);
-        if(showDepartureAirportsList||showDestinationAirportsList){
-            setSearchError('Select airports from the list')
+        changeFlightsTabState('addFlightTab',false)
+        if(flightsTabState.showDepartureAirportsList||flightsTabState.showDestinationAirportsList){
+            changeFlightsTabState('searchError','Select airports from the list')
             return
         }else{
-            setSearchError('')
+          changeFlightsTabState('searchError','')
         }
-        if(departure&&destination&&flightDate){
-            setSearchError('')
-            setLoading(true)
-            let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightDate),"Flights");
+        if(departure&&destination&&flightsTabState.flightDate){
+            changeFlightsTabState('searchError','')
+            changeFlightsTabState('loading',true)
+            let queryResponse = await getFlightsAdmin(departure,destination,formatDateToISO(flightsTabState.flightDate),"Flights");
             console.log(queryResponse)
             if(queryResponse.length<1){
-              setNoFlightsFound('No flights found')
+              changeFlightsTabState('noFlightsFound','No flights found')
             }else {
-              setNoFlightsFound('')
+              changeFlightsTabState('noFlightsFound','')
             }
-            setAdminFlights(queryResponse);
+            changeFlightsTabState('adminFlights',queryResponse)
         }else{
-            setSearchError('Fields cannot be empty')
+            changeFlightsTabState('searchError','Fields cannot be empty')
         }
-        setLoading(false)
+        changeFlightsTabState('loading',false)
     }
     const addFlightFunction=async(e)=>{
         e.preventDefault();
-        setLoadingAdd(true)
+        changeFlightsTabState('loadingAdd',true)
         const flightData = {
           departure: document.getElementById("departureAirport").value,
           destination: document.getElementById("destinationAirport").value,
@@ -102,43 +111,42 @@ function FlightsTab() {
         };
         const hasEmptyValue = Object.values(flightData).some(value => !value);
         if(!hasEmptyValue){
-          setAddError('')
+          changeFlightsTabState('addError','')
           await createFlightsAdmin(flightData);
-          setAddFlightTab(false)
+          changeFlightsTabState('addFlightTab',false)
         }else{
-          setAddError('Empty fields')
+          changeFlightsTabState('addError','Empty fields')
         }    
-        setLoadingAdd(false)
+        changeFlightsTabState('loadingAdd',false)
     }
     return (
     <section className="flex flex-col gap-y-[20px]">
       <form onSubmit={getFLights} action="" className="flex flex-col px-4 lg:px-0 pt-8 w-full 2xl:grid 2xl:grid-cols-5">
-          <LocationPicker type={'departure'} style={'admin'} departuresList={departuresList} showDepartureAirportsList={showDepartureAirportsList} showDepartureAirportsListDesktop={showDepartureAirportsListDesktop}/>
-          <LocationPicker type={'destination'} style={'admin'} destinationsList={destinationsList} showDestinationAirportsList={showDestinationAirportsList} showDestinationAirportsListDesktop={showDestinationAirportsListDesktop}/>
-          <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightDate} onChange={(e)=>{setFlightDate(e.target.value)}}/>
-          <p className="text-red-500 mt-2 2xl:hidden">{searchError}</p>
-          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loading?<Loader/>:'Search'}</button>
-          <p className="text-red-500 mt-2 hidden 2xl:block w-full">{searchError}</p>
+          <LocationPicker type={'departure'} style={'admin'} departuresList={flightsTabState.departuresList} showDepartureAirportsList={flightsTabState.showDepartureAirportsList} showDepartureAirportsListDesktop={flightsTabState.showDepartureAirportsListDesktop}/>
+          <LocationPicker type={'destination'} style={'admin'} destinationsList={flightsTabState.destinationsList} showDestinationAirportsList={flightsTabState.showDestinationAirportsList} showDestinationAirportsListDesktop={flightsTabState.showDestinationAirportsListDesktop}/>
+          <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightsTabState.flightDate} onChange={(e)=>{ changeFlightsTabState('flightDate',e.target.value)}}/>
+          <p className="text-red-500 mt-2 2xl:hidden">{flightsTabState.searchError}</p>
+          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{flightsTabState.loading?<Loader/>:'Search'}</button>
+          <p className="text-red-500 mt-2 hidden 2xl:block w-full">{flightsTabState.searchError}</p>
       </form>
         <div className="px-4 lg:px-0">
-          <button onClick={()=>{setAddFlightTab(true)}} className=" w-full bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
+          <button onClick={()=>{changeFlightsTabState('addFlightTab',true)}} className=" w-full bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
         </div>
-        {!addFlightTab?
+        {!flightsTabState.addFlightTab?
         <section className="p-4 lg:px-[0]">
           <div className="flex flex-col gap-y-4">
-            {adminFlights?.map((f,i)=>{
+            {flightsTabState.adminFlights?.map((f,i)=>{
               return <AdminFlightCard key={i}
               flight={f}
-              editFlight={editFlight}
+              editFlight={flightsTabState.editFlight}
               departure={departure}
               destination={destination}
-              flightDate={formatDateToISO(flightDate)}
-              setEditFlight={setEditFlight}
-              setAdminFlights={setAdminFlights}
+              flightDate={formatDateToISO(flightsTabState.flightDate)}
+              changeFlightsTabState={changeFlightsTabState}
               />
             })}
           </div>
-          <p className="text-red-500">{noFlightsfound}</p>
+          <p className="text-red-500">{flightsTabState.noFlightsFound}</p>
         </section>
         :
         <form onSubmit={addFlightFunction} id="addForm" action="" className="flex flex-col px-4 lg:px-0 w-full 2xl:grid 2xl:grid-cols-10">
@@ -149,16 +157,16 @@ function FlightsTab() {
               <input id="destinationAirport" placeholder="Destination airport" type="text" className="border-2 border-primaryBlue h-full py-3 px-4 text-md w-full" /> 
           </div>
           <p className="2xl:hidden">Flight date:</p>
-          <input id="date" type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]"  min={minDate} />
+          <input id="date" type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]"  min={flightsTabState.minDate} />
           <p className="2xl:hidden">Departure time:</p>
           <input id="departureTime" type="time" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
           <p className="2xl:hidden">Arrival time:</p>
           <input id="arrivalTime" type="time" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
           <input id="pricePerSeat" type="number" placeholder="Price per seat" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-md 2xl:h-[80px]" />
-          <p className="text-red-500 mt-2 2xl:hidden">{addError}</p>
-          <button onClick={()=>{setAddFlightTab(false)}} type="submit" className="bg-gray-400 text-white font-semibold my-4 py-2 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">Cancel</button>
-          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{loadingAdd?<Loader/>:'Add'}</button>
-          <p className="text-red-500 mt-2 hidden 2xl:block w-full">{addError}</p>
+          <p className="text-red-500 mt-2 2xl:hidden">{flightsTabState.addError}</p>
+          <button onClick={()=>{changeFlightsTabState('addFlightTab',false)}} type="submit" className="bg-gray-400 text-white font-semibold my-4 py-2 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">Cancel</button>
+          <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{flightsTabState.loadingAdd?<Loader/>:'Add'}</button>
+          <p className="text-red-500 mt-2 hidden 2xl:block w-full">{flightsTabState.addError}</p>
       </form>}
     </section>
   );

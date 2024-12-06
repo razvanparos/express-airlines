@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { logoutUser} from '../services/authService'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
@@ -6,12 +6,10 @@ import {getAllFlights} from "../services/flightService";
 import {getChartData} from "../services/chartsService"
 import { updateChartsData } from "../services/chartsService";
 import FlightsTab from "../components/AdminFlightsTab";
-import { AppContext } from "../context/AppContext";
 import AdminDashboardCharts from "../components/AdminDashboardCharts";
+import authActions from "../context/actions/auth-actions";
 
 function AdminDashboard() {
-  const {dispatch}=useContext(AppContext)
-
   const navigate=useNavigate();
   const fetchData = async () => {
     await updateChartsData();
@@ -55,13 +53,10 @@ function AdminDashboard() {
     
     const handleLogOut=async()=>{
       await logoutUser(navigate);
-      dispatch({
-        type: "SET_USER_DATA",
-        payload: {
-          userDetails: {},
-        },
-      });
-    }
+      authActions.setUserData({
+        userDetails: {},
+      })}
+
   return (
     <div className="bg-white lg:px-[10%]">
       <section className="bg-primaryBlue w-full h-fit flex justify-between items-center lg:rounded-b-lg py-4 px-4">

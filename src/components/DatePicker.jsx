@@ -1,10 +1,7 @@
-import { useContext } from "react";
 import DatePicker from "react-datepicker";
-import { AppContext } from "../context/AppContext";
 import homeActions from "../context/actions/home-actions";
 
 function FlightDatePicker(props) {
-const {dispatch}=useContext(AppContext)
 
   return (
     <>

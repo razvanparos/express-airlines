@@ -46,7 +46,8 @@ export const registerUser = async (registerName,registerPhone, registerEmail, re
           bookedFlights:[],
           paymentMethods:[],
           fullName:registerName,
-          email: auth.currentUser.email
+          email: auth.currentUser.email,
+          isAdmin: false
       });} 
       catch (error) {
         throw errorMessages[error.code];

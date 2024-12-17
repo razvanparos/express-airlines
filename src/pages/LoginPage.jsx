@@ -4,6 +4,7 @@ import {loginUser} from '../services/authService'
 import { useState } from "react";
 import {getUserDetails} from "../services/authService";
 import authActions from "../context/actions/auth-actions";
+import FormRow from "../components/FormRow";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -38,12 +39,10 @@ function LoginPage() {
 
   return (
     <article className="flex flex-col py-4 px-2 items-center bg-white lg:py-[80px]">
-      <p className="font-bold">Login page</p>
+      <p className="font-bold">Login</p>
       <form action="" onSubmit={handleLogin} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
-        <label htmlFor="email">Email</label>
-        <input type="text" className="border-2 rounded-lg p-2" value={loginEmail} onChange={(e)=>{setLoginEmail(e.target.value)}}/>
-        <label htmlFor="password">Password</label>
-        <input className="border-2 rounded-lg p-2" type="password" value={loginPassword} onChange={(e)=>{setLoginPassword(e.target.value)}}/>
+        <FormRow type={'text'} labelText="Email" value={loginEmail} onChangeFunction={(e)=>{setLoginEmail(e.target.value)}}/>
+        <FormRow type={'password'} labelText="Password" value={loginPassword} onChangeFunction={(e)=>{setLoginPassword(e.target.value)}}/>
         <div className="flex gap-x-2">
           <input type="checkbox" className="w-[20px]" value={rememberMe} onChange={()=>{setRememberMe(!rememberMe)}}/>
           <p>Remember me</p>

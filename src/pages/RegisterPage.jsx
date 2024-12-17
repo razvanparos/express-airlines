@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from '../components/Loader';
 import { registerUser } from "../services/authService";
 import { useState } from "react";
+import FormRow from '../components/FormRow';
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -38,16 +39,12 @@ function RegisterPage() {
     
     return (
       <article className="flex flex-col py-4 px-2 items-center bg-white">
-        <p className="font-bold">Register page</p>
+        <p className="font-bold">Register</p>
         <form action="" onSubmit={handleRegister} className="flex flex-col py-4 gap-y-2 w-full max-w-[500px]">
-          <label htmlFor="name">Name</label>
-          <input type="text" className="border-2 rounded-lg p-2" value={registerState.registerName} onChange={(e)=>changeRegisterState('registerName',e.target.value)}/>
-          <label htmlFor="phone">Phone</label>
-          <input type="number" className="border-2 rounded-lg p-2" value={registerState.registerPhone} onChange={(e)=>changeRegisterState('registerPhone',e.target.value)}/>
-          <label htmlFor="email">Email</label>
-          <input type="text" className="border-2 rounded-lg p-2" value={registerState.registerEmail} onChange={(e)=>changeRegisterState('registerEmail',e.target.value)}/>
-          <label htmlFor="password">Password</label>
-          <input className="border-2 rounded-lg p-2" type="password" value={registerState.registerPassword} onChange={(e)=>changeRegisterState('registerPassword',e.target.value)}/>
+          <FormRow type={'text'} labelText="Name" value={registerState.registerName} onChangeFunction={(e)=>changeRegisterState('registerName',e.target.value)}/>
+          <FormRow type={'number'} labelText="Phone" value={registerState.registerPhone} onChangeFunction={(e)=>changeRegisterState('registerPhone',e.target.value)}/>
+          <FormRow type={'text'} labelText="Email" value={registerState.registerEmail} onChangeFunction={(e)=>changeRegisterState('registerEmail',e.target.value)}/>
+          <FormRow type={'password'} labelText="Password" value={registerState.registerPassword} onChangeFunction={(e)=>changeRegisterState('registerPassword',e.target.value)}/>
           <p className="text-red-600">{registerState.registerError}</p>
           <button type="submit" className="bg-primaryBlue rounded-xl text-white py-3">{registerState.loading?<Loader/>:'Register'}</button>
           <Link to='/login' className="p-2 flex justify-center">Already have an account? Login now!</Link>

@@ -15,10 +15,6 @@ function Home() {
     const initialHomeState={
       departureAirport:'',
       destinationAirport:'',
-      showDepartureAirportsList:false,
-      showDepartureAirportsListDesktop:false,
-      showDestinationAirportsList:false,
-      showDestinationAirportsListDesktop:false,
       departuresList:[],
       destinationsList:[],
       loading:false,
@@ -35,38 +31,27 @@ function Home() {
     }
 
     const {state,dispatch} = useContext(AppContext);
+    const {userDetails} = state;
     const {homeSearch}=state;
     const {departure,destination,adultsNumber,startDate,endDate}=homeSearch;
 
     useEffect(()=>{
-      let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
-      if(departure.localeCompare(homeState.departuresList[0]?.name)===0){
-        changeHomeStateField('showDepartureAirportsList',false)
-        changeHomeStateField('showDepartureAirportsListDesktop',false)
+      if(userDetails[0]?.isAdmin===true){
+        navigate('/admin-dashboard')
       }
-      else if(filteredAirports.length<4){
-        changeHomeStateField('showDepartureAirportsList',true)
-        changeHomeStateField('showDepartureAirportsListDesktop',true)
+    },[userDetails])
+
+    useEffect(()=>{
+      let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
+      if(filteredAirports.length<4){
         changeHomeStateField('departuresList',filteredAirports)
-      }else {
-        changeHomeStateField('showDepartureAirportsList',false)
-        changeHomeStateField('showDepartureAirportsListDesktop',false)
       }
     },[departure])
 
     useEffect(()=>{
       let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(destination.toLowerCase())||airport.name.toLowerCase().includes(destination.toLowerCase()))
-      if(destination.localeCompare(homeState.destinationsList[0]?.name)===0){
-        changeHomeStateField('showDestinationAirportsList',false)
-        changeHomeStateField('showDestinationAirportsListDesktop',false)
-      }
-      else if(filteredAirports.length<4){
-        changeHomeStateField('showDestinationAirportsList',true)
-        changeHomeStateField('showDestinationAirportsListDesktop',true)
+      if(filteredAirports.length<4){
         changeHomeStateField('destinationsList',filteredAirports)
-      }else{
-        changeHomeStateField('showDestinationAirportsList',false)
-        changeHomeStateField('showDestinationAirportsListDesktop',false)
       }
     },[destination])
 
@@ -92,8 +77,8 @@ function Home() {
         <h1 className="text-white mt-[20px] sm:text-2xl">Search for flights all over the world</h1>
         <form onSubmit={handleForm} 
           action="" className="relative flex flex-col px-4 pt-8 w-full bg-darkBlue gap-y-[1px] lg:px-[10%] 2xl:pb-[80px] 2xl:grid 2xl:grid-cols-8">
-          <LocationPicker type={'departure'} changeHomeStateField={changeHomeStateField} departuresList={homeState.departuresList} showDepartureAirportsList={homeState.showDepartureAirportsList} showDepartureAirportsListDesktop={homeState.showDepartureAirportsListDesktop}/>
-          <LocationPicker type={'destination'} changeHomeStateField={changeHomeStateField} destinationsList={homeState.destinationsList} showDestinationAirportsList={homeState.showDestinationAirportsList} showDestinationAirportsListDesktop={homeState.showDestinationAirportsListDesktop}/>
+          <LocationPicker type={'departure'} changeHomeStateField={changeHomeStateField} departuresList={homeState.departuresList}/>
+          <LocationPicker type={'destination'} changeHomeStateField={changeHomeStateField} destinationsList={homeState.destinationsList}/>
           <FlightDatePicker startDate={startDate} type={'departure'}/>
           <FlightDatePicker startDate={startDate} endDate={endDate} type={'destination'}/>
           <AdultsNumberPicker/>

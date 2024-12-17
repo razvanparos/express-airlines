@@ -12,7 +12,7 @@ const LoginPage = React.lazy(() => import("./pages/LoginPage"));
 const Home = React.lazy(() => import("./pages/Home"));
 const RegisterPage = React.lazy(() => import("./pages/RegisterPage"));
 const Layout = React.lazy(() => import("./pages/Layout"));
-const NoPage = React.lazy(() => import("./pages/NoPage"));
+const NotFoundPage = React.lazy(() => import("./pages/NotFoundPage"));
 const UserDashboard = React.lazy(() => import("./pages/UserDashboard"));
 const ExploreResults = React.lazy(() => import("./pages/ExploreResults"));
 const FlightDetails = React.lazy(() => import("./pages/FlightDetails"));
@@ -33,7 +33,7 @@ export default function App() {
             <Route path="admin-dashboard" element={<AdminDashboard />} />
             <Route path="flight-details" element={<FlightDetails />} />
             <Route path="flight-summary" element={<FlightSummary />} />
-            <Route path="*" element={<NoPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </Suspense>

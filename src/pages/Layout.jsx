@@ -1,15 +1,11 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect, useContext } from "react";
+import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { AppContext } from "../context/AppContext";
 import { getUserDetails } from "../services/authService";
 import authActions from "../context/actions/auth-actions";
 
 function Layout() {
-  const { userDetails } = useContext(AppContext);
-  const navigate = useNavigate();
-
   const initApp = async()=>{
     if (sessionStorage.getItem("currentUser")) {
       let response = await getUserDetails("UsersDetails")
@@ -25,13 +21,9 @@ function Layout() {
          userDetails: response
       })}}
 
-  useEffect(() => {initApp()}, []);
-
   useEffect(() => {
-    if (userDetails?.isAdmin && sessionStorage.getItem("currentUser")) {
-      navigate("/admin-dashboard");
-    }
-  }, [userDetails, navigate]);
+    initApp()
+  }, []);
 
   return (
     <div>

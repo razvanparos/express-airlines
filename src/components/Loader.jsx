@@ -4,7 +4,6 @@ ring2.register()
 
 function Loader() {
   return (
-    <div className="App">
     <l-ring-2
         size="18"
         stroke="3"
@@ -13,7 +12,6 @@ function Loader() {
         speed="0.8" 
         color="white" 
     ></l-ring-2>
-    </div>
   );
 }
 

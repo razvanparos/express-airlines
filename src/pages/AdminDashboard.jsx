@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { logoutUser} from '../services/authService'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
@@ -8,6 +8,7 @@ import { updateChartsData } from "../services/chartsService";
 import FlightsTab from "../components/AdminFlightsTab";
 import AdminDashboardCharts from "../components/AdminDashboardCharts";
 import authActions from "../context/actions/auth-actions";
+import { AppContext } from "../context/AppContext";
 
 function AdminDashboard() {
   const navigate=useNavigate();
@@ -36,6 +37,9 @@ function AdminDashboard() {
     const [windowWidth, setWindowWidth] = useState(400)
     const [adminTab, setAdminTab] = useState('Charts')
 
+    const { state } = useContext(AppContext);
+    const { userDetails } = state;
+
     const updateSize=()=>{
       if(window.innerWidth>700){
         setWindowWidth(450)
@@ -45,6 +49,9 @@ function AdminDashboard() {
     }
 
     useEffect(()=>{
+      if (!userDetails[0] || userDetails[0]?.isAdmin===false) {
+        navigate('/');
+      }
         fetchData();
         window.addEventListener("resize", updateSize);
 

@@ -15,10 +15,6 @@ function FlightsTab() {
     const {homeSearch}=state
     const {departure,destination}=homeSearch
     const initialFlightsTabState={
-      showDepartureAirportsList:false,
-      showDepartureAirportsListDesktop:false,
-      showDestinationAirportsList:false,
-      showDestinationAirportsListDesktop:false,
       departuresList:[],
       destinationsList:[],
       flightDate:formatDate(new Date()),
@@ -43,33 +39,15 @@ function FlightsTab() {
 
     useEffect(()=>{
         let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
-        if(departure.localeCompare(flightsTabState.departuresList[0]?.name)===0){
-          changeFlightsTabState('showDepartureAirportsList',false)
-          changeFlightsTabState('showDepartureAirportsListDesktop',false)
-        }
-        else if(filteredAirports.length<4){
-          changeFlightsTabState('showDepartureAirportsList',true)
-          changeFlightsTabState('showDepartureAirportsListDesktop',true)
+        if(filteredAirports.length<4){
           changeFlightsTabState('departuresList',filteredAirports)
-        }else {
-          changeFlightsTabState('showDepartureAirportsList',false)
-          changeFlightsTabState('showDepartureAirportsListDesktop',false)
         }
       },[departure])
   
       useEffect(()=>{
         let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(destination.toLowerCase())||airport.name.toLowerCase().includes(destination.toLowerCase()))
-        if(destination.localeCompare(flightsTabState.destinationsList[0]?.name)===0){
-          changeFlightsTabState('showDestinationAirportsList',false)
-          changeFlightsTabState('showDestinationAirportsListDesktop',false)
-        }
-        else if(filteredAirports.length<4){
-          changeFlightsTabState('showDestinationAirportsList',true)
-          changeFlightsTabState('showDestinationAirportsListDesktop',true)
+        if(filteredAirports.length<4){
           changeFlightsTabState('destinationsList',filteredAirports)
-        }else{
-          changeFlightsTabState('showDestinationAirportsList',false)
-          changeFlightsTabState('showDestinationAirportsListDesktop',false)
         }
       },[destination])
   
@@ -122,8 +100,8 @@ function FlightsTab() {
     return (
     <section className="flex flex-col gap-y-[20px]">
       <form onSubmit={getFLights} action="" className="flex flex-col px-4 lg:px-0 pt-8 w-full 2xl:grid 2xl:grid-cols-5">
-          <LocationPicker type={'departure'} style={'admin'} departuresList={flightsTabState.departuresList} showDepartureAirportsList={flightsTabState.showDepartureAirportsList} showDepartureAirportsListDesktop={flightsTabState.showDepartureAirportsListDesktop}/>
-          <LocationPicker type={'destination'} style={'admin'} destinationsList={flightsTabState.destinationsList} showDestinationAirportsList={flightsTabState.showDestinationAirportsList} showDestinationAirportsListDesktop={flightsTabState.showDestinationAirportsListDesktop}/>
+          <LocationPicker type={'departure'} style={'admin'} departuresList={flightsTabState.departuresList} />
+          <LocationPicker type={'destination'} style={'admin'} destinationsList={flightsTabState.destinationsList} />
           <input type="date" className=" cursor-pointer border-2 border-primaryBlue py-3 px-4 mb-[1px] 2xl:mb-[0px] w-full text-xl 2xl:h-[80px]" value={flightsTabState.flightDate} onChange={(e)=>{ changeFlightsTabState('flightDate',e.target.value)}}/>
           <p className="text-red-500 mt-2 2xl:hidden">{flightsTabState.searchError}</p>
           <button type="submit" className="bg-primaryBlue text-white font-semibold my-4 py-2 rounded-lg 2xl:h-full 2xl:my-0 2xl:rounded-l-none 2xl:text-xl">{flightsTabState.loading?<Loader/>:'Search'}</button>

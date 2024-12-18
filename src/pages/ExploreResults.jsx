@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import FlightCard from "../components/FlightCard";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import BookFlightInfo from "../components/BookFlightInfo";
 
 function ExploreResults() {
     const navigate = useNavigate();
@@ -71,12 +72,11 @@ function ExploreResults() {
             <div ref={summaryRef} className={`${showTripSummary?'h-fit overflow-auto':'h-0 overflow-hidden'} duration-200 flex gap-y-2 flex-col w-full items-center px-2`}>
                 <p className="2xl:max-w-[30%] bg-primaryBlue w-full p-2 rounded-t-xl text-white font-bold">{`Your trip summary to ${flights.destinationAirport?.city}`}</p>
                 <div className="border-2 rounded-lg p-3 flex w-full justify-between 2xl:max-w-[30%]">
-                    <div>
-                        <p className="font-bold">{`${selectedDepartureFlight.departure} - ${selectedReturnFlight.departure}`}</p>
-                        <p>{`${flights.departureDate} (${selectedDepartureFlight.takeOff} - ${selectedDepartureFlight.landing})`}</p>
-                        <p className="font-bold">{`${selectedReturnFlight.departure} - ${selectedDepartureFlight.departure}`}</p>
-                        <p>{`${flights.returnDate} (${selectedReturnFlight.takeOff} - ${selectedReturnFlight.landing})`}</p>
-                    </div>
+                    <BookFlightInfo 
+                        selectedDepartureFlight={selectedDepartureFlight} 
+                        selectedReturnFlight={selectedReturnFlight}
+                        flights={flights}
+                    />
                     <div className="flex flex-col justify-between">
                         <p className="text-end text-primaryBlue font-bold text-xl">{`$${flights.adultsNumber*(selectedDepartureFlight.pricePerSeat+selectedReturnFlight.pricePerSeat)}`}</p>
                         <p className="text-end text-gray-400">{`${flights.adultsNumber} ${flights.adultsNumber===1?'Adult':'Adults'}`}</p>
@@ -84,6 +84,9 @@ function ExploreResults() {
                     </div>
                 </div>
             </div>
+            </div>
+            <div className="bg-gray-200 p-2  flex items-center lg:px-[10%]">
+                <button onClick={()=>{navigate(-1)}} className="bg-gray-400 rounded-lg text-white p-2 px-4">Back</button>
             </div>
         </article>
     );

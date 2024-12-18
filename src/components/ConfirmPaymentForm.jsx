@@ -3,50 +3,68 @@ import { bookFlight} from '../services/flightService'
 import Loader from "../components/Loader";
 import {savePaymentInfo} from '../services/paymentService'
 import {updateDbSeats} from '../services/flightService'
-import { useState,useContext } from "react";
-import { AppContext } from "../context/AppContext";
+import { useState } from "react";
 import { getUserDetails } from "../services/authService";
 import authActions from "../context/actions/auth-actions";
+import FormRow from "../components/FormRow";
+import { useNavigate } from "react-router-dom";
 
 function ConfirmPaymentFrom(props) {
-    const [cardNumber,setCardNumber]=useState('');
-    const [cardHolderName,setCardHolderName]=useState('');
-    const [expiryDate,setExpiryDate]=useState('');
-    const [cvv,setCvv]=useState('');
-    const [paymentError,setPaymentError]=useState('');
-    const [savePayment,setSavePayment]=useState(false);
-    const [loading,setLoading]=useState(false);
+    const initialPaymentState={
+        cardNumber:'',
+        cardHolderName:'',
+        expiryDate:'',
+        cvv:'',
+        paymentError:'',
+        savePayment:false,
+        loading:false
+      }
+  
+      const [paymentState,setPaymentState] = useState(initialPaymentState)
+      const navigate = useNavigate();
+      const changePaymentStateField = (fieldname,value)=>{
+        setPaymentState((prevState) => ({
+          ...prevState,
+          [fieldname]: value,
+        }));
+      }
+   
 
-    const {dispatch}=useContext(AppContext)
+    const handleCardNumberChange=(e)=>{
+        let value = e.target.value.replace(/\s+/g, '');
+        if (/^\d*$/.test(value)) { 
+            value = value.match(/.{1,4}/g)?.join(' ') || '';}
+        changePaymentStateField('cardNumber',value)
+    }
 
     const useSavedPayments=()=>{
-        setCardNumber(props.savedPaymentMethods[0].cardNumber);
-        setCardHolderName(props.savedPaymentMethods[0].cardHolderName);
-        setExpiryDate(props.savedPaymentMethods[0].expiryDate);
-        setCvv(props.savedPaymentMethods[0].cvv);
+        changePaymentStateField('cardNumber',props.savedPaymentMethods[0].cardNumber)
+        changePaymentStateField('cardHolderName',props.savedPaymentMethods[0].cardHolderName)
+        changePaymentStateField('expiryDate',props.savedPaymentMethods[0].expiryDate)
+        changePaymentStateField('cvv',props.savedPaymentMethods[0].cvv)
     }
 
     const handlePayment=async()=>{
-        setLoading(true)
-        if(cardNumber&&cardHolderName&&expiryDate&&cvv){
-            if(cardNumber.length<19||cardNumber.length>19){
-                setPaymentError('Invalid card number')
+        changePaymentStateField('loading',true)
+        if(paymentState.cardNumber&&paymentState.cardHolderName&&paymentState.expiryDate&&paymentState.cvv){
+            if(paymentState.cardNumber.length<19||paymentState.cardNumber.length>19){
+                changePaymentStateField('paymentError','Invalid card number')
                 return
             }
-            if(cvv.length>3){
-                setPaymentError('Invalid cvv')
+            if(paymentState.cvv.length>3){
+                changePaymentStateField('paymentError','Invalid cvv')
                 return
             }
-            setPaymentError('')
+            changePaymentStateField('paymentError','')
             let booking = JSON.parse(sessionStorage.getItem('currentBooking'));
-            if(savePayment){
+            if(paymentState.savePayment){
                 var newId = "id" + Math.random().toString(16).slice(2)
                 let paymentInfo={
                     id: newId,
-                    cardNumber: cardNumber,
-                    cardHolderName: cardHolderName,
-                    expiryDate: expiryDate,
-                    cvv: cvv
+                    cardNumber: paymentState.cardNumber,
+                    cardHolderName: paymentState.cardHolderName,
+                    expiryDate: paymentState.expiryDate,
+                    cvv: paymentState.cvv
                 }
                 await savePaymentInfo(paymentInfo)
             }
@@ -64,42 +82,34 @@ function ConfirmPaymentFrom(props) {
                props.navigate('/')
             },15000)
         }else{
-            setPaymentError('Please enter all payment details')
+            changePaymentStateField('paymentError','Please enter all payment details')
         }
-        setLoading(false)
+        changePaymentStateField('loading',false)
     }
   return (
-    <div className=" flex flex-col gap-y-1 p-2 bg-gray-200 2xl:px-[10%] 2xl:max-w-[800px]">
+    <div className=" flex flex-col gap-y-1 py-4 bg-gray-200 2xl:max-w-[800px]">
         <p className="font-bold text-lg">Confirm payment</p>
-            {props.savedPaymentMethods.length>0?<button onClick={useSavedPayments} className="text-start bg-primaryBlue w-fit text-white text-sm rounded-lg">Use saved payment method</button>:''}
-            <p>Card number</p>
-            <input value={cardNumber}  onChange={(e) => {
-                let value = e.target.value.replace(/\s+/g, '');
-                if (/^\d*$/.test(value)) { 
-                    value = value.match(/.{1,4}/g)?.join(' ') || '';  
-                    }
-                    setCardNumber(value);
-                    }}  
-                type="text" className="rounded-lg p-2"   maxLength="19"
-            />
-        <p>Cardholder name</p>
-        <input value={cardHolderName} onChange={(e)=>{setCardHolderName(e.target.value)}} type="text" className="rounded-lg p-2"/>
+        {props.savedPaymentMethods.length>0?<button onClick={useSavedPayments} className="text-start bg-primaryBlue w-fit text-white text-sm rounded-lg">Use saved payment method</button>:''}
+        <FormRow type={'text'} value={paymentState.cardNumber} labelText={'Card number'} onChangeFunction={(e) => {handleCardNumberChange(e)}}
+        />
+        <FormRow type={'text'} value={paymentState.cardHolderName} labelText={'Cardholder name'} onChangeFunction={(e)=>{changePaymentStateField('cardHolderName',e.target.value)}}/>
         <div className="flex flex-col justify-between gap-x-4">
             <div>
                 <p>Expiry date</p>
-                <input value={expiryDate} min={`${new Date().getFullYear()}-${new Date().getMonth()+1}`} onChange={(e)=>{setExpiryDate(e.target.value)}} type="month" className="rounded-lg p-2 bg-white min-w-full min-h-[40px]"/>
+                <input value={paymentState.expiryDate} min={`${new Date().getFullYear()}-${new Date().getMonth()+1}`} onChange={(e)=>{changePaymentStateField('expiryDate',e.target.value)}} type="month" className="rounded-lg p-2 bg-white min-w-full min-h-[40px]"/>
             </div>
             <div>
                 <p>CVV</p>
-                <input value={cvv} onChange={(e)=>{setCvv(e.target.value)}} type="number" className="rounded-lg p-2 w-full"/>
+                <input value={paymentState.cvv} onChange={(e)=>{changePaymentStateField('cvv',e.target.value)}} type="number" className="rounded-lg p-2 w-full"/>            
             </div>
         </div>
         <div className="flex gap-x-2">
-            <input type="checkbox" className="w-[20px]" value={savePayment} onChange={()=>{setSavePayment(!savePayment)}}/>
+            <input type="checkbox" className="w-[20px]" value={paymentState.savePayment} onChange={()=>{changePaymentStateField('savePayment',!paymentState.savePayment)}}/>
             <p className="font-semibold">Save payment method</p>
         </div>
-        <p className="text-red-500">{paymentError}</p>
-        <button onClick={()=>{handlePayment()}} className="bg-primaryBlue rounded-lg text-white my-2 py-2">{loading?<Loader/>:'Pay & Book'}</button>
+        <p className="text-red-500">{paymentState.paymentError}</p>
+        <button onClick={()=>{handlePayment()}} className="bg-primaryBlue rounded-lg text-white my-2 py-2">{paymentState.loading?<Loader/>:'Pay & Book'}</button>
+        <button onClick={()=>{navigate(-1)}} className="text-md font-bold text-darkBlue">Back</button>
     </div>
   );
 }

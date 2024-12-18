@@ -1,35 +1,17 @@
-import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip  } from 'recharts';
+import AreaChartComponent from './AreaChartComponent';
+import PieChartComponent from './PieChartComponent';
 
 function AdminDashboardCharts(props) {
-    const COLORS = ['green','#0062E3'];
-    const COLORS2 = ['purple','#0062E3'];
     const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
   return (
     <article className="py-[20px] flex flex-col xl:grid xl:grid-cols-3 lg:gap-x-8 items-center px-4 lg:px-0 gap-y-[16px]">
         <section className="h-full flex flex-col justify-between items-center relative bg-gray-200 rounded-lg w-full p-4">
             <p className="text-lg">{`Flights until ${new Date().getDate()} ${MONTHS[new Date().getMonth()]} ${new Date().getFullYear()}`}</p>
-            <PieChart width={200} height={200} >
-              <Pie
-                data={[
+            <PieChartComponent data={[
                   { name: 'Completed flights until today', value: props.flightsNrUntilToday },
-                  { name: 'Upcoming flights', value: props.flightsNr-props.flightsNrUntilToday },
-                ]}
-                innerRadius={60}
-                outerRadius={90}
-                fill="#00C49F"
-                paddingAngle={0}
-                dataKey="value"
-              >
-                {
-                  [{ name: 'Completed flights until today', value: props.flightsNrUntilToday },
-                    { name: 'Upcoming flights', value: props.flightsNr-props.flightsNrUntilToday },
-                  ].map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS2[index % COLORS2.length]} />))
-                }
-              </Pie>
-              <Tooltip />
-            </PieChart>
+                  { name: 'Upcoming flights', value: props.flightsNr-props.flightsNrUntilToday },]}
+                  COLORS = {['purple','#0062E3']}
+            />
             <p className="absolute text-black bottom-[48%] lg:bottom-[48%] font-bold">{`${props.flightsNrUntilToday} / ${props.flightsNr}`}</p> 
             <div>
               <div className="flex items-center gap-x-2">
@@ -45,49 +27,17 @@ function AdminDashboardCharts(props) {
 
         <section className="h-fit flex flex-col items-center relative bg-gray-200 rounded-lg w-full p-4 ">
           <p>Sales</p>
-          <AreaChart
-            className="text-xs"
-            width={props.windowWidth-20}
-            height={250}
-            data={props.salesData}
-            margin={{
-              top: 0,
-              right: 35,
-              left: -10,
-              bottom: 0,
-            }}
-          >
-            <XAxis dataKey="date"/>
-            <YAxis className="text-[10px]"/>
-            <Tooltip />
-            <Area type="monotone" dataKey="sales" stackId="1" stroke="#0062E3" fill="#0062E3" strokeWidth={4} />
-            <Area type="monotone" dataKey="potentialSales" stackId="1" stroke="#82ca9d" fill="#82ca9d" strokeWidth={4}/>
-          </AreaChart>
+          <AreaChartComponent data={props.salesData} width={props.windowWidth-20}/>
         </section>
         
         <section className="h-full flex flex-col justify-between items-center relative bg-gray-200 rounded-lg w-full p-4">
           <p className="text-lg">Occupied Seats</p>
-            <PieChart width={200} height={200} >
-              <Pie
-                data={[
+          <PieChartComponent data={[
                   { name: 'Occupied Seats', value: props.occupiedSeats },
                   { name: 'Free Seats', value: props.freeSeats },
                 ]}
-                innerRadius={60}
-                outerRadius={90}
-                fill="#00C49F"
-                paddingAngle={0}
-                dataKey="value"
-              >
-                {[
-                  { name: 'Occupied Seats', value: props.occupiedSeats },
-                  { name: 'Free Seats', value: props.freeSeats },
-                ].map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip/>
-            </PieChart>
+                COLORS={ ['green','#0062E3']}
+                />
           <p className="absolute text-black bottom-[48%] lg:bottom-[48%] font-bold">{`${props.occupiedSeats} / ${props.freeSeats+props.occupiedSeats}`}</p>  
           <div>
               <div className="flex items-center gap-x-2">

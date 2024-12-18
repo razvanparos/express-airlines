@@ -6,22 +6,16 @@ function AdultsNumberPicker() {
     const {state}=useContext(AppContext)
     const {homeSearch}=state
     const {adultsNumber}=homeSearch
-    useEffect(()=>{
-        if(adultsNumber<1){
-          homeActions.setHomeSearch({
-              homeSearch: {
-                adultsNumber:1
-              },
-          })
-        }
-        if(adultsNumber>8){
-          homeActions.setHomeSearch({
-              homeSearch: {
-                adultsNumber:8
-              },
-          })
-        }
-      },[adultsNumber])
+    
+    useEffect(() => {
+      if (adultsNumber < 1 || adultsNumber > 8) {
+        homeActions.setHomeSearch({
+          homeSearch: {
+            adultsNumber: Math.min(8, Math.max(1, adultsNumber)),
+          },
+        });
+      }
+    }, [adultsNumber]);
 
       const onAdultsNumberIncrease=()=>{
         homeActions.setHomeSearch({

@@ -7,6 +7,10 @@ function FlightDetails() {
     const [selectedDepartureSeats,setSelectedDepartureSeats]=useState([]);
     const [selectedReturnSeats,setSelectedReturnSeats]=useState([]);
     const [continueError,setContinueError]=useState('');
+
+    const goBack=()=>{
+      navigate(-1)
+    }
     
     useEffect(()=>{
         if(!sessionStorage.getItem('currentBooking')||!sessionStorage.getItem('currentUser')){
@@ -90,9 +94,10 @@ function FlightDetails() {
         </div>
       </div>
       </div>
-      <div className="bg-gray-200 p-2 flex justify-between items-center text-red-500 lg:px-[10%]">
-        <p>{continueError}</p>
-        <button onClick={handleContinue} className="bg-primaryBlue rounded-lg text-white p-2">Continue</button>
+      <div className="bg-gray-200 p-2 flex justify-between items-center lg:px-[10%]">
+        <button onClick={goBack} className="bg-gray-400 rounded-lg text-white p-2 px-4">Back</button>
+        <p className="text-sm md:text-lg text-red-500 text-center">{continueError}</p>
+        <button onClick={handleContinue} className="bg-primaryBlue rounded-lg text-white p-2 px-4">Continue</button>
       </div>
       
     </article>

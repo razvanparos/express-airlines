@@ -5,6 +5,7 @@ import { FaCheck } from "react-icons/fa";
 import {getUserDetails} from "../services/authService";
 import ConfirmPaymentFrom from "../components/ConfirmPaymentForm";
 import FlightSummaryRow from "../components/FlightSummaryRow";
+import ButtonComponent from "../components/ButtonComponent";
 
 function FlightSummary() {
     const navigate = useNavigate();
@@ -47,12 +48,12 @@ function FlightSummary() {
                 <ConfirmPaymentFrom savedPaymentMethods={savedPaymentMethods} setThankYou={setThankYou} timeoutRef={timeoutRef} navigate={navigate}/>           
             </div>
            
-          <div className={`flex flex-col gap-y-4 pt-20 items-center ${thankYou?'opacity-100 backdrop-blur-xl pointer-events-auto':'opacity-0 pointer-events-none'} z-2 absolute overflow-hidden duration-500 h-[100vh] w-full`}>
+          <div className={`flex flex-col gap-y-4 pt-20 items-center justify-center ${thankYou?'opacity-100 backdrop-blur-xl pointer-events-auto':'opacity-0 pointer-events-none'} z-2 absolute overflow-hidden duration-500 h-[100vh] w-full`}>
                 <p className="font-bold text-2xl">Thank you!</p>
                 <FaCheck className="text-white bg-primaryBlue p-4 rounded-full w-[60px] h-[60px]"/>
                 <p className="text-lg font-semibold">Flight successfully booked</p>
-                <button onClick={()=>{navigate('/user-dashboard')}} className="bg-darkBlue text-white p-2 rounded-lg">View booked flights</button>
-                <button onClick={()=>{navigate('/')}} className="bg-darkBlue text-white p-2 rounded-lg">Home</button>
+                <ButtonComponent buttonType={'primary'} buttonText={'View booked flights'} buttonFunction={()=>{navigate('/user-dashboard')}}/>
+                <ButtonComponent buttonType={''} buttonText={'Home'} buttonFunction={()=>{navigate('/')}}/>
           </div>
          </article>
     );

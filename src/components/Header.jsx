@@ -12,7 +12,6 @@ function Header() {
         <Link to="/"><h2 className="text-sm font-semibold md:text-2xl">Airline Express</h2></Link>
         <BiSolidPlaneAlt className="text-xl md:text-3xl" />
       </div>
-      {/* <button onClick={()=>{console.log(state)}}>click</button> */}
       <div className="flex gap-x-2 md:gap-x-4">
         {state.userDetails[0]?<Link to='/user-dashboard'><FaUserCircle  className="text-2xl md:text-3xl"/></Link>:<Link to="/login" className=" bg-primaryBlue flex justify-center items-center rounded-xl p-2 px-2 text-sm md:text-xl md:px-4">Login</Link>}
         {state.userDetails[0]?'':<Link to="/register" className="flex justify-center items-center text-sm md:text-lg">Register</Link>}

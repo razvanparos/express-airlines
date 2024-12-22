@@ -8,6 +8,7 @@ import { getUserDetails } from "../services/authService";
 import authActions from "../context/actions/auth-actions";
 import FormRow from "../components/FormRow";
 import { useNavigate } from "react-router-dom";
+import ButtonComponent from "./ButtonComponent";
 
 function ConfirmPaymentFrom(props) {
     const initialPaymentState={
@@ -89,7 +90,7 @@ function ConfirmPaymentFrom(props) {
   return (
     <div className=" flex flex-col gap-y-1 py-4 bg-gray-200 2xl:max-w-[800px]">
         <p className="font-bold text-lg">Confirm payment</p>
-        {props.savedPaymentMethods.length>0?<button onClick={useSavedPayments} className="text-start bg-primaryBlue w-fit text-white text-sm rounded-lg">Use saved payment method</button>:''}
+        {props.savedPaymentMethods.length>0?<ButtonComponent buttonFunction={useSavedPayments} buttonText={'Use saved payment method'} buttonType={'primary-small'}/>:''}
         <FormRow type={'text'} value={paymentState.cardNumber} labelText={'Card number'} onChangeFunction={(e) => {handleCardNumberChange(e)}}
         />
         <FormRow type={'text'} value={paymentState.cardHolderName} labelText={'Cardholder name'} onChangeFunction={(e)=>{changePaymentStateField('cardHolderName',e.target.value)}}/>
@@ -108,8 +109,8 @@ function ConfirmPaymentFrom(props) {
             <p className="font-semibold">Save payment method</p>
         </div>
         <p className="text-red-500">{paymentState.paymentError}</p>
-        <button onClick={()=>{handlePayment()}} className="bg-primaryBlue rounded-lg text-white my-2 py-2">{paymentState.loading?<Loader/>:'Pay & Book'}</button>
-        <button onClick={()=>{navigate(-1)}} className="text-md font-bold text-darkBlue">Back</button>
+        <ButtonComponent buttonType={'primary'} buttonText={paymentState.loading?<Loader/>:'Pay & Book'} buttonFunction={()=>{handlePayment()}}/>
+        <ButtonComponent buttonType={''} buttonText={'Back'} buttonFunction={()=>{navigate(-1)}}/>
     </div>
   );
 }

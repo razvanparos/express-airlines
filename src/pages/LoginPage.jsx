@@ -5,6 +5,7 @@ import { useState } from "react";
 import {getUserDetails} from "../services/authService";
 import authActions from "../context/actions/auth-actions";
 import FormRow from "../components/FormRow";
+import ButtonComponent from "../components/ButtonComponent";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ function LoginPage() {
           <p>Remember me</p>
         </div>
         <p className="text-red-500">{loginError}</p>
-        <button type="submit" className="bg-primaryBlue p-2 text-white rounded-xl">{loading?<Loader/>:'Login'}</button>
+        <ButtonComponent buttonText={loading?<Loader/>:'Login'} buttonType={'primary'}/>
         <Link to='/register' className="p-2 flex justify-center">Don't have an account? Register now!</Link>
       </form>
       

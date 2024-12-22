@@ -3,6 +3,7 @@ import Loader from '../components/Loader';
 import { registerUser } from "../services/authService";
 import { useState } from "react";
 import FormRow from '../components/FormRow';
+import ButtonComponent from "../components/ButtonComponent";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -46,7 +47,7 @@ function RegisterPage() {
           <FormRow type={'text'} labelText="Email" value={registerState.registerEmail} onChangeFunction={(e)=>changeRegisterState('registerEmail',e.target.value)}/>
           <FormRow type={'password'} labelText="Password" value={registerState.registerPassword} onChangeFunction={(e)=>changeRegisterState('registerPassword',e.target.value)}/>
           <p className="text-red-600">{registerState.registerError}</p>
-          <button type="submit" className="bg-primaryBlue rounded-xl text-white py-3">{registerState.loading?<Loader/>:'Register'}</button>
+          <ButtonComponent buttonType={'primary'} buttonText={registerState.loading?<Loader/>:'Register'}/>
           <Link to='/login' className="p-2 flex justify-center">Already have an account? Login now!</Link>
         </form>
       </article>

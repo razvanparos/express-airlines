@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import airports from '../mock-data/airports.json'
 import React from 'react';
 import AdminFlightCard from "./AdminFlightCard";
@@ -7,6 +7,8 @@ import { formatDate } from "../common/utils";
 import { AppContext } from "../context/AppContext";
 import AdminGetFlightsForm from "./AdminGetFlightsForm";
 import AdminAddFlightForm from "./AdminAddFlightForm";
+import ButtonComponent from "./ButtonComponent";
+import useFilterAirports from "../hooks/useFilterAirports";
 
 function FlightsTab() {
     const {state}=useContext(AppContext)
@@ -31,26 +33,14 @@ function FlightsTab() {
       }));
     }
 
-    useEffect(()=>{
-        let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(departure.toLowerCase())||airport.name.toLowerCase().includes(departure.toLowerCase()))
-        if(filteredAirports.length<4){
-          changeFlightsTabState('departuresList',filteredAirports)
-        }
-      },[departure])
+    useFilterAirports(departure, airports, 'departuresList', changeFlightsTabState);
+    useFilterAirports(destination, airports, 'destinationsList', changeFlightsTabState);
   
-      useEffect(()=>{
-        let filteredAirports = airports.filter(airport=>airport.city.toLowerCase().includes(destination.toLowerCase())||airport.name.toLowerCase().includes(destination.toLowerCase()))
-        if(filteredAirports.length<4){
-          changeFlightsTabState('destinationsList',filteredAirports)
-        }
-      },[destination])
-  
-    
     return (
     <section className="flex flex-col gap-y-[20px]">
       <AdminGetFlightsForm destination={destination} departure={departure} flightsTabState={flightsTabState} changeFlightsTabState={changeFlightsTabState}/>
         <div className="px-4 lg:px-0">
-          <button onClick={()=>{changeFlightsTabState('addFlightTab',true)}} className=" w-full bg-primaryBlue md:w-fit text-white rounded-lg p-2 px-8">Add new flight</button>
+          <ButtonComponent buttonFunction={()=>{changeFlightsTabState('addFlightTab',true)}} buttonText={'Add new flight'} buttonType={'primary'}/>
         </div>
         {!flightsTabState.addFlightTab?
         <section className="p-4 lg:px-[0]">

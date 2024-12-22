@@ -5,6 +5,7 @@ import authActions from "../context/actions/auth-actions";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { AppContext } from "../context/AppContext";
 import MyBookingCard from "../components/MyBookingCard";
+import ButtonComponent from "./ButtonComponent";
 
 function AccordionSection(props){
     const [expandBookings, setExpandBookings] = useState(true);
@@ -50,7 +51,7 @@ function AccordionSection(props){
                   </div>
                   <div className="text-end flex flex-col gap-y-4">
                     <p>**{b.cvv[2]}</p>
-                    <button onClick={()=>{handleRemoveCard(b.id)}} className="text-white bg-red-500 rounded-lg text-sm">Remove</button>
+                    <ButtonComponent buttonFunction={()=>{handleRemoveCard(b.id)}} buttonText={'Remove'} buttonType={'danger'}/>
                   </div>
                 </section>
               })}

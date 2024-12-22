@@ -5,6 +5,7 @@ import { formatDate } from '../common/utils';
 import PieChartComponent from './PieChartComponent';
 import BarChartComponent from './BarChartComponent';
 import AdminFlightCardInfo from './AdminFlightCardInfo';
+import ButtonComponent from './ButtonComponent';
 
 function AdminFlightCard({flight,editFlight,changeFlightsTabState,departure,destination,flightDate,}) {
     const [newDeparture, setNewDeparture]=useState('');
@@ -51,8 +52,7 @@ function AdminFlightCard({flight,editFlight,changeFlightsTabState,departure,dest
               <div className="w-full md:w-fit flex md:flex-col justify-between gap-y-[20px]">
                 <button onClick={()=>{editMode(flight.id)}} className={`${editFlight===flight.id?'bg-green-600':'bg-primaryBlue'}
                   text-white p-2 rounded-lg`}>{editFlight===flight.id?'Save':'Edit flight'}</button>
-                <button onClick={()=>{cancelFlight(flight.id)}} className="bg-red-600 text-white p-2 rounded-lg">Cancel
-                  flight</button>
+                <ButtonComponent buttonFunction={()=>{cancelFlight(flight.id)}} buttonText={'Cancel flight'} buttonType={'danger'}/>
               </div>
     </div>
   );

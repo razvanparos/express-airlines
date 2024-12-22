@@ -3,6 +3,7 @@ import FlightCard from "../components/FlightCard";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import BookFlightInfo from "../components/BookFlightInfo";
+import ButtonComponent from "../components/ButtonComponent";
 
 function ExploreResults() {
     const navigate = useNavigate();
@@ -80,13 +81,13 @@ function ExploreResults() {
                     <div className="flex flex-col justify-between">
                         <p className="text-end text-primaryBlue font-bold text-xl">{`$${flights.adultsNumber*(selectedDepartureFlight.pricePerSeat+selectedReturnFlight.pricePerSeat)}`}</p>
                         <p className="text-end text-gray-400">{`${flights.adultsNumber} ${flights.adultsNumber===1?'Adult':'Adults'}`}</p>
-                        <button onClick={bookNow} className="bg-primaryBlue px-3 py-2 rounded-lg text-white">Book now</button>
+                        <ButtonComponent buttonFunction={bookNow} buttonType={'primary'} buttonText={'Book now'}/>
                     </div>
                 </div>
             </div>
             </div>
             <div className="bg-gray-200 p-2  flex items-center lg:px-[10%]">
-                <button onClick={()=>{navigate(-1)}} className="bg-gray-400 rounded-lg text-white p-2 px-4">Back</button>
+                <ButtonComponent buttonFunction={()=>{navigate(-1)}} buttonText={'Back'} buttonType={'back'}/>
             </div>
         </article>
     );

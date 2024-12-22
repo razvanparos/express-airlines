@@ -8,6 +8,7 @@ import { AppContext } from "../context/AppContext";
 import authActions from "../context/actions/auth-actions";
 import InfoRow from "../components/InfoRow";
 import AccordionSection from "../components/AccordionSection";
+import ButtonComponent from "../components/ButtonComponent";
 
 function UserDashboard() {
     const navigate = useNavigate();
@@ -33,9 +34,9 @@ function UserDashboard() {
           <InfoRow text={userDetails[0]?.fullName} icon={<FaUser />}/>
           <InfoRow text={userDetails[0]?.email} icon={<MdEmail />}/>
           <InfoRow text={userDetails[0]?.phone} icon={<FaPhone />}/>
+          <ButtonComponent buttonFunction={handleLogOut} buttonText={'Sign out'} buttonType={'primary'}/>
           <AccordionSection type ={'bookings'}/>
           <AccordionSection type ={'payments'}/>
-          <button className="bg-darkBlue rounded-lg w-[50%] text-white p-3 2xl:rounded-lg 2xl:w-[10%]" onClick={handleLogOut}>Sign out</button>
         </div>
     </article>
   );

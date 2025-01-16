@@ -4,13 +4,15 @@ import combineReducers from "./reducers/combine-reducers";
 import flightActions from "./actions/flights-actions";
 import homeActions from "./actions/home-actions";
 import authActions from "./actions/auth-actions";
+import notificationActions from './actions/notification-actions';
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(combineReducers, initialState);
-  flightActions.registerDispatchFunction(dispatch)
-  homeActions.registerDispatchFunction(dispatch)
-  authActions.registerDispatchFunction(dispatch)
+  flightActions.registerDispatchFunction(dispatch);
+  homeActions.registerDispatchFunction(dispatch);
+  authActions.registerDispatchFunction(dispatch);
+  notificationActions.registerDispatchFunction(dispatch);
 
   return (
     <AppContext.Provider

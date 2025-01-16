@@ -90,7 +90,7 @@ function ConfirmPaymentFrom(props) {
   return (
     <div className=" flex flex-col gap-y-1 py-4 bg-gray-200 2xl:max-w-[800px]">
         <p className="font-bold text-lg">Confirm payment</p>
-        {props.savedPaymentMethods.length>0?<ButtonComponent buttonFunction={useSavedPayments} buttonText={'Use saved payment method'} buttonType={'primary-small'}/>:''}
+        {props.savedPaymentMethods.length>0?<ButtonComponent buttonFunction={useSavedPayments} buttonText="Use saved payment method" buttonType="primary" buttonSize="sm"/>:''}
         <FormRow type={'text'} value={paymentState.cardNumber} labelText={'Card number'} onChangeFunction={(e) => {handleCardNumberChange(e)}}
         />
         <FormRow type={'text'} value={paymentState.cardHolderName} labelText={'Cardholder name'} onChangeFunction={(e)=>{changePaymentStateField('cardHolderName',e.target.value)}}/>

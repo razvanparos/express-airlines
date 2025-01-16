@@ -1,7 +1,7 @@
 import { SET_FLIGHTS } from "../actions/flights-actions";
 
 const flightsReducer = (state, action) => {
-    const { flights } = action.payload;
+    const { flights } = action?.payload || {};
   
     switch (action.type) {
       case SET_FLIGHTS:

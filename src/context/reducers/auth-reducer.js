@@ -1,7 +1,7 @@
 import { SET_USER_DATA } from "../actions/auth-actions";
 
 const authReducer = (state, action) => {
-    const { userDetails } = action.payload;
+    const { userDetails } = action?.payload || {};
   
     switch (action.type) {
       case SET_USER_DATA:

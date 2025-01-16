@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import {logoutUser} from '../services/authService'
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa";
 import { AppContext } from "../context/AppContext";
 import authActions from "../context/actions/auth-actions";
 import InfoRow from "../components/InfoRow";
-import AccordionSection from "../components/AccordionSection";
-import ButtonComponent from "../components/ButtonComponent";
+import ButtonComponent from "./../components/ButtonComponent";
+import UserDashboardPaymentMethodsSection from './../components/UserDashboardPaymentMethodsSection';
+import UserDashboardBookingsSection from '../components/UserDashboardBookingsSection';
 
 function UserDashboard() {
     const navigate = useNavigate();
@@ -35,8 +36,8 @@ function UserDashboard() {
           <InfoRow text={userDetails[0]?.email} icon={<MdEmail />}/>
           <InfoRow text={userDetails[0]?.phone} icon={<FaPhone />}/>
           <ButtonComponent buttonFunction={handleLogOut} buttonText={'Sign out'} buttonType={'primary'}/>
-          <AccordionSection type ={'bookings'}/>
-          <AccordionSection type ={'payments'}/>
+          <UserDashboardBookingsSection userDetails={userDetails} />
+          <UserDashboardPaymentMethodsSection userDetails={userDetails} />
         </div>
     </article>
   );

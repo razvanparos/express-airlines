@@ -1,19 +1,25 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const useFilterAirports = (term, airports, key, changeFlightsTabState) => {
+import airports from './../mock-data/airports.json';
+
+const useFilterAirports = (term) => {
+  const [filteredAirports, setFilteredAirports] = useState([]);
+
   useEffect(() => {
     if (term.trim() === '') return;
 
-    const filteredAirports = airports.filter(
+    const filteredSearchResults = airports.filter(
       (airport) =>
         airport.city.toLowerCase().includes(term.toLowerCase()) ||
         airport.name.toLowerCase().includes(term.toLowerCase())
     );
 
-    if (filteredAirports.length < 4) {
-      changeFlightsTabState(key, filteredAirports);
+    if (filteredSearchResults.length > 0 && filteredSearchResults.length < 4) {
+      setFilteredAirports(filteredSearchResults);
     }
-  }, [term, airports, key, changeFlightsTabState]);
+  }, [term]);
+
+  return filteredAirports;
 };
 
 export default useFilterAirports;

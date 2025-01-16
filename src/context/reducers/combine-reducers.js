@@ -1,6 +1,7 @@
 import authReducer from './auth-reducer.js';
 import flightsReducer from './flights-reducer.js';
 import homeSearchReducer from './home-search-reducer.js';
+import notificationsReducer from './notifications-reducer.js';
 
 const combineReducers = (...reducers) => {
   return (state, action) => {
@@ -22,4 +23,9 @@ const combineReducers = (...reducers) => {
   };
 };
 
-export default combineReducers(flightsReducer, authReducer,homeSearchReducer);
+export default combineReducers(
+  flightsReducer,
+  authReducer,
+  homeSearchReducer,
+  notificationsReducer
+);

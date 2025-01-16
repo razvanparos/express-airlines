@@ -10,7 +10,8 @@ const initialState = {
         adultsNumber:1,
         startDate:'',
         endDate:''
-    }
+    },
+    notification: null
   };
   
   export default initialState;

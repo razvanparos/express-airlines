@@ -9,12 +9,6 @@ export default function PrivateRoute({ children, hasToBeAdmin }) {
   const { state } = useContext(AppContext);
   const { userDetails } = state;
 
-  /*
-    Wait 3 seconds for the user data to load from the server. Till
-    the user data is loaded (we have something in userDetails[0]),
-    we display the loading spinner. This is necessary when refreshing
-    the page on a private route.
-  */
   useEffect(() => {
     if (userDetails?.[0]) {
       setIsUserDataLoaded(true);
@@ -29,6 +23,7 @@ export default function PrivateRoute({ children, hasToBeAdmin }) {
   const isUserAuthenticated =
     (!hasToBeAdmin && userDetails?.[0]) ||
     (hasToBeAdmin && userDetails?.[0]?.isAdmin);
+
 
   return !isUserDataLoaded ? (
     <div className="flex justify-center items-center h-screen">

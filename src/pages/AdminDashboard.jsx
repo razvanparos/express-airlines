@@ -66,8 +66,8 @@ function AdminDashboard() {
       </section>
       <section className="w-full px-4 lg:px-0 flex flex-col md:flex-row justify-between items-end gap-y-4">
         <div className="border-2 border-primaryBlue mt-4 w-full md:w-fit flex rounded-lg">
-          <p onClick={()=>{setAdminTab('Charts')}} className={`${adminTab=='Charts'?'text-white bg-primaryBlue':''} text-primaryBlue duration-300 w-[50%] p-2 px-4 cursor-pointer select-none`}>Charts</p>
-          <p onClick={()=>{setAdminTab('Flights')}} className={`${adminTab=='Flights'?'text-white bg-primaryBlue':''} text-primaryBlue w-[50%] duration-300 p-2 px-4 cursor-pointer select-none`}>Flights</p>
+          <button onClick={()=>{setAdminTab('Charts')}} className={`${adminTab=='Charts'?'text-white bg-primaryBlue':''} text-primaryBlue duration-300 w-[50%] p-2 px-4 cursor-pointer select-none`}>Charts</button>
+          <button onClick={()=>{setAdminTab('Flights')}} className={`${adminTab=='Flights'?'text-white bg-primaryBlue':''} text-primaryBlue w-[50%] duration-300 p-2 px-4 cursor-pointer select-none`}>Flights</button>
         </div>
       </section> 
       {adminTab=='Charts'?

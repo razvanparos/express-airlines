@@ -21,7 +21,6 @@ function LoginPage() {
   useEffect(() => {
     const { state } = location;
     
-    // Show error message in case the user was redirected from a page he wasn't authorized to visit
     if (state && state.navigatedFromPrivateRoute) {
       if (state.hasToBeAdmin) {
         notificationActions.showNotification("error", errorMessages["auth/admin-restricted-page"]);
@@ -29,10 +28,6 @@ function LoginPage() {
         notificationActions.showNotification("error", errorMessages["auth/login-restricted-page"]);
       }
 
-      /*
-        Clear the history state so that the error message
-        does not reappear when the user refreshes the page.
-      */
       window.history.replaceState({}, '');
     }
   }, []);

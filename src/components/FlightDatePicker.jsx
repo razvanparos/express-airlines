@@ -5,7 +5,7 @@ function FlightDatePicker(props) {
 
   return (
     <>
-    {props.type=='departure'?
+    {props.type==='departure'?
     <DatePickerComponent 
       placeholderText={'Departure date'} 
       minDate={new Date()}

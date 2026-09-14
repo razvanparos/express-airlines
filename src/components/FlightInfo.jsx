@@ -6,7 +6,7 @@ function FlightInfo({ text, props, type, seats }) {
             <p className="text-base font-medium text-slate-600">{props.b[type].destination}</p>
             <p className="text-sm text-slate-500">{props.b[type].flightDate}</p>
             <p className="text-sm text-slate-500">{props.b[type].takeOff}-{props.b[type].landing}</p>
-            <div className="mt-2 flex flex-wrap gap-2 ${type === 'returnFlight' ? 'justify-end' : ''}">
+            <div className={`mt-2 flex flex-wrap gap-2 ${type === 'returnFlight' ? 'justify-end' : ''}`}>
                 {props.b[seats].map((s, i) => (
                     <span className="rounded-full border border-primaryBlue/20 bg-primaryBlue/10 px-2 py-1 text-xs font-bold text-primaryBlue" key={i}>
                         {s}

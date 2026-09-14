@@ -7,27 +7,26 @@ function AccordionSection({ children, title }) {
   const onToggleSection = () => setIsSectionExpanded(!isSectionExpanded);
 
   return (
-    <section className="bg-gray-200 p-3 w-full">
+    <section className="w-full overflow-hidden rounded-[24px] bg-white shadow-md shadow-slate-200/70 ring-1 ring-slate-200">
       <div
         onClick={onToggleSection}
-        className="flex justify-between cursor-pointer"
+        className="flex cursor-pointer items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4"
       >
-        <p className="font-semibold mb-4">{title}</p>
+        <p className="text-lg font-semibold text-slate-800">{title}</p>
         <MdKeyboardArrowDown
-          className={`font-bold text-3xl ${
-            isSectionExpanded ? 'rotate-180' : ''
-          }`}
+          className={`text-3xl text-primaryBlue transition-transform duration-200 ${isSectionExpanded ? 'rotate-180' : ''
+            }`}
         />
       </div>
-      <div
-        className={`${
-          isSectionExpanded
-            ? 'h-fit'
-            : 'h-0 overflow-hidden pointer-events-none'
-        } flex flex-col gap-y-2`}
-      >
-        {children}
-      </div>
+      {isSectionExpanded && (
+        <div
+          className={`${isSectionExpanded
+            ? 'opacity-100'
+            : 'max-h-0 overflow-hidden opacity-0'
+            } flex flex-col gap-y-3 p-4 transition-all duration-300`}
+        >
+          {children}
+        </div>)}
     </section>
   );
 }

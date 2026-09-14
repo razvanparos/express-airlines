@@ -1,5 +1,5 @@
 import ButtonComponent from './ButtonComponent';
-import {removePaymentMethod} from './../services/paymentService';
+import { removePaymentMethod } from './../services/paymentService';
 import { getUserDetails } from '../services/authService';
 import authActions from "./../context/actions/auth-actions";
 import AccordionSection from './AccordionSection';
@@ -19,17 +19,17 @@ export default function UserDashboardPaymentMethodsSection({ userDetails }) {
         return (
           <section
             key={i}
-            className="border-2 border-primaryBlue flex items-center justify-between p-2"
+            className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm"
           >
-            <div className="flex flex-col">
-              <p className="font-bold">{b.cardHolderName}</p>
-              <p>
+            <div className="flex flex-col gap-1">
+              <p className="text-lg font-bold text-slate-800">{b.cardHolderName}</p>
+              <p className="text-sm text-slate-600">
                 **** **** **** {b.cardNumber.substr(b.cardNumber.length - 4)}
               </p>
-              <p>{b.expiryDate}</p>
+              <p className="text-sm text-slate-500">{b.expiryDate}</p>
             </div>
-            <div className="text-end flex flex-col gap-y-4">
-              <p>**{b.cvv[2]}</p>
+            <div className="flex flex-col items-end gap-3 text-end">
+              <p className="text-sm text-slate-500">CVV ••{b.cvv?.[2] ?? '*'}</p>
               <ButtonComponent
                 buttonFunction={() => {
                   handleRemoveCard(b.id);

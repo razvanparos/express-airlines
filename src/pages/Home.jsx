@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import airports from '../mock-data/airports.json';
 import 'react-datepicker/dist/react-datepicker.css';
 import Loader from '../components/Loader';
 import { setFlights } from '../services/flightService';
@@ -43,7 +42,7 @@ function Home() {
     if (userDetails?.[0]?.isAdmin === true) {
       navigate('/admin-dashboard');
     }
-  }, [userDetails]);
+  }, [navigate, userDetails]);
 
   useEffect(() => {
     changeFlightStateField('departuresList', filteredDepartures);
@@ -56,8 +55,8 @@ function Home() {
   const handleForm = async (e) => {
     e.preventDefault();
     if (
-      departure != homeState.departuresList[0]?.name ||
-      destination != homeState.destinationsList[0]?.name
+      departure !== homeState.departuresList[0]?.name ||
+      destination !== homeState.destinationsList[0]?.name
     ) {
       changeFlightStateField('searchError', 'Select airports from the list');
       return;

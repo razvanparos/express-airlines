@@ -59,4 +59,6 @@ class DbRequest {
   }
 }
 
-export default new DbRequest();
+const DbRequestInstance = new DbRequest();
+
+export default DbRequestInstance;

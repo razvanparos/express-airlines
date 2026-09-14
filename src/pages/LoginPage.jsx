@@ -20,7 +20,7 @@ function LoginPage() {
 
   useEffect(() => {
     const { state } = location;
-    
+
     if (state && state.navigatedFromPrivateRoute) {
       if (state.hasToBeAdmin) {
         notificationActions.showNotification("error", errorMessages["auth/admin-restricted-page"]);
@@ -30,7 +30,7 @@ function LoginPage() {
 
       window.history.replaceState({}, '');
     }
-  }, []);
+  }, [location]);
 
   const handleLogin = async(e)=>{
     e.preventDefault();

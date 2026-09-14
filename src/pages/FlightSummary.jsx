@@ -22,11 +22,12 @@ function FlightSummary() {
             getUserPaymentMethods();
         }
         return ()=>{
-            if(timeoutRef.current!=null){
-                clearTimeout(timeoutRef.current)
+            const timeout = timeoutRef.current;
+            if(timeout !== null){
+                clearTimeout(timeout)
             }
         }
-    },[])
+    }, [navigate])
 
     const getUserPaymentMethods=async()=>{
         let sessionDetails = await getUserDetails("UsersDetails");

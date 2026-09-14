@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from './context/AppContext';
@@ -24,7 +24,7 @@ export default function App() {
   return (
     <AppProvider>
       <Notification />
-      <BrowserRouter>
+      <HashRouter>
         <Suspense fallback={<FallbackComponent />}>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -54,7 +54,7 @@ export default function App() {
             </Route>
           </Routes>
         </Suspense>
-      </BrowserRouter>
+      </HashRouter>
     </AppProvider>
   );
 }

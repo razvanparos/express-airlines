@@ -16,10 +16,10 @@ export const loginUser=async(loginEmail, loginPassword, rememberMe )=>{
             sessionStorage.setItem('currentUser', auth.currentUser.uid)
           }
         }catch(error){
-          throw(errorMessages[error.code])
+          throw new Error(errorMessages[error.code] || error.message || 'Authentication failed');
         }
     }else{
-      throw('Fields cannot be empty')
+      throw new Error('Fields cannot be empty')
     }
 }
 
@@ -50,10 +50,10 @@ export const registerUser = async (registerName,registerPhone, registerEmail, re
           isAdmin: false
       });} 
       catch (error) {
-        throw errorMessages[error.code];
+        throw new Error(errorMessages[error.code] || error.message || 'Registration failed');
       }
     } else {
-      throw('Fields cannot be empty')
+      throw new Error('Fields cannot be empty')
     }
   };
   

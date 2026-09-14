@@ -19,7 +19,7 @@ function ExploreResults() {
         if(flights.departureFlights?.length===0 || !flights.departureFlights[0]){
             navigate('/')
         }
-    },[])
+    }, [flights.departureFlights, navigate])
 
     useEffect(()=>{
         if(selectedDepartureFlight){

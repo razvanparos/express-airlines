@@ -15,11 +15,11 @@ function FlightDetails() {
         }else{
           setCurrentBooking(JSON.parse(sessionStorage.getItem('currentBooking')))
         }
-    },[])
+    }, [navigate])
 
     const handleDepartureSeatClick=(seat)=>{
       if(selectedDepartureSeats.includes(seat.seatNumber)){
-        let array = selectedDepartureSeats.filter(val=>val!=seat.seatNumber)
+        let array = selectedDepartureSeats.filter(val=>val!==seat.seatNumber)
         setSelectedDepartureSeats(array)
         return
       }
@@ -31,7 +31,7 @@ function FlightDetails() {
     }
     const handleReturnSeatClick=(seat)=>{
       if(selectedReturnSeats.includes(seat.seatNumber)){
-        let array = selectedReturnSeats.filter(val=>val!=seat.seatNumber)
+        let array = selectedReturnSeats.filter(val=>val!==seat.seatNumber)
         setSelectedReturnSeats(array)
         return
       }

@@ -21,8 +21,8 @@ function FlightSummary() {
             setFinalBooking(JSON.parse(sessionStorage.getItem('currentBooking')))
             getUserPaymentMethods();
         }
+        const timeout = timeoutRef.current;
         return ()=>{
-            const timeout = timeoutRef.current;
             if(timeout !== null){
                 clearTimeout(timeout)
             }
